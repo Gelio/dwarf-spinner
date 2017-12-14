@@ -1,0 +1,10 @@
+html, body {
+  box-sizing: border-box;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
