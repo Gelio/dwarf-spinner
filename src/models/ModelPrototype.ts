@@ -9,18 +9,13 @@ export class ModelPrototype {
 
   public texture: WebGLTextureFacade;
 
-  // private readonly gl: WebGLRenderingContext;
-
   public constructor(
-    gl: WebGLRenderingContext,
     vertexNormalBuffer: WebGLBufferFacade,
     vertexTextureCoordsBuffer: WebGLBufferFacade,
     vertexPositionBuffer: WebGLBufferFacade,
     vertexIndexBuffer: WebGLBufferFacade,
     texture: WebGLTextureFacade
   ) {
-    // this.gl = gl;
-
     this.vertexNormalBuffer = vertexNormalBuffer;
     this.vertexTextureCoordsBuffer = vertexTextureCoordsBuffer;
     this.vertexPositionBuffer = vertexPositionBuffer;
