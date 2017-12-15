@@ -1,4 +1,4 @@
-export class Texture {
+export class WebGLTextureFacade {
   public readonly texture: WebGLTexture | null;
   public readonly id: number;
 
