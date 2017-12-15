@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@types/cannon@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@types/cannon/-/cannon-0.1.1.tgz#e962fb3ecc2e525bdf44f24552f7291a7bb100c5"
+
 "@types/gl-matrix@^2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@types/gl-matrix/-/gl-matrix-2.4.0.tgz#a27affbaf3a849894817f648bf68ac710dedf4a3"
@@ -1691,6 +1695,10 @@ expand-range@^1.8.1:
   resolved "https://registry.yarnpkg.com/expand-range/-/expand-range-1.8.2.tgz#a299effd335fe2721ebae8e257ec79644fc85337"
   dependencies:
     fill-range "^2.1.0"
+
+expand-vertex-data@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/expand-vertex-data/-/expand-vertex-data-1.1.2.tgz#5c8fb300622777f8b47121fa92fe68ef8c221ca1"
 
 expect@^21.2.1:
   version "21.2.1"
