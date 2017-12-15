@@ -1,23 +1,17 @@
 import 'index.scss';
 import 'normalize.css';
-import { ModelPrototypeLoader } from 'services/ModelPrototypeLoader';
+
+import { Application } from 'Application';
 
 window.onload = bootstrap;
 
-async function bootstrap() {
+function bootstrap() {
   const mainCanvas = <HTMLCanvasElement>document.getElementById('main-canvas');
 
   if (!mainCanvas) {
     throw new Error('Main canvas not found');
   }
 
-  const gl = mainCanvas.getContext('webgl');
-  if (!gl) {
-    throw new Error('WebGL not supported');
-  }
-
-  const modelPrototypeLoader = new ModelPrototypeLoader(gl);
-  const modelPrototype = await modelPrototypeLoader.loadModelPrototype('models/dwarf.json');
-
-  console.log(modelPrototype);
+  const application = new Application(mainCanvas);
+  application.run();
 }
