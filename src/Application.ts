@@ -103,7 +103,8 @@ export class Application {
 
     modelPrototype.texture.activate(textureSamplerUniform);
 
-    mat4.scale(modelMatrix, modelMatrix, [50, 50, 50]);
+    const scaleFactor = 50;
+    mat4.scale(modelMatrix, modelMatrix, [scaleFactor, scaleFactor, scaleFactor]);
     mat4.rotateY(modelMatrix, modelMatrix, Math.PI);
     gl.uniformMatrix4fv(modelMatrixUniform, false, modelMatrix);
 
@@ -117,6 +118,21 @@ export class Application {
       gl.UNSIGNED_SHORT,
       0
     );
+
+    function render() {
+      requestAnimationFrame(render);
+      mat4.rotateY(modelMatrix, modelMatrix, 0.1);
+      gl.uniformMatrix4fv(modelMatrixUniform, false, modelMatrix);
+
+      gl.drawElements(
+        gl.TRIANGLES,
+        modelPrototype.vertexIndexBuffer.itemsCount,
+        gl.UNSIGNED_SHORT,
+        0
+      );
+    }
+
+    requestAnimationFrame(render);
   }
 
   private initProgram() {
