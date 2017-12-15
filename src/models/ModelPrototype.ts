@@ -1,19 +1,20 @@
-import { WebGLBufferFacade } from 'models/WebGLBufferFacade';
+import { WebGLArrayBufferFacade } from 'models/WebGLArrayBufferFacade';
+import { WebGLElementArrayBufferFacade } from 'models/WebGLElementArrayBufferFacade';
 import { WebGLTextureFacade } from 'models/WebGLTextureFacade';
 
 export class ModelPrototype {
-  public vertexNormalBuffer: WebGLBufferFacade;
-  public vertexTextureCoordsBuffer: WebGLBufferFacade;
-  public vertexPositionBuffer: WebGLBufferFacade;
-  public vertexIndexBuffer: WebGLBufferFacade;
+  public vertexNormalBuffer: WebGLArrayBufferFacade;
+  public vertexTextureCoordsBuffer: WebGLArrayBufferFacade;
+  public vertexPositionBuffer: WebGLArrayBufferFacade;
+  public vertexIndexBuffer: WebGLElementArrayBufferFacade;
 
   public texture: WebGLTextureFacade;
 
   public constructor(
-    vertexNormalBuffer: WebGLBufferFacade,
-    vertexTextureCoordsBuffer: WebGLBufferFacade,
-    vertexPositionBuffer: WebGLBufferFacade,
-    vertexIndexBuffer: WebGLBufferFacade,
+    vertexNormalBuffer: WebGLArrayBufferFacade,
+    vertexTextureCoordsBuffer: WebGLArrayBufferFacade,
+    vertexPositionBuffer: WebGLArrayBufferFacade,
+    vertexIndexBuffer: WebGLElementArrayBufferFacade,
     texture: WebGLTextureFacade
   ) {
     this.vertexNormalBuffer = vertexNormalBuffer;
