@@ -12,5 +12,5 @@ function bootstrap() {
   }
 
   const modelPrototypeLoader = new ModelPrototypeLoader();
-  modelPrototypeLoader.loadModel('models/drawf.json');
+  modelPrototypeLoader.loadModel('models/dwarf.json');
 }
