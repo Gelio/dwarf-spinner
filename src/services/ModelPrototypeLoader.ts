@@ -3,20 +3,27 @@ import expandVertexData = require('expand-vertex-data');
 
 import { BufferUsageType } from 'common/BufferUsageType';
 import { ModelPrototype } from 'models/ModelPrototype';
-import { WebGLBufferFacade } from 'models/WebGLBufferFacade';
+import { WebGLArrayBufferFacade } from 'models/WebGLArrayBufferFacade';
+import { WebGLElementArrayBufferFacade } from 'models/WebGLElementArrayBufferFacade';
 import { WebGLTextureFacade } from 'models/WebGLTextureFacade';
+import { ImageLoader } from 'services/ImageLoader';
 
 export class ModelPrototypeLoader {
   private nextTextureId = 0;
   private readonly gl: WebGLRenderingContext;
+  private readonly imageLoader: ImageLoader;
 
-  public constructor(gl: WebGLRenderingContext) {
+  public constructor(gl: WebGLRenderingContext, imageLoader: ImageLoader) {
     this.gl = gl;
+    this.imageLoader = imageLoader;
   }
 
-  public async loadModelPrototype(sourceUrl: string) {
-    const response = await fetch(sourceUrl);
-    const vertexData = await response.json();
+  public async loadModelPrototype(modelObjUrl: string, textureImageUrl: string) {
+    const [modelObjResponse, textureImage] = await Promise.all([
+      fetch(modelObjUrl),
+      this.imageLoader.loadImage(textureImageUrl)
+    ]);
+    const vertexData = await modelObjResponse.json();
 
     const gl = this.gl;
 
@@ -34,9 +41,10 @@ export class ModelPrototypeLoader {
     );
     const vertexTextureCoordsBuffer = this.createFloat32Buffer(
       gl,
-      expandedVertexData.uvs
+      expandedVertexData.uvs,
+      2
     );
-    const positionIndicesBuffer = new WebGLBufferFacade(
+    const positionIndicesBuffer = new WebGLElementArrayBufferFacade(
       gl,
       new Uint16Array(expandedVertexData.positionIndices),
       1,
@@ -44,14 +52,9 @@ export class ModelPrototypeLoader {
       BufferUsageType.StaticDraw
     );
 
-    const textureImageData = new ImageData(1, 1);
-    textureImageData.data[0] = 1;
-    textureImageData.data[1] = 1;
-    textureImageData.data[2] = 1;
-    textureImageData.data[3] = 1;
     const texture = new WebGLTextureFacade(
       gl,
-      textureImageData,
+      textureImage,
       this.nextTextureId
     );
     this.nextTextureId += 1;
@@ -65,10 +68,8 @@ export class ModelPrototypeLoader {
     );
   }
 
-  private createFloat32Buffer(gl: WebGLRenderingContext, data: number[]) {
-    const itemSize = 3;
-
-    return new WebGLBufferFacade(
+  private createFloat32Buffer(gl: WebGLRenderingContext, data: number[], itemSize: number = 3) {
+    return new WebGLArrayBufferFacade(
       gl,
       new Float32Array(data),
       itemSize,

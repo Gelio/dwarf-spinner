@@ -1,3 +1,5 @@
+declare function require(path: string): any;
+
 declare module 'expand-vertex-data' {
   interface CompressedVertexData {
     vertexPositionIndices: number[];

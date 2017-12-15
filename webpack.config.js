@@ -40,6 +40,10 @@ module.exports = {
         test: /\.ts$/,
         use: ['ts-loader', 'tslint-loader'],
         exclude: /node_modules/
+      },
+      {
+        test: /\.glsl$/,
+        use: 'raw-loader'
       }
     ]
   },
