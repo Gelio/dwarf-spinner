@@ -1,11 +1,8 @@
 import { mat4, vec3 } from 'gl-matrix';
 
-import { BufferUsageType } from 'common/BufferUsageType';
 import { ShaderType } from 'common/ShaderType';
 
 import { Camera } from 'models/Camera';
-import { WebGLArrayBufferFacade } from 'models/WebGLArrayBufferFacade';
-import { WebGLElementArrayBufferFacade } from 'models/WebGLElementArrayBufferFacade';
 import { WebGLProgramFacade } from 'models/WebGLProgramFacade';
 
 import { ImageLoader } from 'services/ImageLoader';
@@ -105,58 +102,6 @@ export class Application {
     gl.uniformMatrix4fv(projectionMatrixUniform, false, projectionMatrix);
 
     modelPrototype.texture.activate(textureSamplerUniform);
-
-    // prettier-ignore
-    const planeVertices = [
-      -5, 0, -5,
-      -5, 0, 5,
-      5, 0, 5,
-      5, 0, -5
-    ];
-
-    const planeVerticesBuffer = new WebGLArrayBufferFacade(
-      gl,
-      new Float32Array(planeVertices),
-      3,
-      4,
-      BufferUsageType.StaticDraw
-    );
-
-    // prettier-ignore
-    const planeIndices = [
-      0, 1, 2,
-      0, 2, 3
-    ];
-
-    const planeIndicesBuffer = new WebGLElementArrayBufferFacade(
-      gl,
-      new Uint16Array(planeIndices),
-      1,
-      6,
-      BufferUsageType.StaticDraw
-    );
-
-    // prettier-ignore
-    const planeTextureCoords = [
-      -5, -5,
-      -5, 5,
-      5, 5,
-      5, -5
-    ];
-
-    const planeTextureCoordsBuffer = new WebGLArrayBufferFacade(
-      gl,
-      new Float32Array(planeTextureCoords),
-      2,
-      4,
-      BufferUsageType.StaticDraw
-    );
-
-    planeTextureCoordsBuffer.bind(textureCoordsAttribute);
-    planeVerticesBuffer.bind(vertexPositionAttribute);
-    planeIndicesBuffer.bind();
-
-    gl.drawElements(gl.TRIANGLES, planeIndicesBuffer.itemsCount, gl.UNSIGNED_SHORT, 0);
 
     mat4.scale(modelMatrix, modelMatrix, [50, 50, 50]);
     mat4.rotateY(modelMatrix, modelMatrix, Math.PI);
