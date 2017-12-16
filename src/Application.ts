@@ -1,5 +1,5 @@
-import { Body, NaiveBroadphase, Plane, Sphere, Vec3, World } from 'cannon';
-import { mat4, vec3 } from 'gl-matrix';
+import { Body, Box, NaiveBroadphase, Plane, Vec3, World } from 'cannon';
+import { mat4, quat, vec3 } from 'gl-matrix';
 
 import { ShaderType } from 'common/ShaderType';
 
@@ -35,7 +35,8 @@ export class Application {
 
   private renderer: Renderer;
 
-  private model: Model;
+  private missile: Model;
+  private bricks: Model;
 
   private world: World;
   private previousRenderTimestamp: number;
@@ -64,7 +65,7 @@ export class Application {
 
     this.initWorld();
 
-    await this.loadModel();
+    await Promise.all([this.loadMissileModel(), this.loadBricksModel()]);
 
     this.render();
   }
@@ -82,26 +83,27 @@ export class Application {
     }
     this.world.step(timeDelta);
 
-    const modelMatrix = this.model.modelMatrix;
-    const modelBody = this.model.body;
+    const modelMatrix = this.missile.modelMatrix;
+    const modelBody = this.missile.body;
 
     mat4.identity(modelMatrix);
     this.matrixTransformer.identity(modelMatrix);
-    this.matrixTransformer.rotate(modelMatrix, modelBody.quaternion.w, [
-      modelBody.quaternion.x,
-      modelBody.quaternion.y,
-      modelBody.quaternion.z
-    ]);
+
+    const quaternion = quat.fromValues(modelBody.quaternion.x, modelBody.quaternion.y, modelBody.quaternion.z, modelBody.quaternion.w);
+    mat4.fromQuat(modelMatrix, quaternion);
     this.matrixTransformer.translate(modelMatrix, [
       modelBody.position.x,
       modelBody.position.z,
       modelBody.position.y
     ]);
-
-    mat4.rotateY(this.model.modelMatrix, this.model.modelMatrix, 0.01);
+    this.camera.targetDirection = vec3.fromValues(modelBody.position.x, modelBody.position.y, modelBody.position.z);
+    this.camera.updateViewMatrix();
+    this.renderer.refreshCamera();
 
     this.renderer.clearCanvas();
-    this.renderer.drawModel(this.model);
+    this.renderer.drawModel(this.missile);
+
+    this.renderer.drawModel(this.bricks);
   }
 
   private loadAttributes() {
@@ -205,26 +207,51 @@ export class Application {
     this.programFacade.use();
   }
 
-  private async loadModel() {
+  private async loadMissileModel() {
     const imageLoader = new ImageLoader();
     const modelPrototypeLoader = new ModelPrototypeLoader(this.gl, imageLoader);
     const modelPrototype = await modelPrototypeLoader.loadModelPrototype(
-      'assets/models/AVMT300-centered.json',
+      'assets/models/AVMT300-centered2.json',
       'assets/textures/missile-texture.jpg'
     );
 
-    const modelBody = new Body({ mass: 500, position: new Vec3(0, 0, 10) });
-    const sphereShape = new Sphere(2);
+    const modelBody = new Body({ mass: 500, position: new Vec3(0, 0, 20) });
+    const sphereShape = new Box(new Vec3(9, 5, 5));
     modelBody.addShape(sphereShape);
     this.world.addBody(modelBody);
 
-    modelBody.angularVelocity.y = 5;
+    // modelBody.angularVelocity.y = -5;
+    modelBody.velocity.z = 20;
     modelBody.angularDamping = 0.5;
 
-    this.model = new Model(modelPrototype, modelBody);
+    this.missile = new Model(modelPrototype, modelBody);
 
     const scaleFactor = 1 / 2;
-    mat4.scale(this.model.modelMatrix, this.model.modelMatrix, [
+    mat4.scale(this.missile.modelMatrix, this.missile.modelMatrix, [
+      scaleFactor,
+      scaleFactor,
+      scaleFactor
+    ]);
+  }
+
+  private async loadBricksModel() {
+    // FIXME: use common ImageLoader and ModelPrototypeLoader
+    const imageLoader = new ImageLoader();
+    const modelPrototypeLoader = new ModelPrototypeLoader(this.gl, imageLoader);
+    const modelPrototype = await modelPrototypeLoader.loadModelPrototype(
+      'assets/models/bricks.json',
+      'assets/textures/bricks.jpg'
+    );
+
+    const groundShape = new Plane();
+    const groundBody = new Body({ mass: 0 });
+    groundBody.addShape(groundShape);
+    this.world.addBody(groundBody);
+
+    this.bricks = new Model(modelPrototype, groundBody);
+
+    const scaleFactor = 3;
+    mat4.scale(this.bricks.modelMatrix, this.bricks.modelMatrix, [
       scaleFactor,
       scaleFactor,
       scaleFactor
@@ -235,11 +262,5 @@ export class Application {
     this.world = new World();
     this.world.gravity.set(0, 0, -9.81);
     this.world.broadphase = new NaiveBroadphase();
-
-    const groundShape = new Plane();
-    const groundBody = new Body({ mass: 0 });
-    groundBody.addShape(groundShape);
-
-    this.world.addBody(groundBody);
   }
 }

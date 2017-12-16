@@ -4,7 +4,7 @@ export class Camera {
   public position: vec3;
   public targetDirection: vec3;
 
-  private upVector = vec3.fromValues(0, 1, 0);
+  private upVector = vec3.fromValues(0, 0, 1);
   private _viewMatrix = mat4.create();
 
   public constructor(position: vec3, targetDirection: vec3) {
