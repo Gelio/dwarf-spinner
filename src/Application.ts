@@ -38,8 +38,8 @@ export class Application {
     this.gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     this.camera = new Camera(
-      vec3.fromValues(1, 10, -15),
-      vec3.fromValues(0, 5, 0)
+      vec3.fromValues(0, 20, -20),
+      vec3.fromValues(0, 0, 0)
     );
   }
 
@@ -51,8 +51,8 @@ export class Application {
     const imageLoader = new ImageLoader();
     const modelPrototypeLoader = new ModelPrototypeLoader(this.gl, imageLoader);
     const modelPrototype = await modelPrototypeLoader.loadModelPrototype(
-      'models/dwarf.json',
-      'models/texture.bmp'
+      'assets/models/missile.json',
+      'assets/textures/missile-texture.jpg'
     );
 
     const program = this.programFacade.program;
@@ -103,7 +103,7 @@ export class Application {
 
     modelPrototype.texture.activate(textureSamplerUniform);
 
-    const scaleFactor = 50;
+    const scaleFactor = 1;
     mat4.scale(modelMatrix, modelMatrix, [scaleFactor, scaleFactor, scaleFactor]);
     mat4.rotateY(modelMatrix, modelMatrix, Math.PI);
     gl.uniformMatrix4fv(modelMatrixUniform, false, modelMatrix);
@@ -121,9 +121,11 @@ export class Application {
 
     function render() {
       requestAnimationFrame(render);
-      mat4.rotateY(modelMatrix, modelMatrix, 0.1);
+      mat4.rotateY(modelMatrix, modelMatrix, 0.01);
       gl.uniformMatrix4fv(modelMatrixUniform, false, modelMatrix);
 
+      // tslint:disable-next-line:no-bitwise
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       gl.drawElements(
         gl.TRIANGLES,
         modelPrototype.vertexIndexBuffer.itemsCount,
