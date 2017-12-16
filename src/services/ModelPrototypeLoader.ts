@@ -1,11 +1,12 @@
 // tslint:disable-next-line:no-require-imports
 import expandVertexData = require('expand-vertex-data');
 
+import { WebGLArrayBufferFacade } from 'facades/WebGLArrayBufferFacade';
+import { WebGLElementArrayBufferFacade } from 'facades/WebGLElementArrayBufferFacade';
+import { WebGLTextureFacade } from 'facades/WebGLTextureFacade';
+
 import { BufferUsageType } from 'common/BufferUsageType';
 import { ModelPrototype } from 'models/ModelPrototype';
-import { WebGLArrayBufferFacade } from 'models/WebGLArrayBufferFacade';
-import { WebGLElementArrayBufferFacade } from 'models/WebGLElementArrayBufferFacade';
-import { WebGLTextureFacade } from 'models/WebGLTextureFacade';
 import { ImageLoader } from 'services/ImageLoader';
 
 export class ModelPrototypeLoader {

@@ -1,13 +1,20 @@
+import { Body } from 'cannon';
 import { mat4, vec3 } from 'gl-matrix';
 
 import { ShaderType } from 'common/ShaderType';
 
+import { WebGLProgramFacade } from 'facades/WebGLProgramFacade';
 import { Camera } from 'models/Camera';
-import { WebGLProgramFacade } from 'models/WebGLProgramFacade';
 
 import { ImageLoader } from 'services/ImageLoader';
 import { ModelPrototypeLoader } from 'services/ModelPrototypeLoader';
+import { ProjectionService } from 'services/ProjectionService';
 import { ShaderCompiler } from 'services/ShaderCompiler';
+
+import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
+import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
+import { Model } from 'models/Model';
+import { Renderer } from 'Renderer';
 
 // tslint:disable no-require-imports import-name no-var-requires
 const fragmentShaderSource = require('./shaders/fragment-shader.glsl');
@@ -18,8 +25,15 @@ export class Application {
   private readonly canvas: HTMLCanvasElement;
   private readonly gl: WebGLRenderingContext;
 
-  private readonly camera: Camera;
+  private camera: Camera;
+  private webGLAttributes: ApplicationWebGLAttributes;
+  private webGLUniforms: ApplicationWebGLUniforms;
   private programFacade: WebGLProgramFacade;
+  private projectionMatrix: mat4;
+
+  private renderer: Renderer;
+
+  private model: Model;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -28,34 +42,38 @@ export class Application {
     if (!gl) {
       throw new Error('WebGL not supported');
     }
-
     this.gl = gl;
 
-    this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.enable(gl.DEPTH_TEST);
-    // tslint:disable-next-line:no-bitwise
-    this.gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-    this.camera = new Camera(
-      vec3.fromValues(0, 20, -20),
-      vec3.fromValues(0, 0, 0)
-    );
+    this.render = this.render.bind(this);
   }
 
-  // tslint:disable-next-line:max-func-body-length
-  public async run() {
-    const gl = this.gl;
+  public async init() {
     this.initProgram();
+    this.loadAttributes();
+    this.loadUniforms();
 
-    const imageLoader = new ImageLoader();
-    const modelPrototypeLoader = new ModelPrototypeLoader(this.gl, imageLoader);
-    const modelPrototype = await modelPrototypeLoader.loadModelPrototype(
-      'assets/models/missile.json',
-      'assets/textures/missile-texture.jpg'
-    );
+    this.initProjectionMatrix();
+    this.initCamera();
+    this.initRenderer();
 
+    await this.loadModel();
+
+    this.render();
+  }
+
+  private render() {
+    requestAnimationFrame(this.render);
+
+    mat4.rotateY(this.model.modelMatrix, this.model.modelMatrix, 0.01);
+
+    this.renderer.clearCanvas();
+    this.renderer.drawModel(this.model);
+  }
+
+  private loadAttributes() {
+    const gl = this.gl;
     const program = this.programFacade.program;
+
     const vertexPositionAttribute = gl.getAttribLocation(
       program,
       'aVertexPosition'
@@ -67,6 +85,16 @@ export class Application {
       'aTextureCoords'
     );
     gl.enableVertexAttribArray(textureCoordsAttribute);
+
+    this.webGLAttributes = {
+      vertexPosition: vertexPositionAttribute,
+      textureCoords: textureCoordsAttribute
+    };
+  }
+
+  private loadUniforms() {
+    const gl = this.gl;
+    const program = this.programFacade.program;
 
     const modelMatrixUniform = <WebGLUniformLocation>gl.getUniformLocation(
       program,
@@ -85,56 +113,42 @@ export class Application {
       'uTextureSampler'
     );
 
-    const projectionMatrix = mat4.create();
-    mat4.perspective(
-      projectionMatrix,
+    this.webGLUniforms = {
+      modelMatrix: modelMatrixUniform,
+      viewMatrix: viewMatrixUniform,
+      projectionMatrix: projectionMatrixUniform,
+      textureSampler: textureSamplerUniform
+    };
+  }
+
+  private initProjectionMatrix() {
+    const projectionService = new ProjectionService();
+    this.projectionMatrix = projectionService.createProjectionMatrix(
       45,
       this.canvas.width / this.canvas.height,
       0.1,
       100
     );
+  }
 
-    const modelMatrix = mat4.create();
-    mat4.identity(modelMatrix);
+  private initCamera() {
+    this.camera = new Camera(
+      vec3.fromValues(0, 20, -20),
+      vec3.fromValues(0, 0, 0)
+    );
+  }
 
-    gl.uniformMatrix4fv(modelMatrixUniform, false, modelMatrix);
-    gl.uniformMatrix4fv(viewMatrixUniform, false, this.camera.viewMatrix);
-    gl.uniformMatrix4fv(projectionMatrixUniform, false, projectionMatrix);
-
-    modelPrototype.texture.activate(textureSamplerUniform);
-
-    const scaleFactor = 1;
-    mat4.scale(modelMatrix, modelMatrix, [scaleFactor, scaleFactor, scaleFactor]);
-    mat4.rotateY(modelMatrix, modelMatrix, Math.PI);
-    gl.uniformMatrix4fv(modelMatrixUniform, false, modelMatrix);
-
-    modelPrototype.vertexPositionBuffer.bind(vertexPositionAttribute);
-    modelPrototype.vertexTextureCoordsBuffer.bind(textureCoordsAttribute);
-
-    modelPrototype.vertexIndexBuffer.bind();
-    gl.drawElements(
-      gl.TRIANGLES,
-      modelPrototype.vertexIndexBuffer.itemsCount,
-      gl.UNSIGNED_SHORT,
-      0
+  private initRenderer() {
+    this.renderer = new Renderer(
+      this.canvas,
+      this.gl,
+      this.projectionMatrix,
+      this.camera,
+      this.webGLAttributes,
+      this.webGLUniforms
     );
 
-    function render() {
-      requestAnimationFrame(render);
-      mat4.rotateY(modelMatrix, modelMatrix, 0.01);
-      gl.uniformMatrix4fv(modelMatrixUniform, false, modelMatrix);
-
-      // tslint:disable-next-line:no-bitwise
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-      gl.drawElements(
-        gl.TRIANGLES,
-        modelPrototype.vertexIndexBuffer.itemsCount,
-        gl.UNSIGNED_SHORT,
-        0
-      );
-    }
-
-    requestAnimationFrame(render);
+    this.renderer.init();
   }
 
   private initProgram() {
@@ -155,5 +169,23 @@ export class Application {
       fragmentShader
     );
     this.programFacade.use();
+  }
+
+  private async loadModel() {
+    const imageLoader = new ImageLoader();
+    const modelPrototypeLoader = new ModelPrototypeLoader(this.gl, imageLoader);
+    const modelPrototype = await modelPrototypeLoader.loadModelPrototype(
+      'assets/models/AVMT300-centered.json',
+      'assets/textures/missile-texture.jpg'
+    );
+
+    this.model = new Model(modelPrototype, new Body());
+
+    const scaleFactor = 1 / 2;
+    mat4.scale(this.model.modelMatrix, this.model.modelMatrix, [
+      scaleFactor,
+      scaleFactor,
+      scaleFactor
+    ]);
   }
 }

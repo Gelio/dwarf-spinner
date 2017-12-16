@@ -1,14 +1,18 @@
-import { WebGLArrayBufferFacade } from 'models/WebGLArrayBufferFacade';
-import { WebGLElementArrayBufferFacade } from 'models/WebGLElementArrayBufferFacade';
-import { WebGLTextureFacade } from 'models/WebGLTextureFacade';
+import { mat4 } from 'gl-matrix';
+
+import { WebGLArrayBufferFacade } from 'facades/WebGLArrayBufferFacade';
+import { WebGLElementArrayBufferFacade } from 'facades/WebGLElementArrayBufferFacade';
+import { WebGLTextureFacade } from 'facades/WebGLTextureFacade';
 
 export class ModelPrototype {
-  public vertexNormalBuffer: WebGLArrayBufferFacade;
-  public vertexTextureCoordsBuffer: WebGLArrayBufferFacade;
-  public vertexPositionBuffer: WebGLArrayBufferFacade;
-  public vertexIndexBuffer: WebGLElementArrayBufferFacade;
+  public readonly vertexNormalBuffer: WebGLArrayBufferFacade;
+  public readonly vertexTextureCoordsBuffer: WebGLArrayBufferFacade;
+  public readonly vertexPositionBuffer: WebGLArrayBufferFacade;
+  public readonly vertexIndexBuffer: WebGLElementArrayBufferFacade;
 
-  public texture: WebGLTextureFacade;
+  public readonly texture: WebGLTextureFacade;
+
+  public readonly modelMatrix: mat4;
 
   public constructor(
     vertexNormalBuffer: WebGLArrayBufferFacade,
@@ -23,5 +27,7 @@ export class ModelPrototype {
     this.vertexIndexBuffer = vertexIndexBuffer;
 
     this.texture = texture;
+
+    this.modelMatrix = mat4.identity(mat4.create());
   }
 }
