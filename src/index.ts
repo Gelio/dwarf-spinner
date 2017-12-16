@@ -13,5 +13,5 @@ function bootstrap() {
   }
 
   const application = new Application(mainCanvas);
-  application.run();
+  application.init();
 }
