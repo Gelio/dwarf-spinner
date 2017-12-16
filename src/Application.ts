@@ -1,4 +1,4 @@
-import { Body } from 'cannon';
+import { Body, NaiveBroadphase, Plane, Sphere, Vec3, World } from 'cannon';
 import { mat4, vec3 } from 'gl-matrix';
 
 import { ShaderType } from 'common/ShaderType';
@@ -7,6 +7,7 @@ import { WebGLProgramFacade } from 'facades/WebGLProgramFacade';
 import { Camera } from 'models/Camera';
 
 import { ImageLoader } from 'services/ImageLoader';
+import { MatrixTransformer } from 'services/MatrixTransformer';
 import { ModelPrototypeLoader } from 'services/ModelPrototypeLoader';
 import { ProjectionService } from 'services/ProjectionService';
 import { ShaderCompiler } from 'services/ShaderCompiler';
@@ -24,6 +25,7 @@ const vertexShaderSource = require('./shaders/vertex-shader.glsl');
 export class Application {
   private readonly canvas: HTMLCanvasElement;
   private readonly gl: WebGLRenderingContext;
+  private readonly matrixTransformer: MatrixTransformer;
 
   private camera: Camera;
   private webGLAttributes: ApplicationWebGLAttributes;
@@ -35,6 +37,9 @@ export class Application {
 
   private model: Model;
 
+  private world: World;
+  private previousRenderTimestamp: number;
+
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
 
@@ -45,6 +50,7 @@ export class Application {
     this.gl = gl;
 
     this.render = this.render.bind(this);
+    this.matrixTransformer = new MatrixTransformer();
   }
 
   public async init() {
@@ -56,13 +62,41 @@ export class Application {
     this.initCamera();
     this.initRenderer();
 
+    this.initWorld();
+
     await this.loadModel();
 
     this.render();
   }
 
-  private render() {
+  private render(timestamp?: number) {
     requestAnimationFrame(this.render);
+
+    let timeDelta = 0;
+    if (timestamp) {
+      if (this.previousRenderTimestamp) {
+        timeDelta = (timestamp - this.previousRenderTimestamp) / 1000;
+      }
+
+      this.previousRenderTimestamp = timestamp;
+    }
+    this.world.step(timeDelta);
+
+    const modelMatrix = this.model.modelMatrix;
+    const modelBody = this.model.body;
+
+    mat4.identity(modelMatrix);
+    this.matrixTransformer.identity(modelMatrix);
+    this.matrixTransformer.rotate(modelMatrix, modelBody.quaternion.w, [
+      modelBody.quaternion.x,
+      modelBody.quaternion.y,
+      modelBody.quaternion.z
+    ]);
+    this.matrixTransformer.translate(modelMatrix, [
+      modelBody.position.x,
+      modelBody.position.z,
+      modelBody.position.y
+    ]);
 
     mat4.rotateY(this.model.modelMatrix, this.model.modelMatrix, 0.01);
 
@@ -179,7 +213,15 @@ export class Application {
       'assets/textures/missile-texture.jpg'
     );
 
-    this.model = new Model(modelPrototype, new Body());
+    const modelBody = new Body({ mass: 500, position: new Vec3(0, 0, 10) });
+    const sphereShape = new Sphere(2);
+    modelBody.addShape(sphereShape);
+    this.world.addBody(modelBody);
+
+    modelBody.angularVelocity.y = 5;
+    modelBody.angularDamping = 0.5;
+
+    this.model = new Model(modelPrototype, modelBody);
 
     const scaleFactor = 1 / 2;
     mat4.scale(this.model.modelMatrix, this.model.modelMatrix, [
@@ -187,5 +229,17 @@ export class Application {
       scaleFactor,
       scaleFactor
     ]);
+  }
+
+  private initWorld() {
+    this.world = new World();
+    this.world.gravity.set(0, 0, -9.81);
+    this.world.broadphase = new NaiveBroadphase();
+
+    const groundShape = new Plane();
+    const groundBody = new Body({ mass: 0 });
+    groundBody.addShape(groundShape);
+
+    this.world.addBody(groundBody);
   }
 }
