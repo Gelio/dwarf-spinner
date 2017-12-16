@@ -12,4 +12,8 @@ export class MatrixTransformer {
   public rotate(matrix: mat4, radians: number, axis: number[]) {
     mat4.rotate(matrix, matrix, radians, axis);
   }
+
+  public identity(matrix: mat4) {
+    mat4.identity(matrix);
+  }
 }
