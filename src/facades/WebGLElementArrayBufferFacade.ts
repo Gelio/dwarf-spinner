@@ -1,6 +1,6 @@
 import { BufferUsageType } from 'common/BufferUsageType';
 
-import { WebGLBufferFacade } from 'models/WebGLBufferFacade';
+import { WebGLBufferFacade } from 'facades/WebGLBufferFacade';
 
 export class WebGLElementArrayBufferFacade extends WebGLBufferFacade {
   public constructor(
@@ -16,7 +16,7 @@ export class WebGLElementArrayBufferFacade extends WebGLBufferFacade {
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, data, usageType);
   }
 
-  public bind() {
+  public bindBuffer() {
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffer);
   }
 }
