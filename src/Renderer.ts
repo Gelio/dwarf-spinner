@@ -1,10 +1,8 @@
 import { mat4 } from 'gl-matrix';
 
-import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
-import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
-
 import { Camera } from 'models/Camera';
 import { Model } from 'models/Model';
+import { WebGLBinder } from 'WebGLBinder';
 
 export class Renderer {
   private readonly canvas: HTMLCanvasElement;
@@ -12,26 +10,21 @@ export class Renderer {
 
   private readonly projectionMatrix: mat4;
   private readonly camera: Camera;
-
-  private readonly attributes: ApplicationWebGLAttributes;
-  private readonly uniforms: ApplicationWebGLUniforms;
+  private readonly webGLBinder: WebGLBinder;
 
   public constructor(
     canvas: HTMLCanvasElement,
     gl: WebGLRenderingContext,
     projectionMatrix: mat4,
     camera: Camera,
-    attributes: ApplicationWebGLAttributes,
-    uniforms: ApplicationWebGLUniforms
+    webGLBinder: WebGLBinder
   ) {
     this.canvas = canvas;
     this.gl = gl;
 
     this.projectionMatrix = projectionMatrix;
     this.camera = camera;
-
-    this.attributes = attributes;
-    this.uniforms = uniforms;
+    this.webGLBinder = webGLBinder;
   }
 
   public init() {
@@ -43,19 +36,12 @@ export class Renderer {
     this.clearCanvas();
     this.refreshCamera();
 
-    gl.uniformMatrix4fv(
-      this.uniforms.projectionMatrix,
-      false,
-      this.projectionMatrix
-    );
+    this.webGLBinder.bindProjectionMatrix(this.projectionMatrix);
   }
 
   public refreshCamera() {
-    this.gl.uniformMatrix4fv(
-      this.uniforms.viewMatrix,
-      false,
-      this.camera.viewMatrix
-    );
+    this.camera.updateViewMatrix();
+    this.webGLBinder.bindViewMatrix(this.camera.viewMatrix);
   }
 
   public clearCanvas() {
@@ -66,25 +52,6 @@ export class Renderer {
   }
 
   public drawModel(model: Model) {
-    const { gl, uniforms, attributes } = this;
-    const modelPrototype = model.modelPrototype;
-
-    modelPrototype.texture.activate(uniforms.textureSampler);
-
-    modelPrototype.vertexPositionBuffer.bindBuffer(attributes.vertexPosition);
-    modelPrototype.vertexTextureCoordsBuffer.bindBuffer(
-      attributes.textureCoords
-    );
-
-    modelPrototype.vertexIndexBuffer.bindBuffer();
-
-    gl.uniformMatrix4fv(uniforms.modelMatrix, false, model.modelMatrix);
-
-    gl.drawElements(
-      gl.TRIANGLES,
-      modelPrototype.vertexIndexBuffer.itemsCount,
-      gl.UNSIGNED_SHORT,
-      0
-    );
+    model.draw(this.gl, this.webGLBinder);
   }
 }
