@@ -1,5 +1,5 @@
 import { Body, Box, NaiveBroadphase, Plane, Vec3, World } from 'cannon';
-import { mat4, vec3 } from 'gl-matrix';
+import { mat4 } from 'gl-matrix';
 
 import { ShaderType } from 'common/ShaderType';
 
@@ -16,6 +16,7 @@ import { WebGLBinder } from 'services/WebGLBinder';
 
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
+import { CoordinateConverter } from 'services/CoordinateConverter';
 
 // tslint:disable no-require-imports import-name no-var-requires
 const fragmentShaderSource = require('./shaders/fragment-shader.glsl');
@@ -35,8 +36,7 @@ export class Application {
 
   private renderer: Renderer;
 
-  private missile: Model;
-  private bricks: Model;
+  private models: Model[] = [];
 
   private world: World;
   private previousRenderTimestamp: number;
@@ -65,7 +65,11 @@ export class Application {
 
     this.initWorld();
 
-    await Promise.all([this.loadMissileModel(), this.loadBricksModel()]);
+    await Promise.all([
+      this.loadMissileModel(),
+      this.loadBricksModel(),
+      this.loadCubeModel()
+    ]);
 
     this.render();
   }
@@ -83,15 +87,14 @@ export class Application {
     }
     this.world.step(timeDelta);
 
-    const missilePosition = this.missile.body.position;
+    const targetPosition = this.models[0].body.position;
 
-    this.camera.targetDirection = vec3.fromValues(missilePosition.x, missilePosition.y, missilePosition.z);
+    CoordinateConverter.physicsToRendering(this.camera.target, targetPosition);
     this.renderer.refreshCamera();
 
     this.renderer.clearCanvas();
-    this.renderer.drawModel(this.missile);
 
-    this.renderer.drawModel(this.bricks);
+    this.models.forEach(model => this.renderer.drawModel(model));
   }
 
   private loadAttributes() {
@@ -156,9 +159,12 @@ export class Application {
   }
 
   private initCamera() {
+    const position = new Vec3(0, -5, 2);
+    const target = new Vec3(0, 0, 0);
+
     this.camera = new Camera(
-      vec3.fromValues(0, 20, -20),
-      vec3.fromValues(0, 0, 0)
+      CoordinateConverter.physicsToRendering(position),
+      CoordinateConverter.physicsToRendering(target)
     );
   }
 
@@ -175,7 +181,11 @@ export class Application {
   }
 
   private initWebGLBinder() {
-    this.webGLBinder = new WebGLBinder(this.gl, this.webGLUniforms, this.webGLAttributes);
+    this.webGLBinder = new WebGLBinder(
+      this.gl,
+      this.webGLUniforms,
+      this.webGLAttributes
+    );
   }
 
   private initProgram() {
@@ -205,18 +215,22 @@ export class Application {
       'assets/models/AVMT300-centered2.json',
       'assets/textures/missile-texture.jpg'
     );
-    mat4.scale(modelPrototype.modelMatrix, modelPrototype.modelMatrix, [0.5, 0.5, 0.5]);
 
-    const modelBody = new Body({ mass: 500, position: new Vec3(0, 0, 20) });
-    const sphereShape = new Box(new Vec3(9, 5, 5));
-    modelBody.addShape(sphereShape);
-    this.world.addBody(modelBody);
+    const scaleVector = CoordinateConverter.physicsToRendering(new Vec3(0.5, 0.5, 0.5));
 
-    modelBody.angularVelocity.y = -5;
-    modelBody.velocity.z = 20;
-    modelBody.angularDamping = 0.5;
+    mat4.scale(modelPrototype.modelMatrix, modelPrototype.modelMatrix, scaleVector);
 
-    this.missile = new Model(modelPrototype, modelBody);
+    // const modelBody = new Body({ mass: 500, position: new Vec3(0, 0, 20) });
+    // const sphereShape = new Box(new Vec3(9, 5, 5));
+    // modelBody.addShape(sphereShape);
+    // this.world.addBody(modelBody);
+
+    // modelBody.angularVelocity.y = -5;
+    // modelBody.velocity.z = 20;
+    // modelBody.angularDamping = 0.5;
+
+    // const missile = new Model(modelPrototype, modelBody);
+    // this.models.push(missile);
   }
 
   private async loadBricksModel() {
@@ -228,14 +242,42 @@ export class Application {
       'assets/textures/bricks.jpg'
     );
 
-    mat4.scale(modelPrototype.modelMatrix, modelPrototype.modelMatrix, [3, 3, 3]);
+    const scaleVector = CoordinateConverter.physicsToRendering(new Vec3(1, 1, 0.01));
+    mat4.scale(modelPrototype.modelMatrix, modelPrototype.modelMatrix, scaleVector);
 
     const groundShape = new Plane();
     const groundBody = new Body({ mass: 0 });
     groundBody.addShape(groundShape);
     this.world.addBody(groundBody);
 
-    this.bricks = new Model(modelPrototype, groundBody);
+    const bricks = new Model(modelPrototype, groundBody);
+    this.models.push(bricks);
+  }
+
+  private async loadCubeModel() {
+    // FIXME: use common ImageLoader and ModelPrototypeLoader
+    const imageLoader = new ImageLoader();
+    const modelPrototypeLoader = new ModelPrototypeLoader(this.gl, imageLoader);
+    const modelPrototype = await modelPrototypeLoader.loadModelPrototype(
+      'assets/models/cube.json',
+      'assets/textures/f16-texture.bmp'
+    );
+
+    const scaleVector = CoordinateConverter.physicsToRendering(new Vec3(1, 1, 1));
+    mat4.scale(modelPrototype.modelMatrix, modelPrototype.modelMatrix, scaleVector);
+
+    const modelBody = new Body({ mass: 5, position: new Vec3(0, 0, 5) });
+    const shape = new Box(new Vec3(0.5, 0.5, 0.5));
+    modelBody.addShape(shape);
+    this.world.addBody(modelBody);
+
+    // modelBody.velocity.z = 5;
+    // modelBody.velocity.x = 5;
+    // modelBody.velocity.y = -1;
+    // modelBody.angularVelocity.z = 5;
+
+    const cube = new Model(modelPrototype, modelBody);
+    this.models.push(cube);
   }
 
   private initWorld() {

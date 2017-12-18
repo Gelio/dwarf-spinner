@@ -3,6 +3,7 @@ import { mat4, quat } from 'gl-matrix';
 
 import { ModelPrototype } from 'models/ModelPrototype';
 
+import { CoordinateConverter } from 'services/CoordinateConverter';
 import { WebGLBinder } from 'services/WebGLBinder';
 
 export class Model {
@@ -36,15 +37,17 @@ export class Model {
   private updateModelMatrixFromBody() {
     const { body } = this;
 
-    const quaternion = quat.fromValues(body.quaternion.x, body.quaternion.y, body.quaternion.z, body.quaternion.w);
-    const quaternionMatrix = mat4.fromQuat(this.modelMatrix, quaternion);
+    const translationVector = CoordinateConverter.physicsToRendering(body.position);
 
-    mat4.mul(this.modelMatrix, quaternionMatrix, this.modelPrototype.modelMatrix);
+    // Same coordinates swap as in CoordinateConverter.
+    const quaternion = quat.fromValues(
+      -body.quaternion.x,
+      body.quaternion.z,
+      body.quaternion.y,
+      body.quaternion.w
+    );
 
-    mat4.translate(this.modelMatrix, this.modelMatrix, [
-      body.position.x,
-      body.position.z,
-      body.position.y
-    ]);
+    mat4.fromRotationTranslation(this.modelMatrix, quaternion, translationVector);
+    mat4.multiply(this.modelMatrix, this.modelMatrix, this.modelPrototype.modelMatrix);
   }
 }
