@@ -8,7 +8,6 @@ import { Camera } from 'models/Camera';
 import { Model } from 'models/Model';
 
 import { ImageLoader } from 'services/ImageLoader';
-import { MatrixTransformer } from 'services/MatrixTransformer';
 import { ModelPrototypeLoader } from 'services/ModelPrototypeLoader';
 import { ProjectionService } from 'services/ProjectionService';
 import { ShaderCompiler } from 'services/ShaderCompiler';
@@ -26,7 +25,6 @@ const vertexShaderSource = require('./shaders/vertex-shader.glsl');
 export class Application {
   private readonly canvas: HTMLCanvasElement;
   private readonly gl: WebGLRenderingContext;
-  private readonly matrixTransformer: MatrixTransformer;
 
   private camera: Camera;
   private webGLAttributes: ApplicationWebGLAttributes;
@@ -53,7 +51,6 @@ export class Application {
     this.gl = gl;
 
     this.render = this.render.bind(this);
-    this.matrixTransformer = new MatrixTransformer();
   }
 
   public async init() {
@@ -208,7 +205,7 @@ export class Application {
       'assets/models/AVMT300-centered2.json',
       'assets/textures/missile-texture.jpg'
     );
-    this.matrixTransformer.scale(modelPrototype.modelMatrix, [0.5, 0.5, 0.5]);
+    mat4.scale(modelPrototype.modelMatrix, modelPrototype.modelMatrix, [0.5, 0.5, 0.5]);
 
     const modelBody = new Body({ mass: 500, position: new Vec3(0, 0, 20) });
     const sphereShape = new Box(new Vec3(9, 5, 5));
@@ -219,7 +216,7 @@ export class Application {
     modelBody.velocity.z = 20;
     modelBody.angularDamping = 0.5;
 
-    this.missile = new Model(this.matrixTransformer, modelPrototype, modelBody);
+    this.missile = new Model(modelPrototype, modelBody);
   }
 
   private async loadBricksModel() {
@@ -231,14 +228,14 @@ export class Application {
       'assets/textures/bricks.jpg'
     );
 
-    this.matrixTransformer.scale(modelPrototype.modelMatrix, [3, 3, 3]);
+    mat4.scale(modelPrototype.modelMatrix, modelPrototype.modelMatrix, [3, 3, 3]);
 
     const groundShape = new Plane();
     const groundBody = new Body({ mass: 0 });
     groundBody.addShape(groundShape);
     this.world.addBody(groundBody);
 
-    this.bricks = new Model(this.matrixTransformer, modelPrototype, groundBody);
+    this.bricks = new Model(modelPrototype, groundBody);
   }
 
   private initWorld() {
