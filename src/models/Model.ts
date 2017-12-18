@@ -36,15 +36,19 @@ export class Model {
   private updateModelMatrixFromBody() {
     const { body } = this;
 
-    const quaternion = quat.fromValues(body.quaternion.x, body.quaternion.y, body.quaternion.z, body.quaternion.w);
-    const quaternionMatrix = mat4.fromQuat(this.modelMatrix, quaternion);
-
-    mat4.mul(this.modelMatrix, quaternionMatrix, this.modelPrototype.modelMatrix);
-
-    mat4.translate(this.modelMatrix, this.modelMatrix, [
-      body.position.x,
+    const translationVector = [
+      -body.position.x,
       body.position.z,
       body.position.y
-    ]);
+    ];
+
+    const quaternion = quat.fromValues(
+      -body.quaternion.x,
+      body.quaternion.z,
+      body.quaternion.y,
+      body.quaternion.w
+    );
+
+    mat4.fromRotationTranslation(this.modelMatrix, quaternion, translationVector);
   }
 }
