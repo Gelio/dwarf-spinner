@@ -10,12 +10,12 @@ import { Model } from 'models/Model';
 import { ImageLoader } from 'services/ImageLoader';
 import { ModelPrototypeLoader } from 'services/ModelPrototypeLoader';
 import { ProjectionService } from 'services/ProjectionService';
+import { Renderer } from 'services/Renderer';
 import { ShaderCompiler } from 'services/ShaderCompiler';
+import { WebGLBinder } from 'services/WebGLBinder';
 
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
-import { Renderer } from 'Renderer';
-import { WebGLBinder } from 'WebGLBinder';
 
 // tslint:disable no-require-imports import-name no-var-requires
 const fragmentShaderSource = require('./shaders/fragment-shader.glsl');

@@ -3,7 +3,7 @@ import { mat4, quat } from 'gl-matrix';
 
 import { ModelPrototype } from 'models/ModelPrototype';
 
-import { WebGLBinder } from 'WebGLBinder';
+import { WebGLBinder } from 'services/WebGLBinder';
 
 export class Model {
   public readonly modelPrototype: ModelPrototype;

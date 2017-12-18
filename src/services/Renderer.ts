@@ -2,7 +2,8 @@ import { mat4 } from 'gl-matrix';
 
 import { Camera } from 'models/Camera';
 import { Model } from 'models/Model';
-import { WebGLBinder } from 'WebGLBinder';
+
+import { WebGLBinder } from 'services/WebGLBinder';
 
 export class Renderer {
   private readonly canvas: HTMLCanvasElement;

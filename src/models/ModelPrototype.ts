@@ -3,7 +3,7 @@ import { mat4 } from 'gl-matrix';
 import { WebGLArrayBufferFacade } from 'facades/WebGLArrayBufferFacade';
 import { WebGLElementArrayBufferFacade } from 'facades/WebGLElementArrayBufferFacade';
 import { WebGLTextureFacade } from 'facades/WebGLTextureFacade';
-import { WebGLBinder } from 'WebGLBinder';
+import { WebGLBinder } from 'services/WebGLBinder';
 
 export class ModelPrototype {
   public readonly vertexNormalBuffer: WebGLArrayBufferFacade;
