@@ -3,7 +3,6 @@ import { mat4, quat } from 'gl-matrix';
 
 import { ModelPrototype } from 'models/ModelPrototype';
 
-import { MatrixTransformer } from 'services/MatrixTransformer';
 import { WebGLBinder } from 'WebGLBinder';
 
 export class Model {
@@ -13,10 +12,7 @@ export class Model {
 
   public readonly modelMatrix: mat4;
 
-  private readonly matrixTransformer: MatrixTransformer;
-
-  public constructor(matrixTransformer: MatrixTransformer, modelPrototype: ModelPrototype, body: Body) {
-    this.matrixTransformer = matrixTransformer;
+  public constructor(modelPrototype: ModelPrototype, body: Body) {
     this.modelPrototype = modelPrototype;
     this.body = body;
 
@@ -45,7 +41,7 @@ export class Model {
 
     mat4.mul(this.modelMatrix, quaternionMatrix, this.modelPrototype.modelMatrix);
 
-    this.matrixTransformer.translate(this.modelMatrix, [
+    mat4.translate(this.modelMatrix, this.modelMatrix, [
       body.position.x,
       body.position.z,
       body.position.y
