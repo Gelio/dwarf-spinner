@@ -1,10 +1,11 @@
 import { Body, Box, NaiveBroadphase, Plane, Vec3, World } from 'cannon';
-import { mat4, quat, vec3 } from 'gl-matrix';
+import { mat4, vec3 } from 'gl-matrix';
 
 import { ShaderType } from 'common/ShaderType';
 
 import { WebGLProgramFacade } from 'facades/WebGLProgramFacade';
 import { Camera } from 'models/Camera';
+import { Model } from 'models/Model';
 
 import { ImageLoader } from 'services/ImageLoader';
 import { MatrixTransformer } from 'services/MatrixTransformer';
@@ -14,8 +15,8 @@ import { ShaderCompiler } from 'services/ShaderCompiler';
 
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
-import { Model } from 'models/Model';
 import { Renderer } from 'Renderer';
+import { WebGLBinder } from 'WebGLBinder';
 
 // tslint:disable no-require-imports import-name no-var-requires
 const fragmentShaderSource = require('./shaders/fragment-shader.glsl');
@@ -30,6 +31,7 @@ export class Application {
   private camera: Camera;
   private webGLAttributes: ApplicationWebGLAttributes;
   private webGLUniforms: ApplicationWebGLUniforms;
+  private webGLBinder: WebGLBinder;
   private programFacade: WebGLProgramFacade;
   private projectionMatrix: mat4;
 
@@ -58,6 +60,7 @@ export class Application {
     this.initProgram();
     this.loadAttributes();
     this.loadUniforms();
+    this.initWebGLBinder();
 
     this.initProjectionMatrix();
     this.initCamera();
@@ -83,21 +86,9 @@ export class Application {
     }
     this.world.step(timeDelta);
 
-    const modelMatrix = this.missile.modelMatrix;
-    const modelBody = this.missile.body;
+    const missilePosition = this.missile.body.position;
 
-    mat4.identity(modelMatrix);
-    this.matrixTransformer.identity(modelMatrix);
-
-    const quaternion = quat.fromValues(modelBody.quaternion.x, modelBody.quaternion.y, modelBody.quaternion.z, modelBody.quaternion.w);
-    mat4.fromQuat(modelMatrix, quaternion);
-    this.matrixTransformer.translate(modelMatrix, [
-      modelBody.position.x,
-      modelBody.position.z,
-      modelBody.position.y
-    ]);
-    this.camera.targetDirection = vec3.fromValues(modelBody.position.x, modelBody.position.y, modelBody.position.z);
-    this.camera.updateViewMatrix();
+    this.camera.targetDirection = vec3.fromValues(missilePosition.x, missilePosition.y, missilePosition.z);
     this.renderer.refreshCamera();
 
     this.renderer.clearCanvas();
@@ -180,11 +171,14 @@ export class Application {
       this.gl,
       this.projectionMatrix,
       this.camera,
-      this.webGLAttributes,
-      this.webGLUniforms
+      this.webGLBinder
     );
 
     this.renderer.init();
+  }
+
+  private initWebGLBinder() {
+    this.webGLBinder = new WebGLBinder(this.gl, this.webGLUniforms, this.webGLAttributes);
   }
 
   private initProgram() {
@@ -214,24 +208,18 @@ export class Application {
       'assets/models/AVMT300-centered2.json',
       'assets/textures/missile-texture.jpg'
     );
+    this.matrixTransformer.scale(modelPrototype.modelMatrix, [0.5, 0.5, 0.5]);
 
     const modelBody = new Body({ mass: 500, position: new Vec3(0, 0, 20) });
     const sphereShape = new Box(new Vec3(9, 5, 5));
     modelBody.addShape(sphereShape);
     this.world.addBody(modelBody);
 
-    // modelBody.angularVelocity.y = -5;
+    modelBody.angularVelocity.y = -5;
     modelBody.velocity.z = 20;
     modelBody.angularDamping = 0.5;
 
-    this.missile = new Model(modelPrototype, modelBody);
-
-    const scaleFactor = 1 / 2;
-    mat4.scale(this.missile.modelMatrix, this.missile.modelMatrix, [
-      scaleFactor,
-      scaleFactor,
-      scaleFactor
-    ]);
+    this.missile = new Model(this.matrixTransformer, modelPrototype, modelBody);
   }
 
   private async loadBricksModel() {
@@ -243,19 +231,14 @@ export class Application {
       'assets/textures/bricks.jpg'
     );
 
+    this.matrixTransformer.scale(modelPrototype.modelMatrix, [3, 3, 3]);
+
     const groundShape = new Plane();
     const groundBody = new Body({ mass: 0 });
     groundBody.addShape(groundShape);
     this.world.addBody(groundBody);
 
-    this.bricks = new Model(modelPrototype, groundBody);
-
-    const scaleFactor = 3;
-    mat4.scale(this.bricks.modelMatrix, this.bricks.modelMatrix, [
-      scaleFactor,
-      scaleFactor,
-      scaleFactor
-    ]);
+    this.bricks = new Model(this.matrixTransformer, modelPrototype, groundBody);
   }
 
   private initWorld() {
