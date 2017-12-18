@@ -3,6 +3,7 @@ import { mat4 } from 'gl-matrix';
 import { WebGLArrayBufferFacade } from 'facades/WebGLArrayBufferFacade';
 import { WebGLElementArrayBufferFacade } from 'facades/WebGLElementArrayBufferFacade';
 import { WebGLTextureFacade } from 'facades/WebGLTextureFacade';
+import { WebGLBinder } from 'WebGLBinder';
 
 export class ModelPrototype {
   public readonly vertexNormalBuffer: WebGLArrayBufferFacade;
@@ -29,5 +30,23 @@ export class ModelPrototype {
     this.texture = texture;
 
     this.modelMatrix = mat4.identity(mat4.create());
+  }
+
+  public bindBuffersAndTexture(webGLBinder: WebGLBinder) {
+    this.bindBuffers(webGLBinder);
+    this.bindTexture(webGLBinder);
+  }
+
+  private bindBuffers(webGLBinder: WebGLBinder) {
+    const { vertexIndexBuffer, vertexNormalBuffer, vertexPositionBuffer, vertexTextureCoordsBuffer } = this;
+
+    webGLBinder.bindTextureCoordsBuffer(vertexTextureCoordsBuffer);
+    webGLBinder.bindVertexPositionBuffer(vertexPositionBuffer);
+    webGLBinder.bindVertexNormalBuffer(vertexNormalBuffer);
+    webGLBinder.bindVertexIndexBuffer(vertexIndexBuffer);
+  }
+
+  private bindTexture(webGLBinder: WebGLBinder) {
+    webGLBinder.bindTexture(this.texture);
   }
 }
