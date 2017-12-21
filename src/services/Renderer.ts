@@ -1,7 +1,7 @@
 import { mat4 } from 'gl-matrix';
 
+import { Model } from 'interfaces/Model';
 import { Camera } from 'models/Camera';
-import { Model } from 'models/Model';
 
 import { WebGLBinder } from 'services/WebGLBinder';
 
