@@ -1,6 +1,8 @@
 import { NaiveBroadphase, Vec3, World } from 'cannon';
 import { mat4 } from 'gl-matrix';
 
+import { configuration } from 'configuration';
+
 import { ShaderType } from 'common/ShaderType';
 
 import { WebGLProgramFacade } from 'facades/WebGLProgramFacade';
@@ -78,6 +80,7 @@ export class Application {
 
       this.previousRenderTimestamp = timestamp;
     }
+    timeDelta = Math.min(timeDelta, configuration.maxPhysicsWorldTimeAdvance);
     this.world.physicsWorld.step(timeDelta);
 
     const targetPosition = this.world.dwarf.body.position;
