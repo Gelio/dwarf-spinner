@@ -5,8 +5,9 @@ import { ShaderType } from 'common/ShaderType';
 
 import { WebGLProgramFacade } from 'facades/WebGLProgramFacade';
 import { Camera } from 'models/Camera';
-import { Model } from 'models/Model';
+import { PhysicalModel } from 'models/PhysicalModel';
 
+import { CoordinateConverter } from 'services/CoordinateConverter';
 import { ImageLoader } from 'services/ImageLoader';
 import { ModelPrototypeLoader } from 'services/ModelPrototypeLoader';
 import { ProjectionService } from 'services/ProjectionService';
@@ -16,7 +17,8 @@ import { WebGLBinder } from 'services/WebGLBinder';
 
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
-import { CoordinateConverter } from 'services/CoordinateConverter';
+import { Model } from 'interfaces/Model';
+import { BodilessModel } from 'models/BodilessModel';
 
 // tslint:disable no-require-imports import-name no-var-requires
 const fragmentShaderSource = require('./shaders/fragment-shader.glsl');
@@ -37,6 +39,7 @@ export class Application {
   private renderer: Renderer;
 
   private models: Model[] = [];
+  private cameraTarget: PhysicalModel;
 
   private world: World;
   private previousRenderTimestamp: number;
@@ -67,7 +70,7 @@ export class Application {
 
     await Promise.all([
       this.loadMissileModel(),
-      this.loadBricksModel(),
+      this.loadGroundModel(),
       this.loadCubeModel()
     ]);
 
@@ -87,7 +90,7 @@ export class Application {
     }
     this.world.step(timeDelta);
 
-    const targetPosition = this.models[0].body.position;
+    const targetPosition = this.cameraTarget.body.position;
 
     CoordinateConverter.physicsToRendering(this.camera.target, targetPosition);
     this.renderer.refreshCamera();
@@ -216,9 +219,15 @@ export class Application {
       'assets/textures/missile-texture.jpg'
     );
 
-    const scaleVector = CoordinateConverter.physicsToRendering(new Vec3(0.5, 0.5, 0.5));
+    const scaleVector = CoordinateConverter.physicsToRendering(
+      new Vec3(0.5, 0.5, 0.5)
+    );
 
-    mat4.scale(modelPrototype.modelMatrix, modelPrototype.modelMatrix, scaleVector);
+    mat4.scale(
+      modelPrototype.modelMatrix,
+      modelPrototype.modelMatrix,
+      scaleVector
+    );
 
     // const modelBody = new Body({ mass: 500, position: new Vec3(0, 0, 20) });
     // const sphereShape = new Box(new Vec3(9, 5, 5));
@@ -233,25 +242,39 @@ export class Application {
     // this.models.push(missile);
   }
 
-  private async loadBricksModel() {
+  private async loadGroundModel() {
     // FIXME: use common ImageLoader and ModelPrototypeLoader
     const imageLoader = new ImageLoader();
     const modelPrototypeLoader = new ModelPrototypeLoader(this.gl, imageLoader);
     const modelPrototype = await modelPrototypeLoader.loadModelPrototype(
-      'assets/models/bricks.json',
-      'assets/textures/bricks.jpg'
+      'assets/models/ground.json',
+      'assets/textures/ground_dirt_1226_9352_Small.jpg'
     );
 
-    const scaleVector = CoordinateConverter.physicsToRendering(new Vec3(1, 1, 0.01));
-    mat4.scale(modelPrototype.modelMatrix, modelPrototype.modelMatrix, scaleVector);
+    const scaleVector = CoordinateConverter.physicsToRendering(
+      new Vec3(5, 5, 1)
+    );
+    mat4.scale(
+      modelPrototype.modelMatrix,
+      modelPrototype.modelMatrix,
+      scaleVector
+    );
 
     const groundShape = new Plane();
     const groundBody = new Body({ mass: 0 });
     groundBody.addShape(groundShape);
     this.world.addBody(groundBody);
 
-    const bricks = new Model(modelPrototype, groundBody);
-    this.models.push(bricks);
+    for (let x = -5; x <= 5; x += 1) {
+      for (let y = -5; y <= 5; y += 1) {
+        const ground = new BodilessModel(modelPrototype);
+
+        const translationVector = CoordinateConverter.physicsToRendering(new Vec3(x, y, 0));
+        mat4.translate(ground.modelMatrix, ground.modelMatrix, translationVector);
+
+        this.models.push(ground);
+      }
+    }
   }
 
   private async loadCubeModel() {
@@ -263,21 +286,24 @@ export class Application {
       'assets/textures/f16-texture.bmp'
     );
 
-    const scaleVector = CoordinateConverter.physicsToRendering(new Vec3(1, 1, 1));
-    mat4.scale(modelPrototype.modelMatrix, modelPrototype.modelMatrix, scaleVector);
+    const scaleVector = CoordinateConverter.physicsToRendering(
+      new Vec3(1, 1, 1)
+    );
+    mat4.scale(
+      modelPrototype.modelMatrix,
+      modelPrototype.modelMatrix,
+      scaleVector
+    );
 
     const modelBody = new Body({ mass: 5, position: new Vec3(0, 0, 5) });
     const shape = new Box(new Vec3(0.5, 0.5, 0.5));
     modelBody.addShape(shape);
     this.world.addBody(modelBody);
 
-    // modelBody.velocity.z = 5;
-    // modelBody.velocity.x = 5;
-    // modelBody.velocity.y = -1;
-    // modelBody.angularVelocity.z = 5;
-
-    const cube = new Model(modelPrototype, modelBody);
+    const cube = new PhysicalModel(modelPrototype, modelBody);
     this.models.push(cube);
+
+    this.cameraTarget = cube;
   }
 
   private initWorld() {
