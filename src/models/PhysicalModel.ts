@@ -1,37 +1,24 @@
 import { Body } from 'cannon';
 import { mat4, quat } from 'gl-matrix';
 
+import { BodilessModel } from 'models/BodilessModel';
 import { ModelPrototype } from 'models/ModelPrototype';
 
 import { CoordinateConverter } from 'services/CoordinateConverter';
 import { WebGLBinder } from 'services/WebGLBinder';
 
-export class Model {
-  public readonly modelPrototype: ModelPrototype;
+export class PhysicalModel extends BodilessModel {
   public readonly body: Body;
   // TODO: lights
 
-  public readonly modelMatrix: mat4;
-
   public constructor(modelPrototype: ModelPrototype, body: Body) {
-    this.modelPrototype = modelPrototype;
+    super(modelPrototype);
     this.body = body;
-
-    this.modelMatrix = mat4.clone(this.modelPrototype.modelMatrix);
   }
 
   public draw(gl: WebGLRenderingContext, webGLBinder: WebGLBinder) {
-    this.modelPrototype.bindBuffersAndTexture(webGLBinder);
-
     this.updateModelMatrixFromBody();
-    webGLBinder.bindModelMatrix(this.modelMatrix);
-
-    gl.drawElements(
-      gl.TRIANGLES,
-      this.modelPrototype.vertexIndexBuffer.itemsCount,
-      gl.UNSIGNED_SHORT,
-      0
-    );
+    super.draw(gl, webGLBinder);
   }
 
   private updateModelMatrixFromBody() {
