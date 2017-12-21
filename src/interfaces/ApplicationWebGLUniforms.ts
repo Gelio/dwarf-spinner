@@ -5,4 +5,7 @@ export interface ApplicationWebGLUniforms {
   viewMatrix: WebGLUniformLocation;
 
   ambientLightColor: WebGLUniformLocation;
+
+  pointLightPosition: WebGLUniformLocation;
+  pointLightColor: WebGLUniformLocation;
 }

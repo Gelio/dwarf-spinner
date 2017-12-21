@@ -1,4 +1,5 @@
 export interface ApplicationWebGLAttributes {
-  vertexPosition: number;
+  normalVector: number;
   textureCoords: number;
+  vertexPosition: number;
 }
