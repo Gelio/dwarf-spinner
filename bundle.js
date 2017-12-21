@@ -148,12 +148,12 @@ function equals(a, b) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__gl_matrix_common__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__gl_matrix_mat2__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__gl_matrix_mat2d__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__gl_matrix_mat2__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__gl_matrix_mat2d__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__gl_matrix_mat3__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__gl_matrix_mat4__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__gl_matrix_quat__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__gl_matrix_vec2__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__gl_matrix_mat4__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__gl_matrix_quat__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__gl_matrix_vec2__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__gl_matrix_vec3__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__gl_matrix_vec4__ = __webpack_require__(6);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "glMatrix", function() { return __WEBPACK_IMPORTED_MODULE_0__gl_matrix_common__; });
@@ -16915,9 +16915,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const cannon_1 = __webpack_require__(2);
 const configuration_1 = __webpack_require__(17);
-const ShaderType_1 = __webpack_require__(18);
-const WebGLProgramFacade_1 = __webpack_require__(19);
-const Camera_1 = __webpack_require__(20);
+const ShaderType_1 = __webpack_require__(23);
+const WebGLProgramFacade_1 = __webpack_require__(24);
+const Camera_1 = __webpack_require__(25);
 const CoordinateConverter_1 = __webpack_require__(3);
 const ImageLoader_1 = __webpack_require__(26);
 const ModelPrototypeLoader_1 = __webpack_require__(27);
@@ -16946,6 +16946,8 @@ class Application {
             this.loadAttributes();
             this.loadUniforms();
             this.initWebGLBinder();
+            this.webGLBinder.bindAmbientLightColor(configuration_1.configuration.ambientLightColor);
+            this.webGLBinder.bindPointLight(configuration_1.configuration.pointLightPosition, configuration_1.configuration.pointLightColor);
             this.initProjectionMatrix();
             this.initCamera();
             this.initRenderer();
@@ -16977,9 +16979,12 @@ class Application {
         gl.enableVertexAttribArray(vertexPositionAttribute);
         const textureCoordsAttribute = gl.getAttribLocation(program, 'aTextureCoords');
         gl.enableVertexAttribArray(textureCoordsAttribute);
+        const normalVectorAttribute = gl.getAttribLocation(program, 'aNormalVector');
+        gl.enableVertexAttribArray(normalVectorAttribute);
         this.webGLAttributes = {
             vertexPosition: vertexPositionAttribute,
-            textureCoords: textureCoordsAttribute
+            textureCoords: textureCoordsAttribute,
+            normalVector: normalVectorAttribute
         };
     }
     loadUniforms() {
@@ -16989,11 +16994,17 @@ class Application {
         const viewMatrixUniform = gl.getUniformLocation(program, 'uViewMatrix');
         const projectionMatrixUniform = gl.getUniformLocation(program, 'uProjectionMatrix');
         const textureSamplerUniform = gl.getUniformLocation(program, 'uTextureSampler');
+        const ambientLightColorUniform = gl.getUniformLocation(program, 'uAmbientLightColor');
+        const pointLightPositionUniform = gl.getUniformLocation(program, 'uPointLightPosition');
+        const pointLightColorUniform = gl.getUniformLocation(program, 'uPointLightColor');
         this.webGLUniforms = {
             modelMatrix: modelMatrixUniform,
             viewMatrix: viewMatrixUniform,
             projectionMatrix: projectionMatrixUniform,
-            textureSampler: textureSamplerUniform
+            textureSampler: textureSamplerUniform,
+            ambientLightColor: ambientLightColorUniform,
+            pointLightColor: pointLightColorUniform,
+            pointLightPosition: pointLightPositionUniform
         };
     }
     initProjectionMatrix() {
@@ -17041,82 +17052,20 @@ exports.Application = Application;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+const cannon_1 = __webpack_require__(2);
+const gl_matrix_1 = __webpack_require__(1);
+const CoordinateConverter_1 = __webpack_require__(3);
 exports.configuration = {
     maxPhysicsWorldTimeAdvance: 1 / 30,
-    physicsSpeed: 1
+    physicsSpeed: 1,
+    ambientLightColor: gl_matrix_1.vec3.fromValues(0.2, 0.2, 0.2),
+    pointLightColor: gl_matrix_1.vec3.fromValues(1, 1, 1),
+    pointLightPosition: CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(0, 0, 5))
 };
 
 
 /***/ }),
 /* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var ShaderType;
-(function (ShaderType) {
-    ShaderType[ShaderType["VertexShader"] = WebGLRenderingContext.VERTEX_SHADER] = "VertexShader";
-    ShaderType[ShaderType["FragmentShader"] = WebGLRenderingContext.FRAGMENT_SHADER] = "FragmentShader";
-})(ShaderType = exports.ShaderType || (exports.ShaderType = {}));
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-class WebGLProgramFacade {
-    constructor(gl, vertexShader, fragmentShader) {
-        this.gl = gl;
-        this.program = gl.createProgram();
-        gl.attachShader(this.program, vertexShader);
-        gl.attachShader(this.program, fragmentShader);
-        gl.linkProgram(this.program);
-        if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
-            throw new Error('Cannot initialize WebGL program (linking failed)');
-        }
-    }
-    use() {
-        this.gl.useProgram(this.program);
-    }
-}
-exports.WebGLProgramFacade = WebGLProgramFacade;
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const cannon_1 = __webpack_require__(2);
-const gl_matrix_1 = __webpack_require__(1);
-const CoordinateConverter_1 = __webpack_require__(3);
-class Camera {
-    constructor(position, target) {
-        this.upVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(0, 0, 1));
-        this._viewMatrix = gl_matrix_1.mat4.create();
-        this.position = position;
-        this.target = target;
-        this.updateViewMatrix();
-    }
-    get viewMatrix() {
-        return this._viewMatrix;
-    }
-    updateViewMatrix() {
-        // TODO: stop using gl-matrix method for calculating the view matrix
-        gl_matrix_1.mat4.lookAt(this.viewMatrix, this.position, this.target, this.upVector);
-    }
-}
-exports.Camera = Camera;
-
-
-/***/ }),
-/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17586,7 +17535,7 @@ const sub = subtract;
 
 
 /***/ }),
-/* 22 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18088,7 +18037,7 @@ const sub = subtract;
 
 
 /***/ }),
-/* 23 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19826,7 +19775,7 @@ const sub = subtract;
 
 
 /***/ }),
-/* 24 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20517,7 +20466,7 @@ const setAxes = (function() {
 
 
 /***/ }),
-/* 25 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21160,6 +21109,74 @@ const forEach = (function() {
 
 
 /***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ShaderType;
+(function (ShaderType) {
+    ShaderType[ShaderType["VertexShader"] = WebGLRenderingContext.VERTEX_SHADER] = "VertexShader";
+    ShaderType[ShaderType["FragmentShader"] = WebGLRenderingContext.FRAGMENT_SHADER] = "FragmentShader";
+})(ShaderType = exports.ShaderType || (exports.ShaderType = {}));
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class WebGLProgramFacade {
+    constructor(gl, vertexShader, fragmentShader) {
+        this.gl = gl;
+        this.program = gl.createProgram();
+        gl.attachShader(this.program, vertexShader);
+        gl.attachShader(this.program, fragmentShader);
+        gl.linkProgram(this.program);
+        if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
+            throw new Error('Cannot initialize WebGL program (linking failed)');
+        }
+    }
+    use() {
+        this.gl.useProgram(this.program);
+    }
+}
+exports.WebGLProgramFacade = WebGLProgramFacade;
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const cannon_1 = __webpack_require__(2);
+const gl_matrix_1 = __webpack_require__(1);
+const CoordinateConverter_1 = __webpack_require__(3);
+class Camera {
+    constructor(position, target) {
+        this.upVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(0, 0, 1));
+        this._viewMatrix = gl_matrix_1.mat4.create();
+        this.position = position;
+        this.target = target;
+        this.updateViewMatrix();
+    }
+    get viewMatrix() {
+        return this._viewMatrix;
+    }
+    updateViewMatrix() {
+        // TODO: stop using gl-matrix method for calculating the view matrix
+        gl_matrix_1.mat4.lookAt(this.viewMatrix, this.position, this.target, this.upVector);
+    }
+}
+exports.Camera = Camera;
+
+
+/***/ }),
 /* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -21621,8 +21638,8 @@ class WebGLBinder {
     bindTexture(texture) {
         texture.activate(this.uniforms.textureSampler);
     }
-    bindVertexNormalBuffer(_vertexNormalBuffer) {
-        // TODO: add attribute for vertex normals
+    bindVertexNormalBuffer(vertexNormalBuffer) {
+        vertexNormalBuffer.bindBuffer(this.attributes.normalVector);
     }
     bindTextureCoordsBuffer(textureCoordsBuffer) {
         textureCoordsBuffer.bindBuffer(this.attributes.textureCoords);
@@ -21641,6 +21658,13 @@ class WebGLBinder {
     }
     bindProjectionMatrix(projectionMatrix) {
         this.gl.uniformMatrix4fv(this.uniforms.projectionMatrix, false, projectionMatrix);
+    }
+    bindAmbientLightColor(ambientLightColor) {
+        this.gl.uniform3fv(this.uniforms.ambientLightColor, ambientLightColor);
+    }
+    bindPointLight(position, color) {
+        this.gl.uniform3fv(this.uniforms.pointLightPosition, position);
+        this.gl.uniform3fv(this.uniforms.pointLightColor, color);
     }
 }
 exports.WebGLBinder = WebGLBinder;
@@ -21808,13 +21832,13 @@ exports.PhysicalModel = PhysicalModel;
 /* 41 */
 /***/ (function(module, exports) {
 
-module.exports = "precision mediump float;\r\n\r\nuniform sampler2D uTextureSampler;\r\n\r\nvarying vec4 vPosition;\r\n// varying vec3 vNormalVector;\r\nvarying vec2 vTextureCoords;\r\n\r\nvoid main(void) {\r\n  gl_FragColor = texture2D(uTextureSampler, vTextureCoords);\r\n}\r\n"
+module.exports = "precision mediump float;\r\n\r\nuniform sampler2D uTextureSampler;\r\n\r\nuniform vec3 uAmbientLightColor;\r\n\r\nuniform vec3 uPointLightPosition;\r\nuniform vec3 uPointLightColor;\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormalVector;\r\nvarying vec2 vTextureCoords;\r\n\r\nvec3 getColorFromPointLight() {\r\n  vec3 lightVector = normalize(uPointLightPosition - vPosition);\r\n\r\n  return uPointLightColor * max(0.0, dot(vNormalVector, lightVector));\r\n}\r\n\r\n\r\nvoid main(void) {\r\n  vec4 ambientLight = vec4(uAmbientLightColor, 1.0);\r\n  vec4 pointLightColor = vec4(getColorFromPointLight(), 1.0);\r\n\r\n  gl_FragColor = (ambientLight + pointLightColor) * texture2D(uTextureSampler, vTextureCoords);\r\n}\r\n"
 
 /***/ }),
 /* 42 */
 /***/ (function(module, exports) {
 
-module.exports = "precision mediump float;\r\n\r\nattribute vec3 aVertexPosition;\r\n// attribute vec3 aNormalVector;\r\nattribute vec2 aTextureCoords;\r\n\r\nuniform mat4 uModelMatrix;\r\nuniform mat4 uViewMatrix;\r\nuniform mat4 uProjectionMatrix;\r\n\r\nvarying vec4 vPosition;\r\n// varying vec3 vNormalVector;\r\nvarying vec2 vTextureCoords;\r\n\r\nvoid main(void) {\r\n  vTextureCoords = aTextureCoords;\r\n  // vNormalVector = aNormalVector;\r\n  // vPosition = ;\r\n  gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aVertexPosition, 1.0);\r\n}\r\n"
+module.exports = "precision mediump float;\r\n\r\nattribute vec3 aVertexPosition;\r\nattribute vec3 aNormalVector;\r\nattribute vec2 aTextureCoords;\r\n\r\nuniform mat4 uModelMatrix;\r\nuniform mat4 uViewMatrix;\r\nuniform mat4 uProjectionMatrix;\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormalVector;\r\nvarying vec2 vTextureCoords;\r\n\r\nvoid main(void) {\r\n  vTextureCoords = aTextureCoords;\r\n  vNormalVector = aNormalVector;\r\n\r\n  vec4 worldPosition = uModelMatrix * vec4(aVertexPosition, 1.0);\r\n  vPosition = worldPosition.xyz;\r\n\r\n  gl_Position = uProjectionMatrix * uViewMatrix * worldPosition;\r\n}\r\n"
 
 /***/ })
 /******/ ]);
