@@ -59,6 +59,7 @@ export class Application {
     this.loadAttributes();
     this.loadUniforms();
     this.initWebGLBinder();
+    this.webGLBinder.bindAmbientLightColor(configuration.ambientLightColor);
 
     this.initProjectionMatrix();
     this.initCamera();
@@ -135,12 +136,17 @@ export class Application {
       program,
       'uTextureSampler'
     );
+    const ambientLightColorUniform = <WebGLUniformLocation>gl.getUniformLocation(
+      program,
+      'uAmbientLightColor'
+    );
 
     this.webGLUniforms = {
       modelMatrix: modelMatrixUniform,
       viewMatrix: viewMatrixUniform,
       projectionMatrix: projectionMatrixUniform,
-      textureSampler: textureSamplerUniform
+      textureSampler: textureSamplerUniform,
+      ambientLightColor: ambientLightColorUniform
     };
   }
 

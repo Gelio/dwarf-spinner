@@ -1,4 +1,4 @@
-import { mat4 } from 'gl-matrix';
+import { mat4, vec4 } from 'gl-matrix';
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
 
@@ -47,5 +47,9 @@ export class WebGLBinder {
 
   public bindProjectionMatrix(projectionMatrix: mat4) {
     this.gl.uniformMatrix4fv(this.uniforms.projectionMatrix, false, projectionMatrix);
+  }
+
+  public bindAmbientLightColor(ambientLightColor: vec4) {
+    this.gl.uniform4fv(this.uniforms.ambientLightColor, ambientLightColor);
   }
 }
