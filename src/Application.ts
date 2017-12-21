@@ -1,11 +1,11 @@
-import { Body, Box, NaiveBroadphase, Plane, Vec3, World } from 'cannon';
+import { NaiveBroadphase, Vec3, World } from 'cannon';
 import { mat4 } from 'gl-matrix';
 
 import { ShaderType } from 'common/ShaderType';
 
 import { WebGLProgramFacade } from 'facades/WebGLProgramFacade';
+import { ApplicationWorld } from 'models/ApplicationWorld';
 import { Camera } from 'models/Camera';
-import { PhysicalModel } from 'models/PhysicalModel';
 
 import { CoordinateConverter } from 'services/CoordinateConverter';
 import { ImageLoader } from 'services/ImageLoader';
@@ -17,8 +17,7 @@ import { WebGLBinder } from 'services/WebGLBinder';
 
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
-import { Model } from 'interfaces/Model';
-import { BodilessModel } from 'models/BodilessModel';
+import { WorldLoader } from 'services/WorldLoader';
 
 // tslint:disable no-require-imports import-name no-var-requires
 const fragmentShaderSource = require('./shaders/fragment-shader.glsl');
@@ -38,10 +37,7 @@ export class Application {
 
   private renderer: Renderer;
 
-  private models: Model[] = [];
-  private cameraTarget: PhysicalModel;
-
-  private world: World;
+  private world: ApplicationWorld;
   private previousRenderTimestamp: number;
 
   constructor(canvas: HTMLCanvasElement) {
@@ -66,13 +62,7 @@ export class Application {
     this.initCamera();
     this.initRenderer();
 
-    this.initWorld();
-
-    await Promise.all([
-      this.loadMissileModel(),
-      this.loadGroundModel(),
-      this.loadCubeModel()
-    ]);
+    await this.initWorld();
 
     this.render();
   }
@@ -88,16 +78,16 @@ export class Application {
 
       this.previousRenderTimestamp = timestamp;
     }
-    this.world.step(timeDelta);
+    this.world.physicsWorld.step(timeDelta);
 
-    const targetPosition = this.cameraTarget.body.position;
+    const targetPosition = this.world.dwarf.body.position;
 
     CoordinateConverter.physicsToRendering(this.camera.target, targetPosition);
     this.renderer.refreshCamera();
 
     this.renderer.clearCanvas();
 
-    this.models.forEach(model => this.renderer.drawModel(model));
+    this.world.models.forEach(model => this.renderer.drawModel(model));
   }
 
   private loadAttributes() {
@@ -211,104 +201,46 @@ export class Application {
     this.programFacade.use();
   }
 
-  private async loadMissileModel() {
+  // private async loadMissileModel() {
+  //   const imageLoader = new ImageLoader();
+  //   const modelPrototypeLoader = new ModelPrototypeLoader(this.gl, imageLoader);
+  //   const modelPrototype = await modelPrototypeLoader.loadModelPrototype(
+  //     'assets/models/AVMT300-centered2.json',
+  //     'assets/textures/missile-texture.jpg'
+  //   );
+
+  //   const scaleVector = CoordinateConverter.physicsToRendering(
+  //     new Vec3(0.5, 0.5, 0.5)
+  //   );
+
+  //   mat4.scale(
+  //     modelPrototype.modelMatrix,
+  //     modelPrototype.modelMatrix,
+  //     scaleVector
+  //   );
+
+  //   const modelBody = new Body({ mass: 500, position: new Vec3(0, 0, 20) });
+  //   const sphereShape = new Box(new Vec3(9, 5, 5));
+  //   modelBody.addShape(sphereShape);
+  //   this.world.addBody(modelBody);
+
+  //   modelBody.angularVelocity.y = -5;
+  //   modelBody.velocity.z = 20;
+  //   modelBody.angularDamping = 0.5;
+
+  //   const missile = new Model(modelPrototype, modelBody);
+  //   this.models.push(missile);
+  // }
+
+  private async initWorld() {
+    const physicsWorld = new World();
+    physicsWorld.gravity.set(0, 0, -9.81);
+    physicsWorld.broadphase = new NaiveBroadphase();
+
     const imageLoader = new ImageLoader();
     const modelPrototypeLoader = new ModelPrototypeLoader(this.gl, imageLoader);
-    const modelPrototype = await modelPrototypeLoader.loadModelPrototype(
-      'assets/models/AVMT300-centered2.json',
-      'assets/textures/missile-texture.jpg'
-    );
+    const worldLoader = new WorldLoader(modelPrototypeLoader);
 
-    const scaleVector = CoordinateConverter.physicsToRendering(
-      new Vec3(0.5, 0.5, 0.5)
-    );
-
-    mat4.scale(
-      modelPrototype.modelMatrix,
-      modelPrototype.modelMatrix,
-      scaleVector
-    );
-
-    // const modelBody = new Body({ mass: 500, position: new Vec3(0, 0, 20) });
-    // const sphereShape = new Box(new Vec3(9, 5, 5));
-    // modelBody.addShape(sphereShape);
-    // this.world.addBody(modelBody);
-
-    // modelBody.angularVelocity.y = -5;
-    // modelBody.velocity.z = 20;
-    // modelBody.angularDamping = 0.5;
-
-    // const missile = new Model(modelPrototype, modelBody);
-    // this.models.push(missile);
-  }
-
-  private async loadGroundModel() {
-    // FIXME: use common ImageLoader and ModelPrototypeLoader
-    const imageLoader = new ImageLoader();
-    const modelPrototypeLoader = new ModelPrototypeLoader(this.gl, imageLoader);
-    const modelPrototype = await modelPrototypeLoader.loadModelPrototype(
-      'assets/models/ground.json',
-      'assets/textures/ground_dirt_1226_9352_Small.jpg'
-    );
-
-    const scaleVector = CoordinateConverter.physicsToRendering(
-      new Vec3(5, 5, 1)
-    );
-    mat4.scale(
-      modelPrototype.modelMatrix,
-      modelPrototype.modelMatrix,
-      scaleVector
-    );
-
-    const groundShape = new Plane();
-    const groundBody = new Body({ mass: 0 });
-    groundBody.addShape(groundShape);
-    this.world.addBody(groundBody);
-
-    for (let x = -5; x <= 5; x += 1) {
-      for (let y = -5; y <= 5; y += 1) {
-        const ground = new BodilessModel(modelPrototype);
-
-        const translationVector = CoordinateConverter.physicsToRendering(new Vec3(x, y, 0));
-        mat4.translate(ground.modelMatrix, ground.modelMatrix, translationVector);
-
-        this.models.push(ground);
-      }
-    }
-  }
-
-  private async loadCubeModel() {
-    // FIXME: use common ImageLoader and ModelPrototypeLoader
-    const imageLoader = new ImageLoader();
-    const modelPrototypeLoader = new ModelPrototypeLoader(this.gl, imageLoader);
-    const modelPrototype = await modelPrototypeLoader.loadModelPrototype(
-      'assets/models/cube.json',
-      'assets/textures/f16-texture.bmp'
-    );
-
-    const scaleVector = CoordinateConverter.physicsToRendering(
-      new Vec3(1, 1, 1)
-    );
-    mat4.scale(
-      modelPrototype.modelMatrix,
-      modelPrototype.modelMatrix,
-      scaleVector
-    );
-
-    const modelBody = new Body({ mass: 5, position: new Vec3(0, 0, 5) });
-    const shape = new Box(new Vec3(0.5, 0.5, 0.5));
-    modelBody.addShape(shape);
-    this.world.addBody(modelBody);
-
-    const cube = new PhysicalModel(modelPrototype, modelBody);
-    this.models.push(cube);
-
-    this.cameraTarget = cube;
-  }
-
-  private initWorld() {
-    this.world = new World();
-    this.world.gravity.set(0, 0, -9.81);
-    this.world.broadphase = new NaiveBroadphase();
+    this.world = await worldLoader.loadWorld(physicsWorld);
   }
 }
