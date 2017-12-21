@@ -8,7 +8,7 @@ export class ApplicationWorld {
   public readonly physicsWorld: World;
   public readonly models: Model[];
 
-  public cube: PhysicalModel;
+  public dwarf: PhysicalModel;
 
   public constructor(physicsWorld: World, models: Model[]) {
     this.physicsWorld = physicsWorld;

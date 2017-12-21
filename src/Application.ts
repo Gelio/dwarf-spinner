@@ -80,7 +80,7 @@ export class Application {
     }
     this.world.physicsWorld.step(timeDelta);
 
-    const targetPosition = this.world.cube.body.position;
+    const targetPosition = this.world.dwarf.body.position;
 
     CoordinateConverter.physicsToRendering(this.camera.target, targetPosition);
     this.renderer.refreshCamera();
