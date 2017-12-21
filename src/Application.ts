@@ -1,6 +1,8 @@
 import { NaiveBroadphase, Vec3, World } from 'cannon';
 import { mat4 } from 'gl-matrix';
 
+import { configuration } from 'configuration';
+
 import { ShaderType } from 'common/ShaderType';
 
 import { WebGLProgramFacade } from 'facades/WebGLProgramFacade';
@@ -78,7 +80,8 @@ export class Application {
 
       this.previousRenderTimestamp = timestamp;
     }
-    this.world.physicsWorld.step(timeDelta);
+    timeDelta = Math.min(timeDelta, configuration.maxPhysicsWorldTimeAdvance);
+    this.world.physicsWorld.step(timeDelta * configuration.physicsSpeed);
 
     const targetPosition = this.world.dwarf.body.position;
 
@@ -200,37 +203,6 @@ export class Application {
     );
     this.programFacade.use();
   }
-
-  // private async loadMissileModel() {
-  //   const imageLoader = new ImageLoader();
-  //   const modelPrototypeLoader = new ModelPrototypeLoader(this.gl, imageLoader);
-  //   const modelPrototype = await modelPrototypeLoader.loadModelPrototype(
-  //     'assets/models/AVMT300-centered2.json',
-  //     'assets/textures/missile-texture.jpg'
-  //   );
-
-  //   const scaleVector = CoordinateConverter.physicsToRendering(
-  //     new Vec3(0.5, 0.5, 0.5)
-  //   );
-
-  //   mat4.scale(
-  //     modelPrototype.modelMatrix,
-  //     modelPrototype.modelMatrix,
-  //     scaleVector
-  //   );
-
-  //   const modelBody = new Body({ mass: 500, position: new Vec3(0, 0, 20) });
-  //   const sphereShape = new Box(new Vec3(9, 5, 5));
-  //   modelBody.addShape(sphereShape);
-  //   this.world.addBody(modelBody);
-
-  //   modelBody.angularVelocity.y = -5;
-  //   modelBody.velocity.z = 20;
-  //   modelBody.angularDamping = 0.5;
-
-  //   const missile = new Model(modelPrototype, modelBody);
-  //   this.models.push(missile);
-  // }
 
   private async initWorld() {
     const physicsWorld = new World();

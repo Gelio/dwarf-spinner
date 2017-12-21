@@ -9,6 +9,7 @@ export class ApplicationWorld {
   public readonly models: Model[];
 
   public dwarf: PhysicalModel;
+  public fidgetSpinner: PhysicalModel;
 
   public constructor(physicsWorld: World, models: Model[]) {
     this.physicsWorld = physicsWorld;
