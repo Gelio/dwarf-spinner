@@ -1,0 +1,26 @@
+{
+  "vertexNormals": [
+    0, 1, 0
+  ],
+  "vertexUVs": [
+    0, 0,
+    0, 1,
+    1, 1,
+    1, 0
+  ],
+  "vertexPositions": [
+    -0.5, 0, 0.5,
+    -0.5, 0, -0.5,
+    0.5, 0, -0.5,
+    0.5, 0, 0.5
+  ],
+  "vertexNormalIndices": [
+    0, 0, 0, 0, 0, 0
+  ],
+  "vertexUVIndices": [
+    0, 1, 2, -1, 0, 2, 3, -1
+  ],
+  "vertexPositionIndices": [
+    0, 1, 2, -1, 0, 2, 3, -1
+  ]
+}

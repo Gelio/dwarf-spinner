@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -148,12 +148,12 @@ function equals(a, b) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__gl_matrix_common__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__gl_matrix_mat2__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__gl_matrix_mat2d__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__gl_matrix_mat2__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__gl_matrix_mat2d__ = __webpack_require__(22);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__gl_matrix_mat3__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__gl_matrix_mat4__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__gl_matrix_quat__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__gl_matrix_vec2__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__gl_matrix_mat4__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__gl_matrix_quat__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__gl_matrix_vec2__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__gl_matrix_vec3__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__gl_matrix_vec4__ = __webpack_require__(6);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "glMatrix", function() { return __WEBPACK_IMPORTED_MODULE_0__gl_matrix_common__; });
@@ -16262,9 +16262,31 @@ exports.WebGLBufferFacade = WebGLBufferFacade;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(9);
-__webpack_require__(14);
-const Application_1 = __webpack_require__(15);
+const gl_matrix_1 = __webpack_require__(1);
+class BodilessModel {
+    constructor(modelPrototype) {
+        this.modelPrototype = modelPrototype;
+        this.modelMatrix = gl_matrix_1.mat4.clone(this.modelPrototype.modelMatrix);
+    }
+    draw(gl, webGLBinder) {
+        this.modelPrototype.bindBuffersAndTexture(webGLBinder);
+        webGLBinder.bindModelMatrix(this.modelMatrix);
+        gl.drawElements(gl.TRIANGLES, this.modelPrototype.vertexIndexBuffer.itemsCount, gl.UNSIGNED_SHORT, 0);
+    }
+}
+exports.BodilessModel = BodilessModel;
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+__webpack_require__(10);
+__webpack_require__(15);
+const Application_1 = __webpack_require__(16);
 window.onload = bootstrap;
 function bootstrap() {
     const mainCanvas = document.getElementById('main-canvas');
@@ -16277,13 +16299,13 @@ function bootstrap() {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(10);
+var content = __webpack_require__(11);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -16291,7 +16313,7 @@ var transform;
 var options = {"hmr":true}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(12)(content, options);
+var update = __webpack_require__(13)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -16308,10 +16330,10 @@ if(false) {
 }
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(11)(undefined);
+exports = module.exports = __webpack_require__(12)(undefined);
 // imports
 
 
@@ -16322,7 +16344,7 @@ exports.push([module.i, "html, body {\n  box-sizing: border-box;\n  min-width: 1
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 /*
@@ -16404,7 +16426,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -16460,7 +16482,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(13);
+var	fixUrls = __webpack_require__(14);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -16776,7 +16798,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 
@@ -16871,13 +16893,13 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16892,25 +16914,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const cannon_1 = __webpack_require__(2);
-const gl_matrix_1 = __webpack_require__(1);
-const ShaderType_1 = __webpack_require__(21);
-const WebGLProgramFacade_1 = __webpack_require__(22);
-const Camera_1 = __webpack_require__(23);
-const Model_1 = __webpack_require__(24);
-const ImageLoader_1 = __webpack_require__(25);
-const ModelPrototypeLoader_1 = __webpack_require__(26);
-const ProjectionService_1 = __webpack_require__(33);
-const Renderer_1 = __webpack_require__(34);
-const ShaderCompiler_1 = __webpack_require__(35);
-const WebGLBinder_1 = __webpack_require__(36);
+const configuration_1 = __webpack_require__(17);
+const ShaderType_1 = __webpack_require__(18);
+const WebGLProgramFacade_1 = __webpack_require__(19);
+const Camera_1 = __webpack_require__(20);
 const CoordinateConverter_1 = __webpack_require__(3);
+const ImageLoader_1 = __webpack_require__(26);
+const ModelPrototypeLoader_1 = __webpack_require__(27);
+const ProjectionService_1 = __webpack_require__(34);
+const Renderer_1 = __webpack_require__(35);
+const ShaderCompiler_1 = __webpack_require__(36);
+const WebGLBinder_1 = __webpack_require__(37);
+const WorldLoader_1 = __webpack_require__(38);
 // tslint:disable no-require-imports import-name no-var-requires
-const fragmentShaderSource = __webpack_require__(37);
-const vertexShaderSource = __webpack_require__(38);
+const fragmentShaderSource = __webpack_require__(41);
+const vertexShaderSource = __webpack_require__(42);
 // tslint:enable no-require-imports, import-name
 class Application {
     constructor(canvas) {
-        this.models = [];
         this.canvas = canvas;
         const gl = this.canvas.getContext('webgl');
         if (!gl) {
@@ -16928,12 +16949,7 @@ class Application {
             this.initProjectionMatrix();
             this.initCamera();
             this.initRenderer();
-            this.initWorld();
-            yield Promise.all([
-                this.loadMissileModel(),
-                this.loadBricksModel(),
-                this.loadCubeModel()
-            ]);
+            yield this.initWorld();
             this.render();
         });
     }
@@ -16946,12 +16962,13 @@ class Application {
             }
             this.previousRenderTimestamp = timestamp;
         }
-        this.world.step(timeDelta);
-        const targetPosition = this.models[0].body.position;
+        timeDelta = Math.min(timeDelta, configuration_1.configuration.maxPhysicsWorldTimeAdvance);
+        this.world.physicsWorld.step(timeDelta * configuration_1.configuration.physicsSpeed);
+        const targetPosition = this.world.dwarf.body.position;
         CoordinateConverter_1.CoordinateConverter.physicsToRendering(this.camera.target, targetPosition);
         this.renderer.refreshCamera();
         this.renderer.clearCanvas();
-        this.models.forEach(model => this.renderer.drawModel(model));
+        this.world.models.forEach(model => this.renderer.drawModel(model));
     }
     loadAttributes() {
         const gl = this.gl;
@@ -17002,71 +17019,104 @@ class Application {
         this.programFacade = new WebGLProgramFacade_1.WebGLProgramFacade(this.gl, vertexShader, fragmentShader);
         this.programFacade.use();
     }
-    loadMissileModel() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const imageLoader = new ImageLoader_1.ImageLoader();
-            const modelPrototypeLoader = new ModelPrototypeLoader_1.ModelPrototypeLoader(this.gl, imageLoader);
-            const modelPrototype = yield modelPrototypeLoader.loadModelPrototype('assets/models/AVMT300-centered2.json', 'assets/textures/missile-texture.jpg');
-            const scaleVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(0.5, 0.5, 0.5));
-            gl_matrix_1.mat4.scale(modelPrototype.modelMatrix, modelPrototype.modelMatrix, scaleVector);
-            // const modelBody = new Body({ mass: 500, position: new Vec3(0, 0, 20) });
-            // const sphereShape = new Box(new Vec3(9, 5, 5));
-            // modelBody.addShape(sphereShape);
-            // this.world.addBody(modelBody);
-            // modelBody.angularVelocity.y = -5;
-            // modelBody.velocity.z = 20;
-            // modelBody.angularDamping = 0.5;
-            // const missile = new Model(modelPrototype, modelBody);
-            // this.models.push(missile);
-        });
-    }
-    loadBricksModel() {
-        return __awaiter(this, void 0, void 0, function* () {
-            // FIXME: use common ImageLoader and ModelPrototypeLoader
-            const imageLoader = new ImageLoader_1.ImageLoader();
-            const modelPrototypeLoader = new ModelPrototypeLoader_1.ModelPrototypeLoader(this.gl, imageLoader);
-            const modelPrototype = yield modelPrototypeLoader.loadModelPrototype('assets/models/bricks.json', 'assets/textures/bricks.jpg');
-            const scaleVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(1, 1, 0.01));
-            gl_matrix_1.mat4.scale(modelPrototype.modelMatrix, modelPrototype.modelMatrix, scaleVector);
-            const groundShape = new cannon_1.Plane();
-            const groundBody = new cannon_1.Body({ mass: 0 });
-            groundBody.addShape(groundShape);
-            this.world.addBody(groundBody);
-            const bricks = new Model_1.Model(modelPrototype, groundBody);
-            this.models.push(bricks);
-        });
-    }
-    loadCubeModel() {
-        return __awaiter(this, void 0, void 0, function* () {
-            // FIXME: use common ImageLoader and ModelPrototypeLoader
-            const imageLoader = new ImageLoader_1.ImageLoader();
-            const modelPrototypeLoader = new ModelPrototypeLoader_1.ModelPrototypeLoader(this.gl, imageLoader);
-            const modelPrototype = yield modelPrototypeLoader.loadModelPrototype('assets/models/cube.json', 'assets/textures/f16-texture.bmp');
-            const scaleVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(1, 1, 1));
-            gl_matrix_1.mat4.scale(modelPrototype.modelMatrix, modelPrototype.modelMatrix, scaleVector);
-            const modelBody = new cannon_1.Body({ mass: 5, position: new cannon_1.Vec3(0, 0, 5) });
-            const shape = new cannon_1.Box(new cannon_1.Vec3(0.5, 0.5, 0.5));
-            modelBody.addShape(shape);
-            this.world.addBody(modelBody);
-            // modelBody.velocity.z = 5;
-            // modelBody.velocity.x = 5;
-            // modelBody.velocity.y = -1;
-            // modelBody.angularVelocity.z = 5;
-            const cube = new Model_1.Model(modelPrototype, modelBody);
-            this.models.push(cube);
-        });
-    }
     initWorld() {
-        this.world = new cannon_1.World();
-        this.world.gravity.set(0, 0, -9.81);
-        this.world.broadphase = new cannon_1.NaiveBroadphase();
+        return __awaiter(this, void 0, void 0, function* () {
+            const physicsWorld = new cannon_1.World();
+            physicsWorld.gravity.set(0, 0, -9.81);
+            physicsWorld.broadphase = new cannon_1.NaiveBroadphase();
+            const imageLoader = new ImageLoader_1.ImageLoader();
+            const modelPrototypeLoader = new ModelPrototypeLoader_1.ModelPrototypeLoader(this.gl, imageLoader);
+            const worldLoader = new WorldLoader_1.WorldLoader(modelPrototypeLoader);
+            this.world = yield worldLoader.loadWorld(physicsWorld);
+        });
     }
 }
 exports.Application = Application;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.configuration = {
+    maxPhysicsWorldTimeAdvance: 1 / 30,
+    physicsSpeed: 1
+};
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ShaderType;
+(function (ShaderType) {
+    ShaderType[ShaderType["VertexShader"] = WebGLRenderingContext.VERTEX_SHADER] = "VertexShader";
+    ShaderType[ShaderType["FragmentShader"] = WebGLRenderingContext.FRAGMENT_SHADER] = "FragmentShader";
+})(ShaderType = exports.ShaderType || (exports.ShaderType = {}));
+
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class WebGLProgramFacade {
+    constructor(gl, vertexShader, fragmentShader) {
+        this.gl = gl;
+        this.program = gl.createProgram();
+        gl.attachShader(this.program, vertexShader);
+        gl.attachShader(this.program, fragmentShader);
+        gl.linkProgram(this.program);
+        if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
+            throw new Error('Cannot initialize WebGL program (linking failed)');
+        }
+    }
+    use() {
+        this.gl.useProgram(this.program);
+    }
+}
+exports.WebGLProgramFacade = WebGLProgramFacade;
+
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const cannon_1 = __webpack_require__(2);
+const gl_matrix_1 = __webpack_require__(1);
+const CoordinateConverter_1 = __webpack_require__(3);
+class Camera {
+    constructor(position, target) {
+        this.upVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(0, 0, 1));
+        this._viewMatrix = gl_matrix_1.mat4.create();
+        this.position = position;
+        this.target = target;
+        this.updateViewMatrix();
+    }
+    get viewMatrix() {
+        return this._viewMatrix;
+    }
+    updateViewMatrix() {
+        // TODO: stop using gl-matrix method for calculating the view matrix
+        gl_matrix_1.mat4.lookAt(this.viewMatrix, this.position, this.target, this.upVector);
+    }
+}
+exports.Camera = Camera;
+
+
+/***/ }),
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17536,7 +17586,7 @@ const sub = subtract;
 
 
 /***/ }),
-/* 17 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18038,7 +18088,7 @@ const sub = subtract;
 
 
 /***/ }),
-/* 18 */
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19776,7 +19826,7 @@ const sub = subtract;
 
 
 /***/ }),
-/* 19 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20467,7 +20517,7 @@ const setAxes = (function() {
 
 
 /***/ }),
-/* 20 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21110,108 +21160,7 @@ const forEach = (function() {
 
 
 /***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var ShaderType;
-(function (ShaderType) {
-    ShaderType[ShaderType["VertexShader"] = WebGLRenderingContext.VERTEX_SHADER] = "VertexShader";
-    ShaderType[ShaderType["FragmentShader"] = WebGLRenderingContext.FRAGMENT_SHADER] = "FragmentShader";
-})(ShaderType = exports.ShaderType || (exports.ShaderType = {}));
-
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-class WebGLProgramFacade {
-    constructor(gl, vertexShader, fragmentShader) {
-        this.gl = gl;
-        this.program = gl.createProgram();
-        gl.attachShader(this.program, vertexShader);
-        gl.attachShader(this.program, fragmentShader);
-        gl.linkProgram(this.program);
-        if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
-            throw new Error('Cannot initialize WebGL program (linking failed)');
-        }
-    }
-    use() {
-        this.gl.useProgram(this.program);
-    }
-}
-exports.WebGLProgramFacade = WebGLProgramFacade;
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const cannon_1 = __webpack_require__(2);
-const gl_matrix_1 = __webpack_require__(1);
-const CoordinateConverter_1 = __webpack_require__(3);
-class Camera {
-    constructor(position, target) {
-        this.upVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(0, 0, 1));
-        this._viewMatrix = gl_matrix_1.mat4.create();
-        this.position = position;
-        this.target = target;
-        this.updateViewMatrix();
-    }
-    get viewMatrix() {
-        return this._viewMatrix;
-    }
-    updateViewMatrix() {
-        // TODO: stop using gl-matrix method for calculating the view matrix
-        gl_matrix_1.mat4.lookAt(this.viewMatrix, this.position, this.target, this.upVector);
-    }
-}
-exports.Camera = Camera;
-
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const gl_matrix_1 = __webpack_require__(1);
-const CoordinateConverter_1 = __webpack_require__(3);
-class Model {
-    constructor(modelPrototype, body) {
-        this.modelPrototype = modelPrototype;
-        this.body = body;
-        this.modelMatrix = gl_matrix_1.mat4.clone(this.modelPrototype.modelMatrix);
-    }
-    draw(gl, webGLBinder) {
-        this.modelPrototype.bindBuffersAndTexture(webGLBinder);
-        this.updateModelMatrixFromBody();
-        webGLBinder.bindModelMatrix(this.modelMatrix);
-        gl.drawElements(gl.TRIANGLES, this.modelPrototype.vertexIndexBuffer.itemsCount, gl.UNSIGNED_SHORT, 0);
-    }
-    updateModelMatrixFromBody() {
-        const { body } = this;
-        const translationVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(body.position);
-        // Same coordinates swap as in CoordinateConverter.
-        const quaternion = gl_matrix_1.quat.fromValues(-body.quaternion.x, body.quaternion.z, body.quaternion.y, body.quaternion.w);
-        gl_matrix_1.mat4.fromRotationTranslation(this.modelMatrix, quaternion, translationVector);
-        gl_matrix_1.mat4.multiply(this.modelMatrix, this.modelMatrix, this.modelPrototype.modelMatrix);
-    }
-}
-exports.Model = Model;
-
-
-/***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21231,7 +21180,7 @@ exports.ImageLoader = ImageLoader;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21246,12 +21195,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // tslint:disable-next-line:no-require-imports
-const expandVertexData = __webpack_require__(27);
-const WebGLArrayBufferFacade_1 = __webpack_require__(28);
-const WebGLElementArrayBufferFacade_1 = __webpack_require__(29);
-const WebGLTextureFacade_1 = __webpack_require__(30);
-const BufferUsageType_1 = __webpack_require__(31);
-const ModelPrototype_1 = __webpack_require__(32);
+const expandVertexData = __webpack_require__(28);
+const WebGLArrayBufferFacade_1 = __webpack_require__(29);
+const WebGLElementArrayBufferFacade_1 = __webpack_require__(30);
+const WebGLTextureFacade_1 = __webpack_require__(31);
+const BufferUsageType_1 = __webpack_require__(32);
+const ModelPrototype_1 = __webpack_require__(33);
 class ModelPrototypeLoader {
     constructor(gl, imageLoader) {
         this.nextTextureId = 0;
@@ -21286,7 +21235,7 @@ exports.ModelPrototypeLoader = ModelPrototypeLoader;
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports) {
 
 module.exports = expandVertexData
@@ -21441,7 +21390,7 @@ function expandVertexData (compressedVertexData, opts) {
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21464,7 +21413,7 @@ exports.WebGLArrayBufferFacade = WebGLArrayBufferFacade;
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21485,7 +21434,7 @@ exports.WebGLElementArrayBufferFacade = WebGLElementArrayBufferFacade;
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21521,7 +21470,7 @@ exports.WebGLTextureFacade = WebGLTextureFacade;
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21536,7 +21485,7 @@ var BufferUsageType;
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21571,7 +21520,7 @@ exports.ModelPrototype = ModelPrototype;
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21589,7 +21538,7 @@ exports.ProjectionService = ProjectionService;
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21629,7 +21578,7 @@ exports.Renderer = Renderer;
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21657,7 +21606,7 @@ exports.ShaderCompiler = ShaderCompiler;
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21698,13 +21647,171 @@ exports.WebGLBinder = WebGLBinder;
 
 
 /***/ }),
-/* 37 */
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const cannon_1 = __webpack_require__(2);
+const gl_matrix_1 = __webpack_require__(1);
+const ApplicationWorld_1 = __webpack_require__(39);
+const BodilessModel_1 = __webpack_require__(8);
+const PhysicalModel_1 = __webpack_require__(40);
+const CoordinateConverter_1 = __webpack_require__(3);
+class WorldLoader {
+    constructor(modelPrototypeLoader) {
+        this.modelPrototypeLoader = modelPrototypeLoader;
+    }
+    loadWorld(physicsWorld) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const models = [];
+            const world = new ApplicationWorld_1.ApplicationWorld(physicsWorld, models);
+            yield Promise.all([
+                this.loadGround(world),
+                this.loadDwarf(world),
+                this.loadFidgetSpinner(world)
+            ]);
+            const dwarfLocalPoint = new cannon_1.Vec3(0, 0, 0.75);
+            const fidgetSpinnerLocalPoint = new cannon_1.Vec3(1.2, 0, 0);
+            const constraint = new cannon_1.PointToPointConstraint(world.dwarf.body, dwarfLocalPoint, world.fidgetSpinner.body, fidgetSpinnerLocalPoint);
+            world.physicsWorld.addConstraint(constraint);
+            setTimeout(() => {
+                world.physicsWorld.removeConstraint(constraint);
+            }, 3000);
+            return world;
+        });
+    }
+    loadGround(applicationWorld) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const groundPrototype = yield this.modelPrototypeLoader.loadModelPrototype('assets/models/ground.json', 'assets/textures/ground_dirt_1226_9352_Small.jpg');
+            const scaleVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(5, 5, 1));
+            gl_matrix_1.mat4.scale(groundPrototype.modelMatrix, groundPrototype.modelMatrix, scaleVector);
+            const groundShape = new cannon_1.Plane();
+            const groundBody = new cannon_1.Body({ mass: 0 });
+            groundBody.addShape(groundShape);
+            applicationWorld.physicsWorld.addBody(groundBody);
+            for (let x = -5; x <= 5; x += 1) {
+                for (let y = -5; y <= 5; y += 1) {
+                    const ground = new BodilessModel_1.BodilessModel(groundPrototype);
+                    const translationVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(x, y, 0));
+                    gl_matrix_1.mat4.translate(ground.modelMatrix, ground.modelMatrix, translationVector);
+                    applicationWorld.models.push(ground);
+                }
+            }
+        });
+    }
+    loadDwarf(applicationWorld) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const dwarfPrototype = yield this.modelPrototypeLoader.loadModelPrototype('assets/models/Dwarf_2_Very_Low-centered.json', 'assets/textures/dwarf_2_1K_color.jpg');
+            const dwarfBody = new cannon_1.Body({ mass: 70, position: new cannon_1.Vec3(2, 2, 3.05) });
+            const shape = new cannon_1.Box(new cannon_1.Vec3(0.4, 0.3, 0.75));
+            dwarfBody.addShape(shape);
+            applicationWorld.physicsWorld.addBody(dwarfBody);
+            dwarfBody.quaternion.setFromAxisAngle(new cannon_1.Vec3(0, 1, 0), Math.PI / 2);
+            const dwarf = new PhysicalModel_1.PhysicalModel(dwarfPrototype, dwarfBody);
+            applicationWorld.models.push(dwarf);
+            applicationWorld.dwarf = dwarf;
+        });
+    }
+    loadFidgetSpinner(applicationWorld) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const fidgetSpinnerPrototype = yield this.modelPrototypeLoader.loadModelPrototype('assets/models/Fidget_Spinner-centered.json', 'assets/textures/fidget_texture.png');
+            const radius = 1.2;
+            const height = 0.05;
+            const constantBody = new cannon_1.Body({
+                mass: 0,
+                position: new cannon_1.Vec3(2, 2, 5.01)
+            });
+            applicationWorld.physicsWorld.addBody(constantBody);
+            const fidgetSpinnerBody = new cannon_1.Body({
+                mass: 400,
+                position: new cannon_1.Vec3(2, 2, 5)
+            });
+            const shape = new cannon_1.Cylinder(radius, radius, height, 10);
+            fidgetSpinnerBody.addShape(shape);
+            applicationWorld.physicsWorld.addBody(fidgetSpinnerBody);
+            fidgetSpinnerBody.angularDamping = 0;
+            fidgetSpinnerBody.angularVelocity.z = 5;
+            fidgetSpinnerBody.quaternion.setFromAxisAngle(new cannon_1.Vec3(1, 0, 0), Math.PI / 2);
+            setInterval(() => {
+                fidgetSpinnerBody.angularVelocity.z += 5;
+            }, 500);
+            const constraint = new cannon_1.DistanceConstraint(fidgetSpinnerBody, constantBody, 1);
+            applicationWorld.physicsWorld.addConstraint(constraint);
+            const fidgetSpinner = new PhysicalModel_1.PhysicalModel(fidgetSpinnerPrototype, fidgetSpinnerBody);
+            applicationWorld.models.push(fidgetSpinner);
+            applicationWorld.fidgetSpinner = fidgetSpinner;
+        });
+    }
+}
+exports.WorldLoader = WorldLoader;
+
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class ApplicationWorld {
+    constructor(physicsWorld, models) {
+        this.physicsWorld = physicsWorld;
+        this.models = models;
+    }
+}
+exports.ApplicationWorld = ApplicationWorld;
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const gl_matrix_1 = __webpack_require__(1);
+const BodilessModel_1 = __webpack_require__(8);
+const CoordinateConverter_1 = __webpack_require__(3);
+class PhysicalModel extends BodilessModel_1.BodilessModel {
+    // TODO: lights
+    constructor(modelPrototype, body) {
+        super(modelPrototype);
+        this.body = body;
+    }
+    draw(gl, webGLBinder) {
+        this.updateModelMatrixFromBody();
+        super.draw(gl, webGLBinder);
+    }
+    updateModelMatrixFromBody() {
+        const { body } = this;
+        const translationVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(body.position);
+        // Same coordinates swap as in CoordinateConverter.
+        const quaternion = gl_matrix_1.quat.fromValues(-body.quaternion.x, body.quaternion.z, body.quaternion.y, body.quaternion.w);
+        gl_matrix_1.mat4.fromRotationTranslation(this.modelMatrix, quaternion, translationVector);
+        gl_matrix_1.mat4.multiply(this.modelMatrix, this.modelMatrix, this.modelPrototype.modelMatrix);
+    }
+}
+exports.PhysicalModel = PhysicalModel;
+
+
+/***/ }),
+/* 41 */
 /***/ (function(module, exports) {
 
 module.exports = "precision mediump float;\r\n\r\nuniform sampler2D uTextureSampler;\r\n\r\nvarying vec4 vPosition;\r\n// varying vec3 vNormalVector;\r\nvarying vec2 vTextureCoords;\r\n\r\nvoid main(void) {\r\n  gl_FragColor = texture2D(uTextureSampler, vTextureCoords);\r\n}\r\n"
 
 /***/ }),
-/* 38 */
+/* 42 */
 /***/ (function(module, exports) {
 
 module.exports = "precision mediump float;\r\n\r\nattribute vec3 aVertexPosition;\r\n// attribute vec3 aNormalVector;\r\nattribute vec2 aTextureCoords;\r\n\r\nuniform mat4 uModelMatrix;\r\nuniform mat4 uViewMatrix;\r\nuniform mat4 uProjectionMatrix;\r\n\r\nvarying vec4 vPosition;\r\n// varying vec3 vNormalVector;\r\nvarying vec2 vTextureCoords;\r\n\r\nvoid main(void) {\r\n  vTextureCoords = aTextureCoords;\r\n  // vNormalVector = aNormalVector;\r\n  // vPosition = ;\r\n  gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aVertexPosition, 1.0);\r\n}\r\n"
