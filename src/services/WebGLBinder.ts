@@ -1,4 +1,4 @@
-import { mat4, vec4 } from 'gl-matrix';
+import { mat4, vec3 } from 'gl-matrix';
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
 
@@ -21,8 +21,8 @@ export class WebGLBinder {
     texture.activate(this.uniforms.textureSampler);
   }
 
-  public bindVertexNormalBuffer(_vertexNormalBuffer: WebGLArrayBufferFacade) {
-    // TODO: add attribute for vertex normals
+  public bindVertexNormalBuffer(vertexNormalBuffer: WebGLArrayBufferFacade) {
+    vertexNormalBuffer.bindBuffer(this.attributes.normalVector);
   }
 
   public bindTextureCoordsBuffer(textureCoordsBuffer: WebGLArrayBufferFacade) {
@@ -49,7 +49,12 @@ export class WebGLBinder {
     this.gl.uniformMatrix4fv(this.uniforms.projectionMatrix, false, projectionMatrix);
   }
 
-  public bindAmbientLightColor(ambientLightColor: vec4) {
-    this.gl.uniform4fv(this.uniforms.ambientLightColor, ambientLightColor);
+  public bindAmbientLightColor(ambientLightColor: vec3) {
+    this.gl.uniform3fv(this.uniforms.ambientLightColor, ambientLightColor);
+  }
+
+  public bindPointLight(position: vec3, color: vec3) {
+    this.gl.uniform3fv(this.uniforms.pointLightPosition, position);
+    this.gl.uniform3fv(this.uniforms.pointLightColor, color);
   }
 }

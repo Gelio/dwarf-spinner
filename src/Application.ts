@@ -60,6 +60,10 @@ export class Application {
     this.loadUniforms();
     this.initWebGLBinder();
     this.webGLBinder.bindAmbientLightColor(configuration.ambientLightColor);
+    this.webGLBinder.bindPointLight(
+      configuration.pointLightPosition,
+      configuration.pointLightColor
+    );
 
     this.initProjectionMatrix();
     this.initCamera();
@@ -110,9 +114,16 @@ export class Application {
     );
     gl.enableVertexAttribArray(textureCoordsAttribute);
 
+    const normalVectorAttribute = gl.getAttribLocation(
+      program,
+      'aNormalVector'
+    );
+    gl.enableVertexAttribArray(normalVectorAttribute);
+
     this.webGLAttributes = {
       vertexPosition: vertexPositionAttribute,
-      textureCoords: textureCoordsAttribute
+      textureCoords: textureCoordsAttribute,
+      normalVector: normalVectorAttribute
     };
   }
 
@@ -140,13 +151,23 @@ export class Application {
       program,
       'uAmbientLightColor'
     );
+    const pointLightPositionUniform = <WebGLUniformLocation>gl.getUniformLocation(
+      program,
+      'uPointLightPosition'
+    );
+    const pointLightColorUniform = <WebGLUniformLocation>gl.getUniformLocation(
+      program,
+      'uPointLightColor'
+    );
 
     this.webGLUniforms = {
       modelMatrix: modelMatrixUniform,
       viewMatrix: viewMatrixUniform,
       projectionMatrix: projectionMatrixUniform,
       textureSampler: textureSamplerUniform,
-      ambientLightColor: ambientLightColorUniform
+      ambientLightColor: ambientLightColorUniform,
+      pointLightColor: pointLightColorUniform,
+      pointLightPosition: pointLightPositionUniform
     };
   }
 
