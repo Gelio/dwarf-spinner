@@ -1,8 +1,8 @@
 {
-  "name": "midget-spinner",
+  "name": "dwarf-spinner",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:Gelio/midget-spinner.git",
+  "repository": "git@github.com:Gelio/dwarf-spinner.git",
   "author": "Grzegorz Rozdzialik <voreny.gelio@gmail.com>",
   "license": "MIT",
   "devDependencies": {
