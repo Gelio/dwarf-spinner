@@ -49,6 +49,7 @@ vec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector) {
 vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector) {
   // Should sum across all light sources
   vec3 viewerVector = normalize(uViewerPosition - vPosition);
+  float shininess = uSpecularShininess;
 
   float cosine = 0.0;
   if (uIlluminationModelType == PHONG_ILLUMINATION_TYPE) {
@@ -57,6 +58,7 @@ vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector) {
   } else if (uIlluminationModelType == BLINN_ILLUMINATION_TYPE)  {
     vec3 hVector = normalize(normalVector + lightVector);
     cosine = dot(normalVector, hVector);
+    shininess /= 2.0;
   }
 
   cosine = max(0.0, cosine);
