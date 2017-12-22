@@ -10,9 +10,9 @@ import {
   Vec3,
   World
 } from 'cannon';
-import { mat4 } from 'gl-matrix';
 
 import { IlluminationProperties } from 'common/IlluminationProperties';
+import { TextureWrapType } from 'common/TextureWrapType';
 
 import { ApplicationWorld } from 'models/ApplicationWorld';
 import { BodilessModel } from 'models/BodilessModel';
@@ -20,7 +20,6 @@ import { PhysicalModel } from 'models/PhysicalModel';
 
 import { Model } from 'interfaces/Model';
 
-import { CoordinateConverter } from 'services/CoordinateConverter';
 import { ModelPrototypeLoader } from 'services/ModelPrototypeLoader';
 
 export class WorldLoader {
@@ -63,15 +62,7 @@ export class WorldLoader {
       'assets/models/ground.json',
       'assets/textures/ground_dirt_1226_9352_Small.jpg'
     );
-
-    const scaleVector = CoordinateConverter.physicsToRendering(
-      new Vec3(5, 5, 1)
-    );
-    mat4.scale(
-      groundPrototype.modelMatrix,
-      groundPrototype.modelMatrix,
-      scaleVector
-    );
+    groundPrototype.texture.enableWrapping(TextureWrapType.Repeat);
 
     const groundShape = new Plane();
     const groundBody = new Body({ mass: 0 });
@@ -83,22 +74,8 @@ export class WorldLoader {
     illuminationProperties.specularCoefficient = 0;
     illuminationProperties.specularShininess = 1;
 
-    for (let x = -5; x <= 5; x += 1) {
-      for (let y = -5; y <= 5; y += 1) {
-        const ground = new BodilessModel(groundPrototype, illuminationProperties);
-
-        const translationVector = CoordinateConverter.physicsToRendering(
-          new Vec3(x, y, 0)
-        );
-        mat4.translate(
-          ground.modelMatrix,
-          ground.modelMatrix,
-          translationVector
-        );
-
-        applicationWorld.models.push(ground);
-      }
-    }
+    const ground = new BodilessModel(groundPrototype, illuminationProperties);
+    applicationWorld.models.push(ground);
   }
 
   private async loadDwarf(applicationWorld: ApplicationWorld) {
