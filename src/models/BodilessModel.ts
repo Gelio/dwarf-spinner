@@ -1,5 +1,7 @@
 import { mat4 } from 'gl-matrix';
 
+import { configuration } from 'configuration';
+
 import { ModelPrototype } from 'models/ModelPrototype';
 
 import { WebGLBinder } from 'services/WebGLBinder';
@@ -11,7 +13,10 @@ export class BodilessModel {
 
   protected readonly modelPrototype: ModelPrototype;
 
-  public constructor(modelPrototype: ModelPrototype, specularShininess: number = 50) {
+  public constructor(
+    modelPrototype: ModelPrototype,
+    specularShininess: number = configuration.defaultSpecularShininess
+  ) {
     this.modelPrototype = modelPrototype;
     this.specularShininess = specularShininess;
 
