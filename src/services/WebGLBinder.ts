@@ -1,6 +1,7 @@
 import { mat4, vec3 } from 'gl-matrix';
 
 import { IlluminationModelType } from 'common/IlluminationModelType';
+import { IlluminationProperties } from 'common/IlluminationProperties';
 
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
@@ -79,6 +80,12 @@ export class WebGLBinder {
 
   public bindSpecularShininess(specularShininess: number) {
     this.gl.uniform1f(this.uniforms.specularShininess, specularShininess);
+  }
+
+  public bindIlluminationProperties(illuminationProperties: IlluminationProperties) {
+    this.bindDiffuseCoefficient(illuminationProperties.diffuseCoefficient);
+    this.bindSpecularCoefficient(illuminationProperties.specularCoefficient);
+    this.bindSpecularShininess(illuminationProperties.specularShininess);
   }
 
   public bindViewerPosition(viewerPosition: vec3) {
