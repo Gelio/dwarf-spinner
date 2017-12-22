@@ -7,6 +7,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/cannon": "^0.1.1",
+    "@types/events": "^1.1.0",
     "@types/gl-matrix": "^2.4.0",
     "@types/jest": "^21.1.8",
     "copy-webpack-plugin": "^4.2.3",
@@ -60,6 +61,7 @@
   },
   "dependencies": {
     "cannon": "^0.6.2",
+    "events": "^1.1.1",
     "expand-vertex-data": "^1.1.2",
     "gl-matrix": "^2.4.0",
     "normalize.css": "^7.0.0"
