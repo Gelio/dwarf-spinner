@@ -16,6 +16,7 @@ import { ProjectionService } from 'services/ProjectionService';
 import { Renderer } from 'services/Renderer';
 import { ShaderCompiler } from 'services/ShaderCompiler';
 import { WebGLBinder } from 'services/WebGLBinder';
+import { WebGLUniformLoader } from 'services/WebGLUniformLoader';
 
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
@@ -132,72 +133,9 @@ export class Application {
   }
 
   private loadUniforms() {
-    const gl = this.gl;
-    const program = this.programFacade.program;
+    const uniformLoader = new WebGLUniformLoader(this.gl, this.programFacade);
 
-    const modelMatrixUniform = <WebGLUniformLocation>gl.getUniformLocation(
-      program,
-      'uModelMatrix'
-    );
-    const viewMatrixUniform = <WebGLUniformLocation>gl.getUniformLocation(
-      program,
-      'uViewMatrix'
-    );
-    const projectionMatrixUniform = <WebGLUniformLocation>gl.getUniformLocation(
-      program,
-      'uProjectionMatrix'
-    );
-    const textureSamplerUniform = <WebGLUniformLocation>gl.getUniformLocation(
-      program,
-      'uTextureSampler'
-    );
-    const ambientLightColorUniform = <WebGLUniformLocation>gl.getUniformLocation(
-      program,
-      'uAmbientLightColor'
-    );
-    const pointLightPositionUniform = <WebGLUniformLocation>gl.getUniformLocation(
-      program,
-      'uPointLightPosition'
-    );
-    const pointLightColorUniform = <WebGLUniformLocation>gl.getUniformLocation(
-      program,
-      'uPointLightColor'
-    );
-    const diffuseCoefficientUniform = <WebGLUniformLocation>gl.getUniformLocation(
-      program,
-      'uDiffuseCoefficient'
-    );
-    const specularCoefficientUniform = <WebGLUniformLocation>gl.getUniformLocation(
-      program,
-      'uSpecularCoefficient'
-    );
-    const illuminationModelTypeUniform = <WebGLUniformLocation>gl.getUniformLocation(
-      program,
-      'uIlluminationModelType'
-    );
-    const specularShininessUniform = <WebGLUniformLocation>gl.getUniformLocation(
-      program,
-      'uSpecularShininess'
-    );
-    const viewerPositionUniform = <WebGLUniformLocation>gl.getUniformLocation(
-      program,
-      'uViewerPosition'
-    );
-
-    this.webGLUniforms = {
-      modelMatrix: modelMatrixUniform,
-      viewMatrix: viewMatrixUniform,
-      projectionMatrix: projectionMatrixUniform,
-      textureSampler: textureSamplerUniform,
-      ambientLightColor: ambientLightColorUniform,
-      pointLightColor: pointLightColorUniform,
-      pointLightPosition: pointLightPositionUniform,
-      diffuseCoefficient: diffuseCoefficientUniform,
-      illuminationModelType: illuminationModelTypeUniform,
-      specularCoefficient: specularCoefficientUniform,
-      specularShininess: specularShininessUniform,
-      viewerPosition: viewerPositionUniform
-    };
+    this.webGLUniforms = uniformLoader.loadUniforms();
   }
 
   private initProjectionMatrix() {
