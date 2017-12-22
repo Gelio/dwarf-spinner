@@ -76,4 +76,8 @@ export class WebGLBinder {
   public bindSpecularShininess(specularShininess: number) {
     this.gl.uniform1f(this.uniforms.specularShininess, specularShininess);
   }
+
+  public bindViewerPosition(viewerPosition: vec3) {
+    this.gl.uniform3fv(this.uniforms.viewerPosition, viewerPosition);
+  }
 }

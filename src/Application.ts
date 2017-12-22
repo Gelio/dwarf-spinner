@@ -95,6 +95,7 @@ export class Application {
 
     CoordinateConverter.physicsToRendering(this.camera.target, targetPosition);
     this.renderer.refreshCamera();
+    this.webGLBinder.bindViewerPosition(this.camera.position);
 
     this.renderer.clearCanvas();
 
@@ -178,6 +179,10 @@ export class Application {
       program,
       'uSpecularShininess'
     );
+    const viewerPositionUniform = <WebGLUniformLocation>gl.getUniformLocation(
+      program,
+      'uViewerPosition'
+    );
 
     this.webGLUniforms = {
       modelMatrix: modelMatrixUniform,
@@ -190,7 +195,8 @@ export class Application {
       diffuseCoefficient: diffuseCoefficientUniform,
       illuminationModelType: illuminationModelTypeUniform,
       specularCoefficient: specularCoefficientUniform,
-      specularShininess: specularShininessUniform
+      specularShininess: specularShininessUniform,
+      viewerPosition: viewerPositionUniform
     };
   }
 

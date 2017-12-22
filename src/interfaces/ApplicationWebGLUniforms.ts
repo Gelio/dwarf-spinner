@@ -14,4 +14,6 @@ export interface ApplicationWebGLUniforms {
 
   pointLightPosition: WebGLUniformLocation;
   pointLightColor: WebGLUniformLocation;
+
+  viewerPosition: WebGLUniformLocation;
 }
