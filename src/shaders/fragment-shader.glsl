@@ -22,15 +22,16 @@ varying vec3 vNormalVector;
 varying vec2 vTextureCoords;
 
 
-vec3 getDiffuseLightIntensity(vec3 lightVector);
-vec3 getSpecularLightIntensity(vec3 lightVector);
+vec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector);
+vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector);
 
 
 void main(void) {
+  vec3 normalVector = normalize(vNormalVector);
   vec3 lightVector = normalize(uPointLightPosition - vPosition);
 
-  vec3 diffuseIntensity = getDiffuseLightIntensity(lightVector);
-  vec3 specularIntensity = getSpecularLightIntensity(lightVector);
+  vec3 diffuseIntensity = getDiffuseLightIntensity(lightVector, normalVector);
+  vec3 specularIntensity = getSpecularLightIntensity(lightVector, normalVector);
 
   vec4 lightIntensity = vec4(uAmbientLightColor + diffuseIntensity + specularIntensity, 1.0);
 
@@ -38,24 +39,24 @@ void main(void) {
 }
 
 
-vec3 getDiffuseLightIntensity(vec3 lightVector) {
+vec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector) {
   // Should sum across all light sources
-  float cosine = max(0.0, dot(vNormalVector, lightVector));
+  float cosine = max(0.0, dot(normalVector, lightVector));
 
   return uDiffuseCoefficient * uPointLightColor * cosine;
 }
 
-vec3 getSpecularLightIntensity(vec3 lightVector) {
+vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector) {
   // Should sum across all light sources
   vec3 viewerVector = normalize(uViewerPosition - vPosition);
 
   float cosine = 0.0;
   if (uIlluminationModelType == PHONG_ILLUMINATION_TYPE) {
-    vec3 reflectionVector = 2.0 * dot(vNormalVector, lightVector) * vNormalVector - lightVector;
+    vec3 reflectionVector = 2.0 * dot(normalVector, lightVector) * normalVector - lightVector;
     cosine = dot(viewerVector, reflectionVector);
   } else if (uIlluminationModelType == BLINN_ILLUMINATION_TYPE)  {
-    vec3 hVector = normalize(vNormalVector + lightVector);
-    cosine = dot(vNormalVector, hVector);
+    vec3 hVector = normalize(normalVector + lightVector);
+    cosine = dot(normalVector, hVector);
   }
 
   cosine = max(0.0, cosine);

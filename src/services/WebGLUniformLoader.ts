@@ -14,6 +14,7 @@ export class WebGLUniformLoader {
   public loadUniforms(): ApplicationWebGLUniforms {
     return {
       modelMatrix: this.loadUniform('uModelMatrix'),
+      normalMatrix: this.loadUniform('uNormalMatrix'),
       viewMatrix: this.loadUniform('uViewMatrix'),
       projectionMatrix: this.loadUniform('uProjectionMatrix'),
       textureSampler: this.loadUniform('uTextureSampler'),
