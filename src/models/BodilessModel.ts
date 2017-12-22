@@ -26,6 +26,7 @@ export class BodilessModel {
   public draw(gl: WebGLRenderingContext, webGLBinder: WebGLBinder) {
     this.modelPrototype.bindBuffersAndTexture(webGLBinder);
     webGLBinder.bindModelMatrix(this.modelMatrix);
+    webGLBinder.bindNormalMatrix(this.modelMatrix);
     webGLBinder.bindSpecularShininess(this.specularShininess);
 
     gl.drawElements(

@@ -44,6 +44,10 @@ export class WebGLBinder {
     this.gl.uniformMatrix4fv(this.uniforms.modelMatrix, false, modelMatrix);
   }
 
+  public bindNormalMatrix(normalMatrix: mat4) {
+    this.gl.uniformMatrix4fv(this.uniforms.normalMatrix, false, normalMatrix);
+  }
+
   public bindViewMatrix(viewMatrix: mat4) {
     this.gl.uniformMatrix4fv(this.uniforms.viewMatrix, false, viewMatrix);
   }

@@ -1,5 +1,6 @@
 export interface ApplicationWebGLUniforms {
   modelMatrix: WebGLUniformLocation;
+  normalMatrix: WebGLUniformLocation;
   projectionMatrix: WebGLUniformLocation;
   textureSampler: WebGLUniformLocation;
   viewMatrix: WebGLUniformLocation;
