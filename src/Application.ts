@@ -64,6 +64,9 @@ export class Application {
       configuration.pointLightPosition,
       configuration.pointLightColor
     );
+    this.webGLBinder.bindIlluminationModelType(configuration.illuminationModelType);
+    this.webGLBinder.bindDiffuseCoefficient(configuration.diffuseCoefficient);
+    this.webGLBinder.bindSpecularCoefficient(configuration.specularCoefficient);
 
     this.initProjectionMatrix();
     this.initCamera();
@@ -92,6 +95,7 @@ export class Application {
 
     CoordinateConverter.physicsToRendering(this.camera.target, targetPosition);
     this.renderer.refreshCamera();
+    this.webGLBinder.bindViewerPosition(this.camera.position);
 
     this.renderer.clearCanvas();
 
@@ -159,6 +163,26 @@ export class Application {
       program,
       'uPointLightColor'
     );
+    const diffuseCoefficientUniform = <WebGLUniformLocation>gl.getUniformLocation(
+      program,
+      'uDiffuseCoefficient'
+    );
+    const specularCoefficientUniform = <WebGLUniformLocation>gl.getUniformLocation(
+      program,
+      'uSpecularCoefficient'
+    );
+    const illuminationModelTypeUniform = <WebGLUniformLocation>gl.getUniformLocation(
+      program,
+      'uIlluminationModelType'
+    );
+    const specularShininessUniform = <WebGLUniformLocation>gl.getUniformLocation(
+      program,
+      'uSpecularShininess'
+    );
+    const viewerPositionUniform = <WebGLUniformLocation>gl.getUniformLocation(
+      program,
+      'uViewerPosition'
+    );
 
     this.webGLUniforms = {
       modelMatrix: modelMatrixUniform,
@@ -167,7 +191,12 @@ export class Application {
       textureSampler: textureSamplerUniform,
       ambientLightColor: ambientLightColorUniform,
       pointLightColor: pointLightColorUniform,
-      pointLightPosition: pointLightPositionUniform
+      pointLightPosition: pointLightPositionUniform,
+      diffuseCoefficient: diffuseCoefficientUniform,
+      illuminationModelType: illuminationModelTypeUniform,
+      specularCoefficient: specularCoefficientUniform,
+      specularShininess: specularShininessUniform,
+      viewerPosition: viewerPositionUniform
     };
   }
 

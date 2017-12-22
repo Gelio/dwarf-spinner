@@ -1,17 +1,24 @@
 import { mat4 } from 'gl-matrix';
 
+import { configuration } from 'configuration';
+
 import { ModelPrototype } from 'models/ModelPrototype';
 
 import { WebGLBinder } from 'services/WebGLBinder';
 
 export class BodilessModel {
   public readonly modelMatrix: mat4;
+  public specularShininess: number;
   // TODO: lights
 
   protected readonly modelPrototype: ModelPrototype;
 
-  public constructor(modelPrototype: ModelPrototype) {
+  public constructor(
+    modelPrototype: ModelPrototype,
+    specularShininess: number = configuration.defaultSpecularShininess
+  ) {
     this.modelPrototype = modelPrototype;
+    this.specularShininess = specularShininess;
 
     this.modelMatrix = mat4.clone(this.modelPrototype.modelMatrix);
   }
@@ -19,6 +26,7 @@ export class BodilessModel {
   public draw(gl: WebGLRenderingContext, webGLBinder: WebGLBinder) {
     this.modelPrototype.bindBuffersAndTexture(webGLBinder);
     webGLBinder.bindModelMatrix(this.modelMatrix);
+    webGLBinder.bindSpecularShininess(this.specularShininess);
 
     gl.drawElements(
       gl.TRIANGLES,

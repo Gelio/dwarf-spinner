@@ -11,8 +11,8 @@ export class PhysicalModel extends BodilessModel {
   public readonly body: Body;
   // TODO: lights
 
-  public constructor(modelPrototype: ModelPrototype, body: Body) {
-    super(modelPrototype);
+  public constructor(modelPrototype: ModelPrototype, body: Body, specularShininess?: number) {
+    super(modelPrototype, specularShininess);
     this.body = body;
   }
 
