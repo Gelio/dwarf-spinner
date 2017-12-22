@@ -20,6 +20,7 @@ import { WebGLUniformLoader } from 'services/WebGLUniformLoader';
 
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
+import { WebGLAttributeLoader } from 'services/WebGLAttributeLoader';
 import { WorldLoader } from 'services/WorldLoader';
 
 // tslint:disable no-require-imports import-name no-var-requires
@@ -104,32 +105,9 @@ export class Application {
   }
 
   private loadAttributes() {
-    const gl = this.gl;
-    const program = this.programFacade.program;
+    const attributeLoader = new WebGLAttributeLoader(this.gl, this.programFacade);
 
-    const vertexPositionAttribute = gl.getAttribLocation(
-      program,
-      'aVertexPosition'
-    );
-    gl.enableVertexAttribArray(vertexPositionAttribute);
-
-    const textureCoordsAttribute = gl.getAttribLocation(
-      program,
-      'aTextureCoords'
-    );
-    gl.enableVertexAttribArray(textureCoordsAttribute);
-
-    const normalVectorAttribute = gl.getAttribLocation(
-      program,
-      'aNormalVector'
-    );
-    gl.enableVertexAttribArray(normalVectorAttribute);
-
-    this.webGLAttributes = {
-      vertexPosition: vertexPositionAttribute,
-      textureCoords: textureCoordsAttribute,
-      normalVector: normalVectorAttribute
-    };
+    this.webGLAttributes = attributeLoader.loadAttributes();
   }
 
   private loadUniforms() {
