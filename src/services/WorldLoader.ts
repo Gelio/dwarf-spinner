@@ -12,6 +12,8 @@ import {
 } from 'cannon';
 import { mat4 } from 'gl-matrix';
 
+import { IlluminationProperties } from 'common/IlluminationProperties';
+
 import { ApplicationWorld } from 'models/ApplicationWorld';
 import { BodilessModel } from 'models/BodilessModel';
 import { PhysicalModel } from 'models/PhysicalModel';
@@ -76,9 +78,14 @@ export class WorldLoader {
     groundBody.addShape(groundShape);
     applicationWorld.physicsWorld.addBody(groundBody);
 
+    const illuminationProperties = new IlluminationProperties();
+    illuminationProperties.diffuseCoefficient = 1;
+    illuminationProperties.specularCoefficient = 0;
+    illuminationProperties.specularShininess = 1;
+
     for (let x = -5; x <= 5; x += 1) {
       for (let y = -5; y <= 5; y += 1) {
-        const ground = new BodilessModel(groundPrototype);
+        const ground = new BodilessModel(groundPrototype, illuminationProperties);
 
         const translationVector = CoordinateConverter.physicsToRendering(
           new Vec3(x, y, 0)
