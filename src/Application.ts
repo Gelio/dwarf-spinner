@@ -15,13 +15,16 @@ import { ModelPrototypeLoader } from 'services/ModelPrototypeLoader';
 import { ProjectionService } from 'services/ProjectionService';
 import { Renderer } from 'services/Renderer';
 import { ShaderCompiler } from 'services/ShaderCompiler';
+import { WebGLAttributeLoader } from 'services/WebGLAttributeLoader';
 import { WebGLBinder } from 'services/WebGLBinder';
 import { WebGLUniformLoader } from 'services/WebGLUniformLoader';
+import { WorldLoader } from 'services/WorldLoader';
 
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
-import { WebGLAttributeLoader } from 'services/WebGLAttributeLoader';
-import { WorldLoader } from 'services/WorldLoader';
+
+import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
+import { NewIlluminationModelTypeEvent } from 'events/NewIlluminationModelTypeEvent';
 
 // tslint:disable no-require-imports import-name no-var-requires
 const fragmentShaderSource = require('./shaders/fragment-shader.glsl');
@@ -31,6 +34,7 @@ const vertexShaderSource = require('./shaders/vertex-shader.glsl');
 export class Application {
   private readonly canvas: HTMLCanvasElement;
   private readonly gl: WebGLRenderingContext;
+  private readonly eventEmitter: ApplicationEventEmitter;
 
   private camera: Camera;
   private webGLAttributes: ApplicationWebGLAttributes;
@@ -46,6 +50,7 @@ export class Application {
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
+    this.eventEmitter = new ApplicationEventEmitter();
 
     const gl = this.canvas.getContext('webgl');
     if (!gl) {
@@ -54,9 +59,14 @@ export class Application {
     this.gl = gl;
 
     this.render = this.render.bind(this);
+    this.onNewIlluminationModelType = this.onNewIlluminationModelType.bind(
+      this
+    );
   }
 
   public async init() {
+    this.bindToEvents();
+
     this.initProgram();
     this.loadAttributes();
     this.loadUniforms();
@@ -66,7 +76,9 @@ export class Application {
       configuration.pointLightPosition,
       configuration.pointLightColor
     );
-    this.webGLBinder.bindIlluminationModelType(configuration.illuminationModelType);
+    this.webGLBinder.bindIlluminationModelType(
+      configuration.illuminationModelType
+    );
 
     this.initProjectionMatrix();
     this.initCamera();
@@ -75,6 +87,13 @@ export class Application {
     await this.initWorld();
 
     this.render();
+  }
+
+  private bindToEvents() {
+    this.eventEmitter.on(
+      NewIlluminationModelTypeEvent.name,
+      this.onNewIlluminationModelType
+    );
   }
 
   private render(timestamp?: number) {
@@ -103,7 +122,10 @@ export class Application {
   }
 
   private loadAttributes() {
-    const attributeLoader = new WebGLAttributeLoader(this.gl, this.programFacade);
+    const attributeLoader = new WebGLAttributeLoader(
+      this.gl,
+      this.programFacade
+    );
 
     this.webGLAttributes = attributeLoader.loadAttributes();
   }
@@ -184,5 +206,9 @@ export class Application {
     const worldLoader = new WorldLoader(modelPrototypeLoader);
 
     this.world = await worldLoader.loadWorld(physicsWorld);
+  }
+
+  private onNewIlluminationModelType(event: NewIlluminationModelTypeEvent) {
+    this.webGLBinder.bindIlluminationModelType(event.illuminationModelType);
   }
 }
