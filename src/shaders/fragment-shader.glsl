@@ -1,3 +1,6 @@
+#define PHONG_ILLUMINATION_TYPE 0
+#define BLINN_ILLUMINATION_TYPE 1
+
 precision mediump float;
 
 uniform sampler2D uTextureSampler;
@@ -45,9 +48,17 @@ vec3 getDiffuseLightIntensity(vec3 lightVector) {
 vec3 getSpecularLightIntensity(vec3 lightVector) {
   // Should sum across all light sources
   vec3 viewerVector = normalize(uViewerPosition - vPosition);
-  vec3 reflectionVector = 2.0 * dot(vNormalVector, lightVector) * vNormalVector - lightVector;
 
-  float cosine = max(0.0, dot(viewerVector, reflectionVector));
+  float cosine = 0.0;
+  if (uIlluminationModelType == PHONG_ILLUMINATION_TYPE) {
+    vec3 reflectionVector = 2.0 * dot(vNormalVector, lightVector) * vNormalVector - lightVector;
+    cosine = dot(viewerVector, reflectionVector);
+  } else if (uIlluminationModelType == BLINN_ILLUMINATION_TYPE)  {
+    vec3 hVector = normalize(vNormalVector + lightVector);
+    cosine = dot(vNormalVector, hVector);
+  }
+
+  cosine = max(0.0, cosine);
 
   return uSpecularCoefficient * uPointLightColor * pow(cosine, uSpecularShininess);
 }
