@@ -1,4 +1,7 @@
 import { mat4, vec3 } from 'gl-matrix';
+
+import { IlluminationModelType } from 'common/IlluminationModelType';
+
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
 
@@ -56,5 +59,21 @@ export class WebGLBinder {
   public bindPointLight(position: vec3, color: vec3) {
     this.gl.uniform3fv(this.uniforms.pointLightPosition, position);
     this.gl.uniform3fv(this.uniforms.pointLightColor, color);
+  }
+
+  public bindIlluminationModelType(illuminationModelType: IlluminationModelType) {
+    this.gl.uniform1i(this.uniforms.illuminationModelType, illuminationModelType);
+  }
+
+  public bindDiffuseCoefficient(diffuseCoefficient: number) {
+    this.gl.uniform1f(this.uniforms.diffuseCoefficient, diffuseCoefficient);
+  }
+
+  public bindSpecularCoefficient(specularCoefficient: number) {
+    this.gl.uniform1f(this.uniforms.specularCoefficient, specularCoefficient);
+  }
+
+  public bindSpecularShininess(specularShininess: number) {
+    this.gl.uniform1f(this.uniforms.specularShininess, specularShininess);
   }
 }

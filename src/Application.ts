@@ -64,6 +64,9 @@ export class Application {
       configuration.pointLightPosition,
       configuration.pointLightColor
     );
+    this.webGLBinder.bindIlluminationModelType(configuration.illuminationModelType);
+    this.webGLBinder.bindDiffuseCoefficient(configuration.diffuseCoefficient);
+    this.webGLBinder.bindSpecularCoefficient(configuration.specularCoefficient);
 
     this.initProjectionMatrix();
     this.initCamera();
@@ -159,6 +162,22 @@ export class Application {
       program,
       'uPointLightColor'
     );
+    const diffuseCoefficientUniform = <WebGLUniformLocation>gl.getUniformLocation(
+      program,
+      'uDiffuseCoefficient'
+    );
+    const specularCoefficientUniform = <WebGLUniformLocation>gl.getUniformLocation(
+      program,
+      'uSpecularCoefficient'
+    );
+    const illuminationModelTypeUniform = <WebGLUniformLocation>gl.getUniformLocation(
+      program,
+      'uIlluminationModelType'
+    );
+    const specularShininessUniform = <WebGLUniformLocation>gl.getUniformLocation(
+      program,
+      'uSpecularShininess'
+    );
 
     this.webGLUniforms = {
       modelMatrix: modelMatrixUniform,
@@ -167,7 +186,11 @@ export class Application {
       textureSampler: textureSamplerUniform,
       ambientLightColor: ambientLightColorUniform,
       pointLightColor: pointLightColorUniform,
-      pointLightPosition: pointLightPositionUniform
+      pointLightPosition: pointLightPositionUniform,
+      diffuseCoefficient: diffuseCoefficientUniform,
+      illuminationModelType: illuminationModelTypeUniform,
+      specularCoefficient: specularCoefficientUniform,
+      specularShininess: specularShininessUniform
     };
   }
 
