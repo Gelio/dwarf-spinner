@@ -5,6 +5,7 @@ attribute vec3 aNormalVector;
 attribute vec2 aTextureCoords;
 
 uniform mat4 uModelMatrix;
+uniform mat4 uNormalMatrix;
 uniform mat4 uViewMatrix;
 uniform mat4 uProjectionMatrix;
 
@@ -14,10 +15,10 @@ varying vec2 vTextureCoords;
 
 void main(void) {
   vTextureCoords = aTextureCoords;
-  vNormalVector = aNormalVector;
+  vNormalVector = vec3(uNormalMatrix * vec4(aNormalVector, 0.0));
 
   vec4 worldPosition = uModelMatrix * vec4(aVertexPosition, 1.0);
-  vPosition = worldPosition.xyz;
+  vPosition = vec3(worldPosition) / worldPosition.w;
 
   gl_Position = uProjectionMatrix * uViewMatrix * worldPosition;
 }
