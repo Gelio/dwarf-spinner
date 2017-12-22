@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -148,14 +148,14 @@ function equals(a, b) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__gl_matrix_common__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__gl_matrix_mat2__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__gl_matrix_mat2d__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__gl_matrix_mat3__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__gl_matrix_mat4__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__gl_matrix_quat__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__gl_matrix_vec2__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__gl_matrix_vec3__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__gl_matrix_vec4__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__gl_matrix_mat2__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__gl_matrix_mat2d__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__gl_matrix_mat3__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__gl_matrix_mat4__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__gl_matrix_quat__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__gl_matrix_vec2__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__gl_matrix_vec3__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__gl_matrix_vec4__ = __webpack_require__(7);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "glMatrix", function() { return __WEBPACK_IMPORTED_MODULE_0__gl_matrix_common__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "mat2", function() { return __WEBPACK_IMPORTED_MODULE_1__gl_matrix_mat2__; });
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "mat2d", function() { return __WEBPACK_IMPORTED_MODULE_2__gl_matrix_mat2d__; });
@@ -13929,6 +13929,33 @@ exports.CoordinateConverter = CoordinateConverter;
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const cannon_1 = __webpack_require__(2);
+const gl_matrix_1 = __webpack_require__(1);
+const IlluminationModelType_1 = __webpack_require__(24);
+const IlluminationProperties_1 = __webpack_require__(8);
+const CoordinateConverter_1 = __webpack_require__(3);
+const defaultIlluminationProperties = new IlluminationProperties_1.IlluminationProperties();
+defaultIlluminationProperties.diffuseCoefficient = 0.8;
+defaultIlluminationProperties.specularCoefficient = 0.5;
+defaultIlluminationProperties.specularShininess = 50;
+exports.configuration = {
+    maxPhysicsWorldTimeAdvance: 1 / 30,
+    physicsSpeed: 1,
+    ambientLightColor: gl_matrix_1.vec3.fromValues(0, 0, 0),
+    pointLightColor: gl_matrix_1.vec3.fromValues(1, 1, 1),
+    pointLightPosition: CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(0, 0, 5)),
+    illuminationModelType: IlluminationModelType_1.IlluminationModelType.Phong,
+    defaultIlluminationProperties
+};
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14736,7 +14763,7 @@ const sub = subtract;
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -15576,7 +15603,7 @@ const forEach = (function() {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -16238,7 +16265,26 @@ const forEach = (function() {
 
 
 /***/ }),
-/* 7 */
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class IlluminationProperties {
+    clone() {
+        const cloned = new IlluminationProperties();
+        cloned.specularShininess = this.specularShininess;
+        cloned.diffuseCoefficient = this.diffuseCoefficient;
+        cloned.specularCoefficient = this.specularCoefficient;
+        return cloned;
+    }
+}
+exports.IlluminationProperties = IlluminationProperties;
+
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16256,21 +16302,25 @@ exports.WebGLBufferFacade = WebGLBufferFacade;
 
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const gl_matrix_1 = __webpack_require__(1);
+const configuration_1 = __webpack_require__(4);
 class BodilessModel {
-    constructor(modelPrototype) {
+    constructor(modelPrototype, illuminationProperties = configuration_1.configuration.defaultIlluminationProperties.clone()) {
         this.modelPrototype = modelPrototype;
+        this.illuminationProperties = illuminationProperties;
         this.modelMatrix = gl_matrix_1.mat4.clone(this.modelPrototype.modelMatrix);
     }
     draw(gl, webGLBinder) {
         this.modelPrototype.bindBuffersAndTexture(webGLBinder);
         webGLBinder.bindModelMatrix(this.modelMatrix);
+        webGLBinder.bindNormalMatrix(this.modelMatrix);
+        webGLBinder.bindIlluminationProperties(this.illuminationProperties);
         gl.drawElements(gl.TRIANGLES, this.modelPrototype.vertexIndexBuffer.itemsCount, gl.UNSIGNED_SHORT, 0);
     }
 }
@@ -16278,15 +16328,15 @@ exports.BodilessModel = BodilessModel;
 
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(10);
-__webpack_require__(15);
-const Application_1 = __webpack_require__(16);
+__webpack_require__(12);
+__webpack_require__(17);
+const Application_1 = __webpack_require__(18);
 window.onload = bootstrap;
 function bootstrap() {
     const mainCanvas = document.getElementById('main-canvas');
@@ -16299,13 +16349,13 @@ function bootstrap() {
 
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(11);
+var content = __webpack_require__(13);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -16313,7 +16363,7 @@ var transform;
 var options = {"hmr":true}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(13)(content, options);
+var update = __webpack_require__(15)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -16330,10 +16380,10 @@ if(false) {
 }
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(12)(undefined);
+exports = module.exports = __webpack_require__(14)(undefined);
 // imports
 
 
@@ -16344,7 +16394,7 @@ exports.push([module.i, "html, body {\n  box-sizing: border-box;\n  min-width: 1
 
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports) {
 
 /*
@@ -16426,7 +16476,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -16482,7 +16532,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(14);
+var	fixUrls = __webpack_require__(16);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -16798,7 +16848,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports) {
 
 
@@ -16893,13 +16943,13 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16914,46 +16964,57 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const cannon_1 = __webpack_require__(2);
-const configuration_1 = __webpack_require__(17);
-const ShaderType_1 = __webpack_require__(23);
-const WebGLProgramFacade_1 = __webpack_require__(24);
-const Camera_1 = __webpack_require__(25);
+const configuration_1 = __webpack_require__(4);
+const ShaderType_1 = __webpack_require__(25);
+const WebGLProgramFacade_1 = __webpack_require__(26);
+const Camera_1 = __webpack_require__(27);
 const CoordinateConverter_1 = __webpack_require__(3);
-const ImageLoader_1 = __webpack_require__(26);
-const ModelPrototypeLoader_1 = __webpack_require__(27);
-const ProjectionService_1 = __webpack_require__(34);
-const Renderer_1 = __webpack_require__(35);
-const ShaderCompiler_1 = __webpack_require__(36);
-const WebGLBinder_1 = __webpack_require__(37);
-const WorldLoader_1 = __webpack_require__(38);
+const ImageLoader_1 = __webpack_require__(28);
+const ModelPrototypeLoader_1 = __webpack_require__(29);
+const ProjectionService_1 = __webpack_require__(36);
+const Renderer_1 = __webpack_require__(37);
+const ShaderCompiler_1 = __webpack_require__(38);
+const WebGLAttributeLoader_1 = __webpack_require__(39);
+const WebGLBinder_1 = __webpack_require__(40);
+const WebGLUniformLoader_1 = __webpack_require__(41);
+const WorldLoader_1 = __webpack_require__(42);
+const ApplicationEventEmitter_1 = __webpack_require__(46);
+const NewIlluminationModelTypeEvent_1 = __webpack_require__(48);
 // tslint:disable no-require-imports import-name no-var-requires
-const fragmentShaderSource = __webpack_require__(41);
-const vertexShaderSource = __webpack_require__(42);
+const fragmentShaderSource = __webpack_require__(50);
+const vertexShaderSource = __webpack_require__(51);
 // tslint:enable no-require-imports, import-name
 class Application {
     constructor(canvas) {
         this.canvas = canvas;
+        this.eventEmitter = new ApplicationEventEmitter_1.ApplicationEventEmitter();
         const gl = this.canvas.getContext('webgl');
         if (!gl) {
             throw new Error('WebGL not supported');
         }
         this.gl = gl;
         this.render = this.render.bind(this);
+        this.onNewIlluminationModelType = this.onNewIlluminationModelType.bind(this);
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
+            this.bindToEvents();
             this.initProgram();
             this.loadAttributes();
             this.loadUniforms();
             this.initWebGLBinder();
             this.webGLBinder.bindAmbientLightColor(configuration_1.configuration.ambientLightColor);
             this.webGLBinder.bindPointLight(configuration_1.configuration.pointLightPosition, configuration_1.configuration.pointLightColor);
+            this.webGLBinder.bindIlluminationModelType(configuration_1.configuration.illuminationModelType);
             this.initProjectionMatrix();
             this.initCamera();
             this.initRenderer();
             yield this.initWorld();
             this.render();
         });
+    }
+    bindToEvents() {
+        this.eventEmitter.on(NewIlluminationModelTypeEvent_1.NewIlluminationModelTypeEvent.name, this.onNewIlluminationModelType);
     }
     render(timestamp) {
         requestAnimationFrame(this.render);
@@ -16969,43 +17030,17 @@ class Application {
         const targetPosition = this.world.dwarf.body.position;
         CoordinateConverter_1.CoordinateConverter.physicsToRendering(this.camera.target, targetPosition);
         this.renderer.refreshCamera();
+        this.webGLBinder.bindViewerPosition(this.camera.position);
         this.renderer.clearCanvas();
         this.world.models.forEach(model => this.renderer.drawModel(model));
     }
     loadAttributes() {
-        const gl = this.gl;
-        const program = this.programFacade.program;
-        const vertexPositionAttribute = gl.getAttribLocation(program, 'aVertexPosition');
-        gl.enableVertexAttribArray(vertexPositionAttribute);
-        const textureCoordsAttribute = gl.getAttribLocation(program, 'aTextureCoords');
-        gl.enableVertexAttribArray(textureCoordsAttribute);
-        const normalVectorAttribute = gl.getAttribLocation(program, 'aNormalVector');
-        gl.enableVertexAttribArray(normalVectorAttribute);
-        this.webGLAttributes = {
-            vertexPosition: vertexPositionAttribute,
-            textureCoords: textureCoordsAttribute,
-            normalVector: normalVectorAttribute
-        };
+        const attributeLoader = new WebGLAttributeLoader_1.WebGLAttributeLoader(this.gl, this.programFacade);
+        this.webGLAttributes = attributeLoader.loadAttributes();
     }
     loadUniforms() {
-        const gl = this.gl;
-        const program = this.programFacade.program;
-        const modelMatrixUniform = gl.getUniformLocation(program, 'uModelMatrix');
-        const viewMatrixUniform = gl.getUniformLocation(program, 'uViewMatrix');
-        const projectionMatrixUniform = gl.getUniformLocation(program, 'uProjectionMatrix');
-        const textureSamplerUniform = gl.getUniformLocation(program, 'uTextureSampler');
-        const ambientLightColorUniform = gl.getUniformLocation(program, 'uAmbientLightColor');
-        const pointLightPositionUniform = gl.getUniformLocation(program, 'uPointLightPosition');
-        const pointLightColorUniform = gl.getUniformLocation(program, 'uPointLightColor');
-        this.webGLUniforms = {
-            modelMatrix: modelMatrixUniform,
-            viewMatrix: viewMatrixUniform,
-            projectionMatrix: projectionMatrixUniform,
-            textureSampler: textureSamplerUniform,
-            ambientLightColor: ambientLightColorUniform,
-            pointLightColor: pointLightColorUniform,
-            pointLightPosition: pointLightPositionUniform
-        };
+        const uniformLoader = new WebGLUniformLoader_1.WebGLUniformLoader(this.gl, this.programFacade);
+        this.webGLUniforms = uniformLoader.loadUniforms();
     }
     initProjectionMatrix() {
         const projectionService = new ProjectionService_1.ProjectionService();
@@ -17041,31 +17076,15 @@ class Application {
             this.world = yield worldLoader.loadWorld(physicsWorld);
         });
     }
+    onNewIlluminationModelType(event) {
+        this.webGLBinder.bindIlluminationModelType(event.illuminationModelType);
+    }
 }
 exports.Application = Application;
 
 
 /***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const cannon_1 = __webpack_require__(2);
-const gl_matrix_1 = __webpack_require__(1);
-const CoordinateConverter_1 = __webpack_require__(3);
-exports.configuration = {
-    maxPhysicsWorldTimeAdvance: 1 / 30,
-    physicsSpeed: 1,
-    ambientLightColor: gl_matrix_1.vec3.fromValues(0.2, 0.2, 0.2),
-    pointLightColor: gl_matrix_1.vec3.fromValues(1, 1, 1),
-    pointLightPosition: CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(0, 0, 5))
-};
-
-
-/***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17535,7 +17554,7 @@ const sub = subtract;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -18037,7 +18056,7 @@ const sub = subtract;
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19775,7 +19794,7 @@ const sub = subtract;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19796,9 +19815,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["fromEuler"] = fromEuler;
 /* harmony export (immutable) */ __webpack_exports__["str"] = str;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mat3__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__vec3__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__vec4__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mat3__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__vec3__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__vec4__ = __webpack_require__(7);
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20466,7 +20485,7 @@ const setAxes = (function() {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -21109,7 +21128,21 @@ const forEach = (function() {
 
 
 /***/ }),
-/* 23 */
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var IlluminationModelType;
+(function (IlluminationModelType) {
+    IlluminationModelType[IlluminationModelType["Phong"] = 0] = "Phong";
+    IlluminationModelType[IlluminationModelType["Blinn"] = 1] = "Blinn";
+})(IlluminationModelType = exports.IlluminationModelType || (exports.IlluminationModelType = {}));
+
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21123,7 +21156,7 @@ var ShaderType;
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21148,7 +21181,7 @@ exports.WebGLProgramFacade = WebGLProgramFacade;
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21177,7 +21210,7 @@ exports.Camera = Camera;
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21197,7 +21230,7 @@ exports.ImageLoader = ImageLoader;
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21212,12 +21245,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // tslint:disable-next-line:no-require-imports
-const expandVertexData = __webpack_require__(28);
-const WebGLArrayBufferFacade_1 = __webpack_require__(29);
-const WebGLElementArrayBufferFacade_1 = __webpack_require__(30);
-const WebGLTextureFacade_1 = __webpack_require__(31);
-const BufferUsageType_1 = __webpack_require__(32);
-const ModelPrototype_1 = __webpack_require__(33);
+const expandVertexData = __webpack_require__(30);
+const WebGLArrayBufferFacade_1 = __webpack_require__(31);
+const WebGLElementArrayBufferFacade_1 = __webpack_require__(32);
+const WebGLTextureFacade_1 = __webpack_require__(33);
+const BufferUsageType_1 = __webpack_require__(34);
+const ModelPrototype_1 = __webpack_require__(35);
 class ModelPrototypeLoader {
     constructor(gl, imageLoader) {
         this.nextTextureId = 0;
@@ -21252,7 +21285,7 @@ exports.ModelPrototypeLoader = ModelPrototypeLoader;
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports) {
 
 module.exports = expandVertexData
@@ -21407,13 +21440,13 @@ function expandVertexData (compressedVertexData, opts) {
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const WebGLBufferFacade_1 = __webpack_require__(7);
+const WebGLBufferFacade_1 = __webpack_require__(9);
 class WebGLArrayBufferFacade extends WebGLBufferFacade_1.WebGLBufferFacade {
     constructor(gl, data, itemSize, itemsCount, usageType) {
         super(gl, itemSize, itemsCount);
@@ -21430,13 +21463,13 @@ exports.WebGLArrayBufferFacade = WebGLArrayBufferFacade;
 
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const WebGLBufferFacade_1 = __webpack_require__(7);
+const WebGLBufferFacade_1 = __webpack_require__(9);
 class WebGLElementArrayBufferFacade extends WebGLBufferFacade_1.WebGLBufferFacade {
     constructor(gl, data, itemSize, itemsCount, usageType) {
         super(gl, itemSize, itemsCount);
@@ -21451,7 +21484,7 @@ exports.WebGLElementArrayBufferFacade = WebGLElementArrayBufferFacade;
 
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21482,12 +21515,19 @@ class WebGLTextureFacade {
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.uniform1i(uniformLocation, this.id);
     }
+    enableWrapping(textureWrapType) {
+        const gl = this.gl;
+        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, textureWrapType);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, textureWrapType);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    }
 }
 exports.WebGLTextureFacade = WebGLTextureFacade;
 
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21502,7 +21542,7 @@ var BufferUsageType;
 
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21537,7 +21577,7 @@ exports.ModelPrototype = ModelPrototype;
 
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21555,7 +21595,7 @@ exports.ProjectionService = ProjectionService;
 
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21595,7 +21635,7 @@ exports.Renderer = Renderer;
 
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21623,7 +21663,35 @@ exports.ShaderCompiler = ShaderCompiler;
 
 
 /***/ }),
-/* 37 */
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class WebGLAttributeLoader {
+    constructor(gl, programFacade) {
+        this.gl = gl;
+        this.programFacade = programFacade;
+    }
+    loadAttributes() {
+        return {
+            vertexPosition: this.loadAndEnableAttribute('aVertexPosition'),
+            textureCoords: this.loadAndEnableAttribute('aTextureCoords'),
+            normalVector: this.loadAndEnableAttribute('aNormalVector')
+        };
+    }
+    loadAndEnableAttribute(name) {
+        const attribute = this.gl.getAttribLocation(this.programFacade.program, name);
+        this.gl.enableVertexAttribArray(attribute);
+        return attribute;
+    }
+}
+exports.WebGLAttributeLoader = WebGLAttributeLoader;
+
+
+/***/ }),
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21653,6 +21721,9 @@ class WebGLBinder {
     bindModelMatrix(modelMatrix) {
         this.gl.uniformMatrix4fv(this.uniforms.modelMatrix, false, modelMatrix);
     }
+    bindNormalMatrix(normalMatrix) {
+        this.gl.uniformMatrix4fv(this.uniforms.normalMatrix, false, normalMatrix);
+    }
     bindViewMatrix(viewMatrix) {
         this.gl.uniformMatrix4fv(this.uniforms.viewMatrix, false, viewMatrix);
     }
@@ -21666,12 +21737,68 @@ class WebGLBinder {
         this.gl.uniform3fv(this.uniforms.pointLightPosition, position);
         this.gl.uniform3fv(this.uniforms.pointLightColor, color);
     }
+    bindIlluminationModelType(illuminationModelType) {
+        this.gl.uniform1i(this.uniforms.illuminationModelType, illuminationModelType);
+    }
+    bindDiffuseCoefficient(diffuseCoefficient) {
+        this.gl.uniform1f(this.uniforms.diffuseCoefficient, diffuseCoefficient);
+    }
+    bindSpecularCoefficient(specularCoefficient) {
+        this.gl.uniform1f(this.uniforms.specularCoefficient, specularCoefficient);
+    }
+    bindSpecularShininess(specularShininess) {
+        this.gl.uniform1f(this.uniforms.specularShininess, specularShininess);
+    }
+    bindIlluminationProperties(illuminationProperties) {
+        this.bindDiffuseCoefficient(illuminationProperties.diffuseCoefficient);
+        this.bindSpecularCoefficient(illuminationProperties.specularCoefficient);
+        this.bindSpecularShininess(illuminationProperties.specularShininess);
+    }
+    bindViewerPosition(viewerPosition) {
+        this.gl.uniform3fv(this.uniforms.viewerPosition, viewerPosition);
+    }
 }
 exports.WebGLBinder = WebGLBinder;
 
 
 /***/ }),
-/* 38 */
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class WebGLUniformLoader {
+    constructor(gl, programFacade) {
+        this.gl = gl;
+        this.programFacade = programFacade;
+    }
+    loadUniforms() {
+        return {
+            modelMatrix: this.loadUniform('uModelMatrix'),
+            normalMatrix: this.loadUniform('uNormalMatrix'),
+            viewMatrix: this.loadUniform('uViewMatrix'),
+            projectionMatrix: this.loadUniform('uProjectionMatrix'),
+            textureSampler: this.loadUniform('uTextureSampler'),
+            ambientLightColor: this.loadUniform('uAmbientLightColor'),
+            pointLightColor: this.loadUniform('uPointLightColor'),
+            pointLightPosition: this.loadUniform('uPointLightPosition'),
+            diffuseCoefficient: this.loadUniform('uDiffuseCoefficient'),
+            illuminationModelType: this.loadUniform('uIlluminationModelType'),
+            specularCoefficient: this.loadUniform('uSpecularCoefficient'),
+            specularShininess: this.loadUniform('uSpecularShininess'),
+            viewerPosition: this.loadUniform('uViewerPosition')
+        };
+    }
+    loadUniform(name) {
+        return this.gl.getUniformLocation(this.programFacade.program, name);
+    }
+}
+exports.WebGLUniformLoader = WebGLUniformLoader;
+
+
+/***/ }),
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21686,11 +21813,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const cannon_1 = __webpack_require__(2);
-const gl_matrix_1 = __webpack_require__(1);
-const ApplicationWorld_1 = __webpack_require__(39);
-const BodilessModel_1 = __webpack_require__(8);
-const PhysicalModel_1 = __webpack_require__(40);
-const CoordinateConverter_1 = __webpack_require__(3);
+const IlluminationProperties_1 = __webpack_require__(8);
+const TextureWrapType_1 = __webpack_require__(43);
+const ApplicationWorld_1 = __webpack_require__(44);
+const BodilessModel_1 = __webpack_require__(10);
+const PhysicalModel_1 = __webpack_require__(45);
 class WorldLoader {
     constructor(modelPrototypeLoader) {
         this.modelPrototypeLoader = modelPrototypeLoader;
@@ -21717,20 +21844,17 @@ class WorldLoader {
     loadGround(applicationWorld) {
         return __awaiter(this, void 0, void 0, function* () {
             const groundPrototype = yield this.modelPrototypeLoader.loadModelPrototype('assets/models/ground.json', 'assets/textures/ground_dirt_1226_9352_Small.jpg');
-            const scaleVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(5, 5, 1));
-            gl_matrix_1.mat4.scale(groundPrototype.modelMatrix, groundPrototype.modelMatrix, scaleVector);
+            groundPrototype.texture.enableWrapping(TextureWrapType_1.TextureWrapType.Repeat);
             const groundShape = new cannon_1.Plane();
             const groundBody = new cannon_1.Body({ mass: 0 });
             groundBody.addShape(groundShape);
             applicationWorld.physicsWorld.addBody(groundBody);
-            for (let x = -5; x <= 5; x += 1) {
-                for (let y = -5; y <= 5; y += 1) {
-                    const ground = new BodilessModel_1.BodilessModel(groundPrototype);
-                    const translationVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(x, y, 0));
-                    gl_matrix_1.mat4.translate(ground.modelMatrix, ground.modelMatrix, translationVector);
-                    applicationWorld.models.push(ground);
-                }
-            }
+            const illuminationProperties = new IlluminationProperties_1.IlluminationProperties();
+            illuminationProperties.diffuseCoefficient = 1;
+            illuminationProperties.specularCoefficient = 0;
+            illuminationProperties.specularShininess = 1;
+            const ground = new BodilessModel_1.BodilessModel(groundPrototype, illuminationProperties);
+            applicationWorld.models.push(ground);
         });
     }
     loadDwarf(applicationWorld) {
@@ -21781,7 +21905,21 @@ exports.WorldLoader = WorldLoader;
 
 
 /***/ }),
-/* 39 */
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var TextureWrapType;
+(function (TextureWrapType) {
+    TextureWrapType[TextureWrapType["Repeat"] = WebGLRenderingContext.REPEAT] = "Repeat";
+    TextureWrapType[TextureWrapType["MirroredRepeat"] = WebGLRenderingContext.MIRRORED_REPEAT] = "MirroredRepeat";
+})(TextureWrapType = exports.TextureWrapType || (exports.TextureWrapType = {}));
+
+
+/***/ }),
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21797,19 +21935,19 @@ exports.ApplicationWorld = ApplicationWorld;
 
 
 /***/ }),
-/* 40 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const gl_matrix_1 = __webpack_require__(1);
-const BodilessModel_1 = __webpack_require__(8);
+const BodilessModel_1 = __webpack_require__(10);
 const CoordinateConverter_1 = __webpack_require__(3);
 class PhysicalModel extends BodilessModel_1.BodilessModel {
     // TODO: lights
-    constructor(modelPrototype, body) {
-        super(modelPrototype);
+    constructor(modelPrototype, body, illuminationProperties) {
+        super(modelPrototype, illuminationProperties);
         this.body = body;
     }
     draw(gl, webGLBinder) {
@@ -21829,16 +21967,375 @@ exports.PhysicalModel = PhysicalModel;
 
 
 /***/ }),
-/* 41 */
-/***/ (function(module, exports) {
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "precision mediump float;\r\n\r\nuniform sampler2D uTextureSampler;\r\n\r\nuniform vec3 uAmbientLightColor;\r\n\r\nuniform vec3 uPointLightPosition;\r\nuniform vec3 uPointLightColor;\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormalVector;\r\nvarying vec2 vTextureCoords;\r\n\r\nvec3 getColorFromPointLight() {\r\n  vec3 lightVector = normalize(uPointLightPosition - vPosition);\r\n\r\n  return uPointLightColor * max(0.0, dot(vNormalVector, lightVector));\r\n}\r\n\r\n\r\nvoid main(void) {\r\n  vec4 ambientLight = vec4(uAmbientLightColor, 1.0);\r\n  vec4 pointLightColor = vec4(getColorFromPointLight(), 1.0);\r\n\r\n  gl_FragColor = (ambientLight + pointLightColor) * texture2D(uTextureSampler, vTextureCoords);\r\n}\r\n"
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const events_1 = __webpack_require__(47);
+class ApplicationEventEmitter extends events_1.EventEmitter {
+    emitAppEvent(event) {
+        this.emit(event.eventType, event);
+    }
+}
+exports.ApplicationEventEmitter = ApplicationEventEmitter;
+
 
 /***/ }),
-/* 42 */
+/* 47 */
 /***/ (function(module, exports) {
 
-module.exports = "precision mediump float;\r\n\r\nattribute vec3 aVertexPosition;\r\nattribute vec3 aNormalVector;\r\nattribute vec2 aTextureCoords;\r\n\r\nuniform mat4 uModelMatrix;\r\nuniform mat4 uViewMatrix;\r\nuniform mat4 uProjectionMatrix;\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormalVector;\r\nvarying vec2 vTextureCoords;\r\n\r\nvoid main(void) {\r\n  vTextureCoords = aTextureCoords;\r\n  vNormalVector = aNormalVector;\r\n\r\n  vec4 worldPosition = uModelMatrix * vec4(aVertexPosition, 1.0);\r\n  vPosition = worldPosition.xyz;\r\n\r\n  gl_Position = uProjectionMatrix * uViewMatrix * worldPosition;\r\n}\r\n"
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+function EventEmitter() {
+  this._events = this._events || {};
+  this._maxListeners = this._maxListeners || undefined;
+}
+module.exports = EventEmitter;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+EventEmitter.defaultMaxListeners = 10;
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function(n) {
+  if (!isNumber(n) || n < 0 || isNaN(n))
+    throw TypeError('n must be a positive number');
+  this._maxListeners = n;
+  return this;
+};
+
+EventEmitter.prototype.emit = function(type) {
+  var er, handler, len, args, i, listeners;
+
+  if (!this._events)
+    this._events = {};
+
+  // If there is no 'error' event listener then throw.
+  if (type === 'error') {
+    if (!this._events.error ||
+        (isObject(this._events.error) && !this._events.error.length)) {
+      er = arguments[1];
+      if (er instanceof Error) {
+        throw er; // Unhandled 'error' event
+      } else {
+        // At least give some kind of context to the user
+        var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
+        err.context = er;
+        throw err;
+      }
+    }
+  }
+
+  handler = this._events[type];
+
+  if (isUndefined(handler))
+    return false;
+
+  if (isFunction(handler)) {
+    switch (arguments.length) {
+      // fast cases
+      case 1:
+        handler.call(this);
+        break;
+      case 2:
+        handler.call(this, arguments[1]);
+        break;
+      case 3:
+        handler.call(this, arguments[1], arguments[2]);
+        break;
+      // slower
+      default:
+        args = Array.prototype.slice.call(arguments, 1);
+        handler.apply(this, args);
+    }
+  } else if (isObject(handler)) {
+    args = Array.prototype.slice.call(arguments, 1);
+    listeners = handler.slice();
+    len = listeners.length;
+    for (i = 0; i < len; i++)
+      listeners[i].apply(this, args);
+  }
+
+  return true;
+};
+
+EventEmitter.prototype.addListener = function(type, listener) {
+  var m;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events)
+    this._events = {};
+
+  // To avoid recursion in the case that type === "newListener"! Before
+  // adding it to the listeners, first emit "newListener".
+  if (this._events.newListener)
+    this.emit('newListener', type,
+              isFunction(listener.listener) ?
+              listener.listener : listener);
+
+  if (!this._events[type])
+    // Optimize the case of one listener. Don't need the extra array object.
+    this._events[type] = listener;
+  else if (isObject(this._events[type]))
+    // If we've already got an array, just append.
+    this._events[type].push(listener);
+  else
+    // Adding the second element, need to change to array.
+    this._events[type] = [this._events[type], listener];
+
+  // Check for listener leak
+  if (isObject(this._events[type]) && !this._events[type].warned) {
+    if (!isUndefined(this._maxListeners)) {
+      m = this._maxListeners;
+    } else {
+      m = EventEmitter.defaultMaxListeners;
+    }
+
+    if (m && m > 0 && this._events[type].length > m) {
+      this._events[type].warned = true;
+      console.error('(node) warning: possible EventEmitter memory ' +
+                    'leak detected. %d listeners added. ' +
+                    'Use emitter.setMaxListeners() to increase limit.',
+                    this._events[type].length);
+      if (typeof console.trace === 'function') {
+        // not supported in IE 10
+        console.trace();
+      }
+    }
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.once = function(type, listener) {
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  var fired = false;
+
+  function g() {
+    this.removeListener(type, g);
+
+    if (!fired) {
+      fired = true;
+      listener.apply(this, arguments);
+    }
+  }
+
+  g.listener = listener;
+  this.on(type, g);
+
+  return this;
+};
+
+// emits a 'removeListener' event iff the listener was removed
+EventEmitter.prototype.removeListener = function(type, listener) {
+  var list, position, length, i;
+
+  if (!isFunction(listener))
+    throw TypeError('listener must be a function');
+
+  if (!this._events || !this._events[type])
+    return this;
+
+  list = this._events[type];
+  length = list.length;
+  position = -1;
+
+  if (list === listener ||
+      (isFunction(list.listener) && list.listener === listener)) {
+    delete this._events[type];
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+
+  } else if (isObject(list)) {
+    for (i = length; i-- > 0;) {
+      if (list[i] === listener ||
+          (list[i].listener && list[i].listener === listener)) {
+        position = i;
+        break;
+      }
+    }
+
+    if (position < 0)
+      return this;
+
+    if (list.length === 1) {
+      list.length = 0;
+      delete this._events[type];
+    } else {
+      list.splice(position, 1);
+    }
+
+    if (this._events.removeListener)
+      this.emit('removeListener', type, listener);
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.removeAllListeners = function(type) {
+  var key, listeners;
+
+  if (!this._events)
+    return this;
+
+  // not listening for removeListener, no need to emit
+  if (!this._events.removeListener) {
+    if (arguments.length === 0)
+      this._events = {};
+    else if (this._events[type])
+      delete this._events[type];
+    return this;
+  }
+
+  // emit removeListener for all listeners on all events
+  if (arguments.length === 0) {
+    for (key in this._events) {
+      if (key === 'removeListener') continue;
+      this.removeAllListeners(key);
+    }
+    this.removeAllListeners('removeListener');
+    this._events = {};
+    return this;
+  }
+
+  listeners = this._events[type];
+
+  if (isFunction(listeners)) {
+    this.removeListener(type, listeners);
+  } else if (listeners) {
+    // LIFO order
+    while (listeners.length)
+      this.removeListener(type, listeners[listeners.length - 1]);
+  }
+  delete this._events[type];
+
+  return this;
+};
+
+EventEmitter.prototype.listeners = function(type) {
+  var ret;
+  if (!this._events || !this._events[type])
+    ret = [];
+  else if (isFunction(this._events[type]))
+    ret = [this._events[type]];
+  else
+    ret = this._events[type].slice();
+  return ret;
+};
+
+EventEmitter.prototype.listenerCount = function(type) {
+  if (this._events) {
+    var evlistener = this._events[type];
+
+    if (isFunction(evlistener))
+      return 1;
+    else if (evlistener)
+      return evlistener.length;
+  }
+  return 0;
+};
+
+EventEmitter.listenerCount = function(emitter, type) {
+  return emitter.listenerCount(type);
+};
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const BaseEvent_1 = __webpack_require__(49);
+class NewIlluminationModelTypeEvent extends BaseEvent_1.BaseEvent {
+    constructor(illuminationModelType) {
+        super();
+        this.illuminationModelType = illuminationModelType;
+    }
+}
+exports.NewIlluminationModelTypeEvent = NewIlluminationModelTypeEvent;
+
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class BaseEvent {
+    constructor() {
+        this.eventType = this.constructor.name;
+    }
+    static get eventType() {
+        return this.name;
+    }
+}
+exports.BaseEvent = BaseEvent;
+
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports) {
+
+module.exports = "#define PHONG_ILLUMINATION_TYPE 0\r\n#define BLINN_ILLUMINATION_TYPE 1\r\n\r\nprecision mediump float;\r\n\r\nuniform sampler2D uTextureSampler;\r\n\r\nuniform vec3 uAmbientLightColor;\r\n\r\nuniform vec3 uPointLightPosition;\r\nuniform vec3 uPointLightColor;\r\n\r\nuniform vec3 uViewerPosition;\r\n\r\nuniform float uDiffuseCoefficient;\r\nuniform float uSpecularCoefficient;\r\nuniform int uIlluminationModelType;\r\nuniform float uSpecularShininess;\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormalVector;\r\nvarying vec2 vTextureCoords;\r\n\r\n\r\nvec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector);\r\nvec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector);\r\n\r\n\r\nvoid main(void) {\r\n  vec3 normalVector = normalize(vNormalVector);\r\n  vec3 lightVector = normalize(uPointLightPosition - vPosition);\r\n\r\n  vec3 diffuseIntensity = getDiffuseLightIntensity(lightVector, normalVector);\r\n  vec3 specularIntensity = getSpecularLightIntensity(lightVector, normalVector);\r\n\r\n  vec4 lightIntensity = vec4(uAmbientLightColor + diffuseIntensity + specularIntensity, 1.0);\r\n\r\n  gl_FragColor = lightIntensity * texture2D(uTextureSampler, vTextureCoords);\r\n}\r\n\r\n\r\nvec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector) {\r\n  // Should sum across all light sources\r\n  float cosine = max(0.0, dot(normalVector, lightVector));\r\n\r\n  return uDiffuseCoefficient * uPointLightColor * cosine;\r\n}\r\n\r\nvec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector) {\r\n  // Should sum across all light sources\r\n  vec3 viewerVector = normalize(uViewerPosition - vPosition);\r\n  float shininess = uSpecularShininess;\r\n\r\n  float cosine = 0.0;\r\n  if (uIlluminationModelType == PHONG_ILLUMINATION_TYPE) {\r\n    vec3 reflectionVector = 2.0 * dot(normalVector, lightVector) * normalVector - lightVector;\r\n    cosine = dot(viewerVector, reflectionVector);\r\n  } else if (uIlluminationModelType == BLINN_ILLUMINATION_TYPE)  {\r\n    vec3 hVector = normalize(normalVector + lightVector);\r\n    cosine = dot(normalVector, hVector);\r\n    shininess /= 2.0;\r\n  }\r\n\r\n  cosine = max(0.0, cosine);\r\n\r\n  return uSpecularCoefficient * uPointLightColor * pow(cosine, uSpecularShininess);\r\n}\r\n"
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports) {
+
+module.exports = "precision mediump float;\r\n\r\nattribute vec3 aVertexPosition;\r\nattribute vec3 aNormalVector;\r\nattribute vec2 aTextureCoords;\r\n\r\nuniform mat4 uModelMatrix;\r\nuniform mat4 uNormalMatrix;\r\nuniform mat4 uViewMatrix;\r\nuniform mat4 uProjectionMatrix;\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormalVector;\r\nvarying vec2 vTextureCoords;\r\n\r\nvoid main(void) {\r\n  vTextureCoords = aTextureCoords;\r\n  vNormalVector = vec3(uNormalMatrix * vec4(aNormalVector, 0.0));\r\n\r\n  vec4 worldPosition = uModelMatrix * vec4(aVertexPosition, 1.0);\r\n  vPosition = vec3(worldPosition) / worldPosition.w;\r\n\r\n  gl_Position = uProjectionMatrix * uViewMatrix * worldPosition;\r\n}\r\n"
 
 /***/ })
 /******/ ]);
