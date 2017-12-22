@@ -67,8 +67,6 @@ export class Application {
       configuration.pointLightColor
     );
     this.webGLBinder.bindIlluminationModelType(configuration.illuminationModelType);
-    this.webGLBinder.bindDiffuseCoefficient(configuration.diffuseCoefficient);
-    this.webGLBinder.bindSpecularCoefficient(configuration.specularCoefficient);
 
     this.initProjectionMatrix();
     this.initCamera();

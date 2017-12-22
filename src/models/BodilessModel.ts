@@ -2,23 +2,25 @@ import { mat4 } from 'gl-matrix';
 
 import { configuration } from 'configuration';
 
+import { IlluminationProperties } from 'common/IlluminationProperties';
+
 import { ModelPrototype } from 'models/ModelPrototype';
 
 import { WebGLBinder } from 'services/WebGLBinder';
 
 export class BodilessModel {
   public readonly modelMatrix: mat4;
-  public specularShininess: number;
+  public readonly illuminationProperties: IlluminationProperties;
   // TODO: lights
 
   protected readonly modelPrototype: ModelPrototype;
 
   public constructor(
     modelPrototype: ModelPrototype,
-    specularShininess: number = configuration.defaultSpecularShininess
+    illuminationProperties: IlluminationProperties = configuration.defaultIlluminationProperties.clone()
   ) {
     this.modelPrototype = modelPrototype;
-    this.specularShininess = specularShininess;
+    this.illuminationProperties = illuminationProperties;
 
     this.modelMatrix = mat4.clone(this.modelPrototype.modelMatrix);
   }
@@ -27,7 +29,7 @@ export class BodilessModel {
     this.modelPrototype.bindBuffersAndTexture(webGLBinder);
     webGLBinder.bindModelMatrix(this.modelMatrix);
     webGLBinder.bindNormalMatrix(this.modelMatrix);
-    webGLBinder.bindSpecularShininess(this.specularShininess);
+    webGLBinder.bindIlluminationProperties(this.illuminationProperties);
 
     gl.drawElements(
       gl.TRIANGLES,
