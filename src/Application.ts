@@ -27,8 +27,8 @@ import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
 import { NewIlluminationModelTypeEvent } from 'events/NewIlluminationModelTypeEvent';
 
 // tslint:disable no-require-imports import-name no-var-requires
-const fragmentShaderSource = require('./shaders/fragment-shader.glsl');
-const vertexShaderSource = require('./shaders/vertex-shader.glsl');
+const fragmentShaderSource = require('./shaders/phong/fragment-shader.glsl');
+const vertexShaderSource = require('./shaders/phong/vertex-shader.glsl');
 // tslint:enable no-require-imports, import-name
 
 export class Application {
