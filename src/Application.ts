@@ -3,7 +3,7 @@ import { mat4 } from 'gl-matrix';
 
 import { configuration } from 'configuration';
 
-import { ShaderType } from 'common/ShaderType';
+import { ShadingModelType } from 'common/ShadingModelType';
 
 import { WebGLProgramFacade } from 'facades/WebGLProgramFacade';
 import { ApplicationWorld } from 'models/ApplicationWorld';
@@ -25,11 +25,14 @@ import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
 
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
 import { NewIlluminationModelTypeEvent } from 'events/NewIlluminationModelTypeEvent';
+import { NewShadingModelTypeEvent } from 'events/NewShadingModelTypeEvent';
 
-// tslint:disable no-require-imports import-name no-var-requires
-const fragmentShaderSource = require('./shaders/phong/fragment-shader.glsl');
-const vertexShaderSource = require('./shaders/phong/vertex-shader.glsl');
-// tslint:enable no-require-imports, import-name
+import { GouraudShadingProgramFactory } from 'programs/GouraudShadingProgramFactory';
+import { PhongShadingProgramFactory } from 'programs/PhongShadingProgramFactory';
+
+interface ProgramsDictionary {
+  [shaderType: number]: WebGLProgramFacade;
+}
 
 export class Application {
   public readonly eventEmitter: ApplicationEventEmitter;
@@ -41,8 +44,10 @@ export class Application {
   private webGLAttributes: ApplicationWebGLAttributes;
   private webGLUniforms: ApplicationWebGLUniforms;
   private webGLBinder: WebGLBinder;
-  private programFacade: WebGLProgramFacade;
   private projectionMatrix: mat4;
+
+  private programs: ProgramsDictionary;
+  private currentProgram: WebGLProgramFacade;
 
   private renderer: Renderer;
 
@@ -60,30 +65,18 @@ export class Application {
     this.gl = gl;
 
     this.render = this.render.bind(this);
-    this.onNewIlluminationModelType = this.onNewIlluminationModelType.bind(
-      this
-    );
+    this.onNewIlluminationModelType = this.onNewIlluminationModelType.bind(this);
+    this.onNewShadingModelType = this.onNewShadingModelType.bind(this);
   }
 
   public async init() {
     this.bindToEvents();
 
-    this.initProgram();
-    this.loadAttributes();
-    this.loadUniforms();
-    this.initWebGLBinder();
-    this.webGLBinder.bindAmbientLightColor(configuration.ambientLightColor);
-    this.webGLBinder.bindPointLight(
-      configuration.pointLightPosition,
-      configuration.pointLightColor
-    );
-    this.webGLBinder.bindIlluminationModelType(
-      configuration.defaultIlluminationModelType
-    );
-
     this.initProjectionMatrix();
     this.initCamera();
-    this.initRenderer();
+
+    this.initPrograms();
+    this.changeShadingModelType(configuration.defaultShadingModelType);
 
     await this.initWorld();
 
@@ -91,10 +84,9 @@ export class Application {
   }
 
   private bindToEvents() {
-    this.eventEmitter.on(
-      NewIlluminationModelTypeEvent.name,
-      this.onNewIlluminationModelType
-    );
+    this.eventEmitter.on(NewIlluminationModelTypeEvent.name, this.onNewIlluminationModelType);
+
+    this.eventEmitter.on(NewShadingModelTypeEvent.name, this.onNewShadingModelType);
   }
 
   private render(timestamp?: number) {
@@ -123,16 +115,13 @@ export class Application {
   }
 
   private loadAttributes() {
-    const attributeLoader = new WebGLAttributeLoader(
-      this.gl,
-      this.programFacade
-    );
+    const attributeLoader = new WebGLAttributeLoader(this.gl, this.currentProgram);
 
     this.webGLAttributes = attributeLoader.loadAttributes();
   }
 
   private loadUniforms() {
-    const uniformLoader = new WebGLUniformLoader(this.gl, this.programFacade);
+    const uniformLoader = new WebGLUniformLoader(this.gl, this.currentProgram);
 
     this.webGLUniforms = uniformLoader.loadUniforms();
   }
@@ -170,31 +159,22 @@ export class Application {
   }
 
   private initWebGLBinder() {
-    this.webGLBinder = new WebGLBinder(
-      this.gl,
-      this.webGLUniforms,
-      this.webGLAttributes
-    );
+    this.webGLBinder = new WebGLBinder(this.gl, this.webGLUniforms, this.webGLAttributes);
   }
 
-  private initProgram() {
+  private initPrograms() {
     const shaderCompiler = new ShaderCompiler(this.gl);
+    const gouraudShadingProgramFactory = new GouraudShadingProgramFactory(shaderCompiler, this.gl);
+    gouraudShadingProgramFactory.compile();
 
-    const vertexShader = shaderCompiler.compileShader(
-      vertexShaderSource,
-      ShaderType.VertexShader
-    );
-    const fragmentShader = shaderCompiler.compileShader(
-      fragmentShaderSource,
-      ShaderType.FragmentShader
-    );
+    const phongShadingProgramFactory = new PhongShadingProgramFactory(shaderCompiler, this.gl);
+    phongShadingProgramFactory.compile();
 
-    this.programFacade = new WebGLProgramFacade(
-      this.gl,
-      vertexShader,
-      fragmentShader
-    );
-    this.programFacade.use();
+    this.programs = {
+      [ShadingModelType.Gouraud]: gouraudShadingProgramFactory.compiledProgram,
+      [ShadingModelType.Phong]: phongShadingProgramFactory.compiledProgram
+    };
+    this.currentProgram = this.programs[configuration.defaultShadingModelType];
   }
 
   private async initWorld() {
@@ -209,7 +189,33 @@ export class Application {
     this.world = await worldLoader.loadWorld(physicsWorld);
   }
 
+  private changeShadingModelType(newShadingModelType: ShadingModelType) {
+    const programFacade = this.programs[newShadingModelType];
+    if (!programFacade) {
+      throw new Error(`Program for shading model type ${newShadingModelType} does not exist`);
+    }
+
+    this.currentProgram = programFacade;
+    programFacade.use();
+
+    this.loadAttributes();
+    this.loadUniforms();
+    this.initWebGLBinder();
+    this.webGLBinder.bindAmbientLightColor(configuration.ambientLightColor);
+    this.webGLBinder.bindPointLight(
+      configuration.pointLightPosition,
+      configuration.pointLightColor
+    );
+    this.webGLBinder.bindIlluminationModelType(configuration.defaultIlluminationModelType);
+
+    this.initRenderer();
+  }
+
   private onNewIlluminationModelType(event: NewIlluminationModelTypeEvent) {
     this.webGLBinder.bindIlluminationModelType(event.illuminationModelType);
+  }
+
+  private onNewShadingModelType(event: NewShadingModelTypeEvent) {
+    this.changeShadingModelType(event.shadingModelType);
   }
 }
