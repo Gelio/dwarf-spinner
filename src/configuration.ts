@@ -3,6 +3,7 @@ import { vec3 } from 'gl-matrix';
 
 import { IlluminationModelType } from 'common/IlluminationModelType';
 import { IlluminationProperties } from 'common/IlluminationProperties';
+import { ShadingModelType } from 'common/ShadingModelType';
 
 import { CoordinateConverter } from 'services/CoordinateConverter';
 
@@ -20,5 +21,6 @@ export const configuration = {
   pointLightPosition: CoordinateConverter.physicsToRendering(new Vec3(0, 0, 5)),
 
   defaultIlluminationModelType: IlluminationModelType.Phong,
+  defaultShadingModelType: ShadingModelType.Phong,
   defaultIlluminationProperties
 };

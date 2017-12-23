@@ -83,8 +83,8 @@ declare module 'hyperhtml/esm' {
     protected html: Function;
     protected svg: Function;
     protected state: ComponentState;
+    protected defaultState: ComponentState;
 
-    protected defaultState(): ComponentState;
     protected handleEvent(event: Event): void;
 
     protected setState(patch: Partial<ComponentState>): void;
