@@ -8,6 +8,7 @@ import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
 import { NewIlluminationModelTypeEvent } from 'events/NewIlluminationModelTypeEvent';
 
 import { SelectComponent } from 'ui/SelectComponent';
+import { ShadingModelTypeSelectComponent } from 'ui/ShadingModelTypeSelectComponent';
 
 interface ApplicationComponentState {
   illuminationModelType: IlluminationModelType;
@@ -15,15 +16,17 @@ interface ApplicationComponentState {
 
 export class ApplicationComponent extends HyperComponent<ApplicationComponentState> {
   private readonly eventEmitter: ApplicationEventEmitter;
+  private readonly shadingModelTypeSelectComponent: ShadingModelTypeSelectComponent;
 
   constructor(eventEmitter: ApplicationEventEmitter) {
     super();
 
     this.eventEmitter = eventEmitter;
     this.onIlluminationModelTypeChange = this.onIlluminationModelTypeChange.bind(this);
+    this.shadingModelTypeSelectComponent = new ShadingModelTypeSelectComponent(this.eventEmitter);
   }
 
-  public defaultState(): ApplicationComponentState {
+  public get defaultState(): ApplicationComponentState {
     return {
       illuminationModelType: configuration.defaultIlluminationModelType
     };
@@ -33,16 +36,24 @@ export class ApplicationComponent extends HyperComponent<ApplicationComponentSta
     const { illuminationModelType } = this.state;
 
     return this.html`
-      ${SelectComponent([
-        {
-          label: "Blinn's",
-          value: IlluminationModelType.Blinn
-        },
-        {
-          label: "Phong's",
-          value: IlluminationModelType.Phong
-        }
-      ], illuminationModelType, this.onIlluminationModelTypeChange)}
+      <div>
+        Illumination model type:
+        ${SelectComponent(
+          [
+            {
+              label: "Blinn's",
+              value: IlluminationModelType.Blinn
+            },
+            {
+              label: "Phong's",
+              value: IlluminationModelType.Phong
+            }
+          ],
+          illuminationModelType,
+          this.onIlluminationModelTypeChange
+        )}
+      </div>
+      ${this.shadingModelTypeSelectComponent}
     `;
   }
 
