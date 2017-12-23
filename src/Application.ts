@@ -210,7 +210,6 @@ export class Application {
   }
 
   private onNewIlluminationModelType(event: NewIlluminationModelTypeEvent) {
-    console.log(event);
     this.webGLBinder.bindIlluminationModelType(event.illuminationModelType);
   }
 }
