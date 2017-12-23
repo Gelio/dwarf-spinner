@@ -32,9 +32,10 @@ const vertexShaderSource = require('./shaders/vertex-shader.glsl');
 // tslint:enable no-require-imports, import-name
 
 export class Application {
+  public readonly eventEmitter: ApplicationEventEmitter;
+
   private readonly canvas: HTMLCanvasElement;
   private readonly gl: WebGLRenderingContext;
-  private readonly eventEmitter: ApplicationEventEmitter;
 
   private camera: Camera;
   private webGLAttributes: ApplicationWebGLAttributes;
@@ -77,7 +78,7 @@ export class Application {
       configuration.pointLightColor
     );
     this.webGLBinder.bindIlluminationModelType(
-      configuration.illuminationModelType
+      configuration.defaultIlluminationModelType
     );
 
     this.initProjectionMatrix();
@@ -209,6 +210,7 @@ export class Application {
   }
 
   private onNewIlluminationModelType(event: NewIlluminationModelTypeEvent) {
+    console.log(event);
     this.webGLBinder.bindIlluminationModelType(event.illuminationModelType);
   }
 }
