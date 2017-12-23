@@ -19,6 +19,6 @@ export const configuration = {
   pointLightColor: vec3.fromValues(1, 1, 1),
   pointLightPosition: CoordinateConverter.physicsToRendering(new Vec3(0, 0, 5)),
 
-  illuminationModelType: IlluminationModelType.Phong,
+  defaultIlluminationModelType: IlluminationModelType.Phong,
   defaultIlluminationProperties
 };
