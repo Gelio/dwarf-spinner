@@ -1,67 +1,28 @@
 import { Component as HyperComponent } from 'hyperhtml/esm';
 
-import { IlluminationModelType } from 'common/IlluminationModelType';
-
-import { configuration } from 'configuration';
-
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
-import { NewIlluminationModelTypeEvent } from 'events/NewIlluminationModelTypeEvent';
 
-import { SelectComponent } from 'ui/SelectComponent';
+import { IlluminationModelTypeSelectComponent } from 'ui/IlluminationModelTypeSelectComponent';
 import { ShadingModelTypeSelectComponent } from 'ui/ShadingModelTypeSelectComponent';
 
-interface ApplicationComponentState {
-  illuminationModelType: IlluminationModelType;
-}
-
-export class ApplicationComponent extends HyperComponent<ApplicationComponentState> {
+export class ApplicationComponent extends HyperComponent {
   private readonly eventEmitter: ApplicationEventEmitter;
-  private readonly shadingModelTypeSelectComponent: ShadingModelTypeSelectComponent;
+  private readonly illuminationModelTypeSelect: IlluminationModelTypeSelectComponent;
+  private readonly shadingModelTypeSelect: ShadingModelTypeSelectComponent;
 
   constructor(eventEmitter: ApplicationEventEmitter) {
     super();
 
     this.eventEmitter = eventEmitter;
-    this.onIlluminationModelTypeChange = this.onIlluminationModelTypeChange.bind(this);
-    this.shadingModelTypeSelectComponent = new ShadingModelTypeSelectComponent(this.eventEmitter);
-  }
 
-  public get defaultState(): ApplicationComponentState {
-    return {
-      illuminationModelType: configuration.defaultIlluminationModelType
-    };
+    this.illuminationModelTypeSelect = new IlluminationModelTypeSelectComponent(this.eventEmitter);
+    this.shadingModelTypeSelect = new ShadingModelTypeSelectComponent(this.eventEmitter);
   }
 
   public render() {
-    const { illuminationModelType } = this.state;
-
     return this.html`
-      <div>
-        Illumination model type:
-        ${SelectComponent(
-          [
-            {
-              label: "Blinn's",
-              value: IlluminationModelType.Blinn
-            },
-            {
-              label: "Phong's",
-              value: IlluminationModelType.Phong
-            }
-          ],
-          illuminationModelType,
-          this.onIlluminationModelTypeChange
-        )}
-      </div>
-      ${this.shadingModelTypeSelectComponent}
+      ${this.illuminationModelTypeSelect}
+      ${this.shadingModelTypeSelect}
     `;
-  }
-
-  private onIlluminationModelTypeChange(illuminationModelType: IlluminationModelType) {
-    this.setState({
-      illuminationModelType
-    });
-
-    this.eventEmitter.emitAppEvent(new NewIlluminationModelTypeEvent(illuminationModelType));
   }
 }
