@@ -7,7 +7,7 @@ import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
 import { ReleaseDwarfEvent } from 'events/ReleaseDwarfEvent';
 import { RestartEvent } from 'events/RestartEvent';
 
-export class KeyboardInputHandler {
+export class KeyboardInputMapper {
   private readonly eventEmitter: ApplicationEventEmitter;
   private readonly holdableKeys: number[] = [
     KeyboardKeys.ArrowDown,
@@ -34,19 +34,21 @@ export class KeyboardInputHandler {
   }
 
   private onKeyDown(event: KeyboardEvent) {
-    if (this.isHoldableKey(event.keyCode)) {
-      return;
-    }
+    const { keyCode } = event;
 
-    store.dispatch(keyPressed(event.keyCode));
+    if (this.isHoldableKey(keyCode)) {
+      store.dispatch(keyPressed(keyCode));
+    }
   }
 
   private onKeyUp(event: KeyboardEvent) {
-    if (this.isHoldableKey(event.keyCode)) {
-      return store.dispatch(keyReleased(event.keyCode));
+    const { keyCode } = event;
+
+    if (this.isHoldableKey(keyCode)) {
+      return store.dispatch(keyReleased(keyCode));
     }
 
-    this.handleNotHoldableKey(event.keyCode);
+    this.handleNotHoldableKey(keyCode);
   }
 
   private isHoldableKey(keyCode: number) {
