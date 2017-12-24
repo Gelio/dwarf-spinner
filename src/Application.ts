@@ -28,6 +28,7 @@ import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
 import { NewIlluminationModelTypeEvent } from 'events/NewIlluminationModelTypeEvent';
 import { NewShadingModelTypeEvent } from 'events/NewShadingModelTypeEvent';
+import { RestartEvent } from 'events/RestartEvent';
 
 import { GouraudShadingProgramFactory } from 'programs/GouraudShadingProgramFactory';
 import { PhongShadingProgramFactory } from 'programs/PhongShadingProgramFactory';
@@ -86,6 +87,7 @@ export class Application {
     await this.initWorld();
 
     this.initInputServices();
+    this.eventEmitter.emitAppEvent(new RestartEvent());
 
     this.render();
   }

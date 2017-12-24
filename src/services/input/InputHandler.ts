@@ -42,12 +42,12 @@ export class InputHandler {
   }
 
   private restartWorld() {
-    if (!this.dwarfReleased) {
-      return;
-    }
+    this.world.models.forEach(model => model.reset());
 
-    this.world.physicsWorld.addConstraint(this.world.dwarfConstraint);
-    this.dwarfReleased = false;
+    if (this.dwarfReleased) {
+      this.world.physicsWorld.addConstraint(this.world.dwarfConstraint);
+      this.dwarfReleased = false;
+    }
   }
 
   private releaseDwarf() {
