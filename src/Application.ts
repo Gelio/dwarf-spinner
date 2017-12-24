@@ -30,6 +30,8 @@ import { NewShadingModelTypeEvent } from 'events/NewShadingModelTypeEvent';
 import { GouraudShadingProgramFactory } from 'programs/GouraudShadingProgramFactory';
 import { PhongShadingProgramFactory } from 'programs/PhongShadingProgramFactory';
 
+import 'store';
+
 interface ProgramsDictionary {
   [shaderType: number]: WebGLProgramFacade;
 }
