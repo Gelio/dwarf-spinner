@@ -50,9 +50,7 @@ export class WorldLoader {
     );
     world.physicsWorld.addConstraint(constraint);
 
-    setTimeout(() => {
-      world.physicsWorld.removeConstraint(constraint);
-    }, 3000);
+    world.dwarfConstraint = constraint;
 
     return world;
   }
@@ -120,7 +118,6 @@ export class WorldLoader {
     applicationWorld.physicsWorld.addBody(fidgetSpinnerBody);
 
     fidgetSpinnerBody.angularDamping = 0;
-    fidgetSpinnerBody.angularVelocity.z = 5;
 
     fidgetSpinnerBody.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI / 2);
 

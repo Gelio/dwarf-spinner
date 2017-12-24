@@ -15,6 +15,8 @@ export class InputHandler {
   private readonly world: ApplicationWorld;
   private readonly eventEmitter: ApplicationEventEmitter;
 
+  private dwarfReleased = false;
+
   constructor(world: ApplicationWorld, eventEmitter: ApplicationEventEmitter) {
     this.world = world;
     this.eventEmitter = eventEmitter;
@@ -40,12 +42,20 @@ export class InputHandler {
   }
 
   private restartWorld() {
-    // TODO: complete this
-    console.log('Should restart world');
+    if (!this.dwarfReleased) {
+      return;
+    }
+
+    this.world.physicsWorld.addConstraint(this.world.dwarfConstraint);
+    this.dwarfReleased = false;
   }
 
   private releaseDwarf() {
-    // TODO: complete this
-    console.log('Should release dwarf');
+    if (this.dwarfReleased) {
+      return;
+    }
+
+    this.world.physicsWorld.removeConstraint(this.world.dwarfConstraint);
+    this.dwarfReleased = true;
   }
 }
