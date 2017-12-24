@@ -19,7 +19,12 @@ export class ShaderCompiler {
     gl.compileShader(shader);
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      throw new Error('Cannot compile shader');
+      const compileErrorMessage = gl.getShaderInfoLog(shader);
+
+      const error = new Error('Cannot compile shader');
+      (<any>error).compileErrorMessage = compileErrorMessage;
+
+      throw error;
     }
 
     return shader;
