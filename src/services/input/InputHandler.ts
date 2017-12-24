@@ -1,10 +1,10 @@
-// import { Set as ImmutableSet } from 'immutable';
+import { Set as ImmutableSet } from 'immutable';
 
-// import { KeyboardKeys } from 'common/KeyboardKeys';
+import { KeyboardKeys } from 'common/KeyboardKeys';
 
 import { ApplicationWorld } from 'models/ApplicationWorld';
 
-// import { store } from 'store';
+import { store } from 'store';
 
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
 import { ReleaseDwarfEvent } from 'events/ReleaseDwarfEvent';
@@ -36,9 +36,22 @@ export class InputHandler {
   }
 
   public step(_timeDelta: number) {
-    // const pressedKeys: ImmutableSet<number> = store.getState().input.getIn(['pressedKeys']);
+    const dwarfBody = this.world.dwarf.body;
+    const pressedKeys: ImmutableSet<number> = store.getState().input.getIn(['pressedKeys']);
 
-    // TODO: handle pressed keys
+    // FIXME: add proper rotation
+    if (pressedKeys.has(KeyboardKeys.ArrowUp)) {
+      dwarfBody.angularVelocity.x += 0.5;
+    }
+    if (pressedKeys.has(KeyboardKeys.ArrowDown)) {
+      dwarfBody.angularVelocity.x -= 0.5;
+    }
+    if (pressedKeys.has(KeyboardKeys.ArrowLeft)) {
+      dwarfBody.angularVelocity.y -= 0.5;
+    }
+    if (pressedKeys.has(KeyboardKeys.ArrowRight)) {
+      dwarfBody.angularVelocity.y -= 0.5;
+    }
   }
 
   private restartWorld() {
