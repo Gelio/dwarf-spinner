@@ -2,9 +2,7 @@ import {
   Body,
   Box,
   Cylinder,
-  DistanceConstraint,
-  // LockConstraint,
-  // HingeConstraint,
+  HingeConstraint,
   Plane,
   PointToPointConstraint,
   Vec3,
@@ -16,6 +14,7 @@ import { TextureWrapType } from 'common/TextureWrapType';
 
 import { ApplicationWorld } from 'models/ApplicationWorld';
 import { BodilessModel } from 'models/BodilessModel';
+import { InvisibleModel } from 'models/InvisibleModel';
 import { PhysicalModel } from 'models/PhysicalModel';
 
 import { Model } from 'interfaces/Model';
@@ -37,20 +36,11 @@ export class WorldLoader {
     await Promise.all([
       this.loadGround(world),
       this.loadDwarf(world),
-      this.loadFidgetSpinner(world)
+      this.loadFidgetSpinner(world),
+      this.loadFidgetSpinnerHinge(world)
     ]);
 
-    const dwarfLocalPoint = new Vec3(0, 0, 0.75);
-    const fidgetSpinnerLocalPoint = new Vec3(1.2, 0, 0);
-    const constraint = new PointToPointConstraint(
-      world.dwarf.body,
-      dwarfLocalPoint,
-      world.fidgetSpinner.body,
-      fidgetSpinnerLocalPoint
-    );
-    world.physicsWorld.addConstraint(constraint);
-
-    world.dwarfConstraint = constraint;
+    this.setConstraints(world);
 
     return world;
   }
@@ -83,7 +73,7 @@ export class WorldLoader {
     );
 
     const dwarfBody = new Body({ mass: 70, position: new Vec3(2, 2, 3.05) });
-    dwarfBody.initPosition = dwarfBody.position.clone();
+    dwarfBody.initPosition.copy(dwarfBody.position);
     dwarfBody.initQuaternion.setFromAxisAngle(new Vec3(0, 1, 0), Math.PI / 2);
 
     const shape = new Box(new Vec3(0.4, 0.3, 0.75));
@@ -102,32 +92,60 @@ export class WorldLoader {
       'assets/textures/fidget_texture.png'
     );
 
-    const radius = 1.2;
+    const radius = 1.1;
     const height = 0.05;
-
-    const constantBody = new Body({
-      mass: 0,
-      position: new Vec3(2, 2, 5.01)
-    });
-    applicationWorld.physicsWorld.addBody(constantBody);
 
     const fidgetSpinnerBody = new Body({
       mass: 400,
       position: new Vec3(2, 2, 5)
     });
-    fidgetSpinnerBody.initPosition = fidgetSpinnerBody.position.clone();
-    fidgetSpinnerBody.initQuaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI / 2);
+    fidgetSpinnerBody.initPosition.copy(fidgetSpinnerBody.position);
+    fidgetSpinnerBody.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), Math.PI / 2);
+    fidgetSpinnerBody.initQuaternion.copy(fidgetSpinnerBody.quaternion);
 
     const shape = new Cylinder(radius, radius, height, 10);
     fidgetSpinnerBody.addShape(shape);
 
     applicationWorld.physicsWorld.addBody(fidgetSpinnerBody);
 
-    const constraint = new DistanceConstraint(fidgetSpinnerBody, constantBody, 0.1);
-    applicationWorld.physicsWorld.addConstraint(constraint);
-
     const fidgetSpinner = new PhysicalModel(fidgetSpinnerPrototype, fidgetSpinnerBody);
     applicationWorld.models.push(fidgetSpinner);
     applicationWorld.fidgetSpinner = fidgetSpinner;
+  }
+
+  private async loadFidgetSpinnerHinge(applicationWorld: ApplicationWorld) {
+    const hingeBody = new Body({
+      mass: 0,
+      position: new Vec3(2, 2, 5)
+    });
+    applicationWorld.physicsWorld.addBody(hingeBody);
+
+    const hinge = new InvisibleModel(hingeBody);
+    applicationWorld.fidgetSpinnerHinge = hinge;
+
+    applicationWorld.models.push(hinge);
+  }
+
+  private setConstraints(applicationWorld: ApplicationWorld) {
+    const dwarfLocalPoint = new Vec3(0, 0, 0.75);
+    const fidgetSpinnerLocalPoint = new Vec3(1.1, 0.3, 0);
+    const constraint = new PointToPointConstraint(
+      applicationWorld.dwarf.body,
+      dwarfLocalPoint,
+      applicationWorld.fidgetSpinner.body,
+      fidgetSpinnerLocalPoint
+    );
+    applicationWorld.physicsWorld.addConstraint(constraint);
+
+    applicationWorld.dwarfConstraint = constraint;
+
+    const hingeConstraint = new HingeConstraint(
+      applicationWorld.fidgetSpinner.body,
+      applicationWorld.fidgetSpinnerHinge.body,
+      {
+        axisA: new Vec3(0, 0, 1)
+      }
+    );
+    applicationWorld.physicsWorld.addConstraint(hingeConstraint);
   }
 }
