@@ -9,6 +9,8 @@ import {
   World
 } from 'cannon';
 
+import { configuration } from 'configuration';
+
 import { IlluminationProperties } from 'common/IlluminationProperties';
 import { TextureWrapType } from 'common/TextureWrapType';
 
@@ -72,7 +74,7 @@ export class WorldLoader {
       'assets/textures/dwarf_2_1K_color.jpg'
     );
 
-    const dwarfBody = new Body({ mass: 70, position: new Vec3(2, 2, 3.05) });
+    const dwarfBody = new Body({ mass: configuration.dwarfMass, position: new Vec3(2, 2, 3.05) });
     dwarfBody.initPosition.copy(dwarfBody.position);
     dwarfBody.initQuaternion.setFromAxisAngle(new Vec3(0, 1, 0), Math.PI / 2);
 
@@ -96,7 +98,7 @@ export class WorldLoader {
     const height = 0.05;
 
     const fidgetSpinnerBody = new Body({
-      mass: 400,
+      mass: configuration.fidgetSpinnerMass,
       position: new Vec3(2, 2, 5)
     });
     fidgetSpinnerBody.initPosition.copy(fidgetSpinnerBody.position);
