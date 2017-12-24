@@ -22,5 +22,11 @@ export const configuration = {
 
   defaultIlluminationModelType: IlluminationModelType.Phong,
   defaultShadingModelType: ShadingModelType.Phong,
-  defaultIlluminationProperties
+  defaultIlluminationProperties,
+
+  fidgetSpinnerMass: 400,
+  dwarfMass: 80,
+
+  spinnerAngularAcceleration: 6,
+  hingeAngularAcceleration: 3
 };

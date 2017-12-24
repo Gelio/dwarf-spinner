@@ -2,6 +2,7 @@ import { Body } from 'cannon';
 import { mat4, quat } from 'gl-matrix';
 
 import { IlluminationProperties } from 'common/IlluminationProperties';
+import { resetBody } from 'common/resetBody';
 
 import { BodilessModel } from 'models/BodilessModel';
 import { ModelPrototype } from 'models/ModelPrototype';
@@ -28,10 +29,7 @@ export class PhysicalModel extends BodilessModel {
   }
 
   public reset() {
-    this.body.position = this.body.initPosition.clone();
-    this.body.velocity = this.body.initVelocity.clone();
-    this.body.angularVelocity = this.body.initAngularVelocity.clone();
-    this.body.quaternion = this.body.initQuaternion.clone();
+    resetBody(this.body);
   }
 
   private updateModelMatrixFromBody() {
