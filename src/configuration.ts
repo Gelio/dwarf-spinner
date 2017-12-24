@@ -22,5 +22,8 @@ export const configuration = {
 
   defaultIlluminationModelType: IlluminationModelType.Phong,
   defaultShadingModelType: ShadingModelType.Phong,
-  defaultIlluminationProperties
+  defaultIlluminationProperties,
+
+  spinnerAngularAcceleration: 6,
+  hingeAngularAcceleration: 3
 };
