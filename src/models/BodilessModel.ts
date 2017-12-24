@@ -4,11 +4,12 @@ import { configuration } from 'configuration';
 
 import { IlluminationProperties } from 'common/IlluminationProperties';
 
+import { Model } from 'interfaces/Model';
 import { ModelPrototype } from 'models/ModelPrototype';
 
 import { WebGLBinder } from 'services/WebGLBinder';
 
-export class BodilessModel {
+export class BodilessModel implements Model {
   public readonly modelMatrix: mat4;
   public readonly illuminationProperties: IlluminationProperties;
   // TODO: lights
@@ -37,5 +38,9 @@ export class BodilessModel {
       gl.UNSIGNED_SHORT,
       0
     );
+  }
+
+  public reset() {
+    // Nothing to do here
   }
 }

@@ -13,7 +13,11 @@ export class PhysicalModel extends BodilessModel {
   public readonly body: Body;
   // TODO: lights
 
-  public constructor(modelPrototype: ModelPrototype, body: Body, illuminationProperties?: IlluminationProperties) {
+  public constructor(
+    modelPrototype: ModelPrototype,
+    body: Body,
+    illuminationProperties?: IlluminationProperties
+  ) {
     super(modelPrototype, illuminationProperties);
     this.body = body;
   }
@@ -21,6 +25,13 @@ export class PhysicalModel extends BodilessModel {
   public draw(gl: WebGLRenderingContext, webGLBinder: WebGLBinder) {
     this.updateModelMatrixFromBody();
     super.draw(gl, webGLBinder);
+  }
+
+  public reset() {
+    this.body.position = this.body.initPosition.clone();
+    this.body.velocity = this.body.initVelocity.clone();
+    this.body.angularVelocity = this.body.initAngularVelocity.clone();
+    this.body.quaternion = this.body.initQuaternion.clone();
   }
 
   private updateModelMatrixFromBody() {
