@@ -11,6 +11,8 @@ import { Camera } from 'models/Camera';
 
 import { CoordinateConverter } from 'services/CoordinateConverter';
 import { ImageLoader } from 'services/ImageLoader';
+import { InputHandler } from 'services/input/InputHandler';
+import { KeyboardInputMapper } from 'services/input/KeyboardInputMapper';
 import { ModelPrototypeLoader } from 'services/ModelPrototypeLoader';
 import { ProjectionService } from 'services/ProjectionService';
 import { Renderer } from 'services/Renderer';
@@ -52,6 +54,7 @@ export class Application {
   private currentProgram: WebGLProgramFacade;
 
   private renderer: Renderer;
+  private inputHandler: InputHandler;
 
   private world: ApplicationWorld;
   private previousRenderTimestamp: number;
@@ -82,12 +85,13 @@ export class Application {
 
     await this.initWorld();
 
+    this.initInputServices();
+
     this.render();
   }
 
   private bindToEvents() {
     this.eventEmitter.on(NewIlluminationModelTypeEvent.name, this.onNewIlluminationModelType);
-
     this.eventEmitter.on(NewShadingModelTypeEvent.name, this.onNewShadingModelType);
   }
 
@@ -103,7 +107,10 @@ export class Application {
       this.previousRenderTimestamp = timestamp;
     }
     timeDelta = Math.min(timeDelta, configuration.maxPhysicsWorldTimeAdvance);
-    this.world.physicsWorld.step(timeDelta * configuration.physicsSpeed);
+    timeDelta *= configuration.physicsSpeed;
+
+    this.inputHandler.step(timeDelta);
+    this.world.physicsWorld.step(timeDelta);
 
     const targetPosition = this.world.dwarf.body.position;
 
@@ -219,5 +226,13 @@ export class Application {
 
   private onNewShadingModelType(event: NewShadingModelTypeEvent) {
     this.changeShadingModelType(event.shadingModelType);
+  }
+
+  private initInputServices() {
+    this.inputHandler = new InputHandler(this.world, this.eventEmitter);
+    this.inputHandler.init();
+
+    const keyboardInputMapper = new KeyboardInputMapper(this.eventEmitter);
+    keyboardInputMapper.init();
   }
 }
