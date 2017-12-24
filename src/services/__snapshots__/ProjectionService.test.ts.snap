@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjectionService createProjectionMatrix should return a projection matrix 1`] = `
+Float32Array [
+  1.1950606107711792,
+  0,
+  0,
+  0,
+  0,
+  1.7925909757614136,
+  0,
+  0,
+  0,
+  0,
+  -1.0002000331878662,
+  -1,
+  0,
+  0,
+  -0.20002000033855438,
+  0,
+]
+`;
