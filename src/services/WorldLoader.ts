@@ -50,9 +50,7 @@ export class WorldLoader {
     );
     world.physicsWorld.addConstraint(constraint);
 
-    setTimeout(() => {
-      world.physicsWorld.removeConstraint(constraint);
-    }, 3000);
+    world.dwarfConstraint = constraint;
 
     return world;
   }
@@ -85,11 +83,13 @@ export class WorldLoader {
     );
 
     const dwarfBody = new Body({ mass: 70, position: new Vec3(2, 2, 3.05) });
+    dwarfBody.initPosition = dwarfBody.position.clone();
+    dwarfBody.initQuaternion.setFromAxisAngle(new Vec3(0, 1, 0), Math.PI / 2);
+
     const shape = new Box(new Vec3(0.4, 0.3, 0.75));
     dwarfBody.addShape(shape);
-    applicationWorld.physicsWorld.addBody(dwarfBody);
 
-    dwarfBody.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), Math.PI / 2);
+    applicationWorld.physicsWorld.addBody(dwarfBody);
 
     const dwarf = new PhysicalModel(dwarfPrototype, dwarfBody);
     applicationWorld.models.push(dwarf);
@@ -115,30 +115,18 @@ export class WorldLoader {
       mass: 400,
       position: new Vec3(2, 2, 5)
     });
+    fidgetSpinnerBody.initPosition = fidgetSpinnerBody.position.clone();
+    fidgetSpinnerBody.initQuaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI / 2);
+
     const shape = new Cylinder(radius, radius, height, 10);
     fidgetSpinnerBody.addShape(shape);
+
     applicationWorld.physicsWorld.addBody(fidgetSpinnerBody);
 
-    fidgetSpinnerBody.angularDamping = 0;
-    fidgetSpinnerBody.angularVelocity.z = 5;
-
-    fidgetSpinnerBody.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI / 2);
-
-    setInterval(() => {
-      fidgetSpinnerBody.angularVelocity.z += 5;
-    }, 500);
-
-    const constraint = new DistanceConstraint(
-      fidgetSpinnerBody,
-      constantBody,
-      1
-    );
+    const constraint = new DistanceConstraint(fidgetSpinnerBody, constantBody, 0.1);
     applicationWorld.physicsWorld.addConstraint(constraint);
 
-    const fidgetSpinner = new PhysicalModel(
-      fidgetSpinnerPrototype,
-      fidgetSpinnerBody
-    );
+    const fidgetSpinner = new PhysicalModel(fidgetSpinnerPrototype, fidgetSpinnerBody);
     applicationWorld.models.push(fidgetSpinner);
     applicationWorld.fidgetSpinner = fidgetSpinner;
   }

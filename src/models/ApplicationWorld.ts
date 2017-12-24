@@ -1,4 +1,4 @@
-import { World } from 'cannon';
+import { Constraint, World } from 'cannon';
 
 import { Model } from 'interfaces/Model';
 
@@ -10,6 +10,7 @@ export class ApplicationWorld {
 
   public dwarf: PhysicalModel;
   public fidgetSpinner: PhysicalModel;
+  public dwarfConstraint: Constraint;
 
   public constructor(physicsWorld: World, models: Model[]) {
     this.physicsWorld = physicsWorld;
