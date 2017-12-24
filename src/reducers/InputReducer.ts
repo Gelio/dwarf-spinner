@@ -3,19 +3,13 @@ import { AnyAction } from 'redux';
 
 import { InputActionTypes } from 'actions/InputActions';
 
-interface PressedKeys {
-  [keyCode: number]: boolean;
-}
+export type InputState = ImmutableMap<string, any>;
 
-export interface InputState {
-  pressedKeys: PressedKeys;
-}
-
-const defaultState = ImmutableMap({
+const defaultState: InputState = ImmutableMap({
   pressedKeys: ImmutableSet<number>()
 });
 
-export function inputReducer(state: ImmutableMap<string, any> = defaultState, action: AnyAction) {
+export function inputReducer(state: InputState = defaultState, action: AnyAction) {
   switch (action.type) {
     case InputActionTypes.KeyPressed:
       return state.updateIn(['pressedKeys'], (pressedKeys: ImmutableSet<number>) =>
