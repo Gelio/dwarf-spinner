@@ -10,6 +10,7 @@ html, body {
 
 #main-canvas {
   border: solid 1px black;
-  width: 100%;
+  max-width: 100%;
   height: auto;
+  max-height: 600px;
 }
