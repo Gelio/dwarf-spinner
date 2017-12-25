@@ -9,7 +9,9 @@ import { ApplicationWorld } from 'models/ApplicationWorld';
 
 import { store } from 'store';
 
+import { AccelerateSpinnerEvent } from 'events/AccelerateSpinnerEvent';
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
+import { HorizontalRotateSpinner } from 'events/HorizontalRotateSpinner';
 import { ReleaseDwarfEvent } from 'events/ReleaseDwarfEvent';
 import { RestartEvent } from 'events/RestartEvent';
 
@@ -28,16 +30,22 @@ export class InputHandler {
 
     this.restartWorld = this.restartWorld.bind(this);
     this.releaseDwarf = this.releaseDwarf.bind(this);
+    this.accelerateFidgetSpinner = this.accelerateFidgetSpinner.bind(this);
+    this.horizontalRotateFidgetSpinner = this.horizontalRotateFidgetSpinner.bind(this);
   }
 
   public init() {
     this.eventEmitter.on(RestartEvent.name, this.restartWorld);
     this.eventEmitter.on(ReleaseDwarfEvent.name, this.releaseDwarf);
+    this.eventEmitter.on(AccelerateSpinnerEvent.name, this.accelerateFidgetSpinner);
+    this.eventEmitter.on(HorizontalRotateSpinner.name, this.horizontalRotateFidgetSpinner);
   }
 
   public destroy() {
     this.eventEmitter.removeListener(RestartEvent.name, this.restartWorld);
     this.eventEmitter.removeListener(ReleaseDwarfEvent.name, this.releaseDwarf);
+    this.eventEmitter.removeListener(AccelerateSpinnerEvent.name, this.accelerateFidgetSpinner);
+    this.eventEmitter.removeListener(HorizontalRotateSpinner.name, this.horizontalRotateFidgetSpinner);
   }
 
   public step(_timeDelta: number) {
@@ -70,6 +78,7 @@ export class InputHandler {
     const fidgetSpinnerBody = this.world.fidgetSpinner.body;
     const tickAcceleration = configuration.spinnerAngularAcceleration * timeDelta;
 
+    // FIXME: See issue #33 (no rotation is applied when hingeAngle changes)
     if (pressedKeys.has(KeyboardKeys.ArrowUp)) {
       fidgetSpinnerBody.angularVelocity.x += tickAcceleration;
     }
@@ -98,5 +107,25 @@ export class InputHandler {
     }
 
     hingeBody.quaternion.setFromAxisAngle(this.hingeRotationAxis, this.hingeAngle);
+  }
+
+  /**
+   * Used during vertical swipes (mobile gestures)
+   * @param event
+   */
+  private accelerateFidgetSpinner(event: AccelerateSpinnerEvent) {
+    this.world.fidgetSpinner.body.angularVelocity.x += event.velocity;
+  }
+
+  /**
+   * Used during horizontal panning (mobile gestures)
+   * @param event
+   */
+  private horizontalRotateFidgetSpinner(event: HorizontalRotateSpinner) {
+    this.hingeAngle += event.angle;
+    this.world.fidgetSpinnerHinge.body.quaternion.setFromAxisAngle(
+      this.hingeRotationAxis,
+      this.hingeAngle
+    );
   }
 }
