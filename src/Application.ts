@@ -11,6 +11,7 @@ import { Camera } from 'models/Camera';
 
 import { CoordinateConverter } from 'services/CoordinateConverter';
 import { ImageLoader } from 'services/ImageLoader';
+import { GestureInputMapper } from 'services/input/GestureInputMapper';
 import { InputHandler } from 'services/input/InputHandler';
 import { KeyboardInputMapper } from 'services/input/KeyboardInputMapper';
 import { ModelPrototypeLoader } from 'services/ModelPrototypeLoader';
@@ -236,5 +237,8 @@ export class Application {
 
     const keyboardInputMapper = new KeyboardInputMapper(this.eventEmitter);
     keyboardInputMapper.init();
+
+    const gestureInputMapper = new GestureInputMapper(this.canvas, this.eventEmitter);
+    gestureInputMapper.init();
   }
 }
