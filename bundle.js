@@ -169,10 +169,10 @@ exports.configuration = {
     defaultIlluminationProperties,
     fidgetSpinnerMass: 400,
     dwarfMass: 80,
-    spinnerAngularAcceleration: 6,
-    hingeAngularAcceleration: 3,
+    spinnerAngularAcceleration: 4,
+    hingeAngularAcceleration: 0.5,
     spinnerSwipeAccelerationMultiplier: 2,
-    spinnerPanRotationMultiplier: 0.1
+    spinnerPanRotationMultiplier: 0.05
 };
 
 
@@ -19327,7 +19327,7 @@ exports = module.exports = __webpack_require__(20)(undefined);
 
 
 // module
-exports.push([module.i, "html, body {\n  box-sizing: border-box;\n  min-width: 100%;\n  min-height: 100%; }\n\n*, *::before, *::after {\n  box-sizing: inherit; }\n\n#main-canvas {\n  border: solid 1px black;\n  width: 100%;\n  height: auto; }\n", ""]);
+exports.push([module.i, "html, body {\n  box-sizing: border-box;\n  min-width: 100%;\n  min-height: 100%; }\n\n*, *::before, *::after {\n  box-sizing: inherit; }\n\n#main-canvas {\n  border: solid 1px black;\n  max-width: 100%;\n  height: auto;\n  max-height: 600px;\n  margin: auto;\n  display: block; }\n", ""]);
 
 // exports
 
@@ -32170,13 +32170,23 @@ class KeyboardInputMapper {
         if (this.isHoldableKey(keyCode)) {
             store_1.store.dispatch(InputActions_1.keyPressed(keyCode));
         }
+        if (this.shouldStopPropagation(keyCode)) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
     }
     onKeyUp(event) {
         const { keyCode } = event;
         if (this.isHoldableKey(keyCode)) {
-            return store_1.store.dispatch(InputActions_1.keyReleased(keyCode));
+            store_1.store.dispatch(InputActions_1.keyReleased(keyCode));
         }
-        this.handleNotHoldableKey(keyCode);
+        else {
+            this.handleNotHoldableKey(keyCode);
+        }
+        if (this.shouldStopPropagation(keyCode)) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
     }
     isHoldableKey(keyCode) {
         return this.holdableKeys.indexOf(keyCode) !== -1;
@@ -32185,13 +32195,17 @@ class KeyboardInputMapper {
         switch (keyCode) {
             case KeyboardKeys_1.KeyboardKeys.R:
                 this.eventEmitter.emitAppEvent(new RestartEvent_1.RestartEvent());
-                break;
+                return true;
             case KeyboardKeys_1.KeyboardKeys.Space:
                 this.eventEmitter.emitAppEvent(new ReleaseDwarfEvent_1.ReleaseDwarfEvent());
-                break;
+                return true;
             default:
                 break;
         }
+        return false;
+    }
+    shouldStopPropagation(keyCode) {
+        return (this.isHoldableKey(keyCode) || keyCode === KeyboardKeys_1.KeyboardKeys.Space || keyCode === KeyboardKeys_1.KeyboardKeys.R);
     }
 }
 exports.KeyboardInputMapper = KeyboardInputMapper;
