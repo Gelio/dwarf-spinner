@@ -30,5 +30,6 @@ export const configuration = {
   spinnerAngularAcceleration: 6,
   hingeAngularAcceleration: 3,
 
-  spinnerSwipeAccelerationMultiplier: 2
+  spinnerSwipeAccelerationMultiplier: 2,
+  spinnerPanRotationMultiplier: 0.1
 };

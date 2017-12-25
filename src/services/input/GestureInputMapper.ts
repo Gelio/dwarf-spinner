@@ -4,6 +4,7 @@ import { configuration } from 'configuration';
 
 import { AccelerateSpinnerEvent } from 'events/AccelerateSpinnerEvent';
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
+import { HorizontalRotateSpinner } from 'events/HorizontalRotateSpinner';
 import { ReleaseDwarfEvent } from 'events/ReleaseDwarfEvent';
 import { RestartEvent } from 'events/RestartEvent';
 
@@ -23,30 +24,33 @@ export class GestureInputMapper {
     this.onTap = this.onTap.bind(this);
     this.onPress = this.onPress.bind(this);
     this.onSwipe = this.onSwipe.bind(this);
+    this.onPan = this.onPan.bind(this);
   }
 
   public init() {
     this.canvasManager.on('tap', this.onTap);
     this.canvasManager.on('press', this.onPress);
     this.canvasManager.on('swipe', this.onSwipe);
+    this.canvasManager.on('pan', this.onPan);
   }
 
   public destroy() {
     this.canvasManager.off('tap', this.onTap);
     this.canvasManager.off('press', this.onPress);
     this.canvasManager.off('swipe', this.onSwipe);
+    this.canvasManager.off('pan', this.onPan);
   }
 
   private addRecognizers() {
-    this.canvasManager.add(
-      new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL, threshold: 50 })
-    );
+    const pan = new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL, threshold: 50 });
+    const swipe = new Hammer.Swipe({ direction: Hammer.DIRECTION_VERTICAL });
+    const tap = new Hammer.Tap();
+    const press = new Hammer.Press();
 
-    this.canvasManager.add(new Hammer.Swipe({ direction: Hammer.DIRECTION_VERTICAL }));
+    pan.requireFailure(swipe);
+    swipe.requireFailure(pan);
 
-    this.canvasManager.add(new Hammer.Tap());
-
-    this.canvasManager.add(new Hammer.Press());
+    this.canvasManager.add([pan, swipe, tap, press]);
   }
 
   private onTap() {
@@ -62,5 +66,12 @@ export class GestureInputMapper {
     const velocity = event.velocityY * multiplier;
 
     this.eventEmitter.emitAppEvent(new AccelerateSpinnerEvent(velocity));
+  }
+
+  private onPan(event: HammerInput) {
+    const multiplier = -configuration.spinnerPanRotationMultiplier;
+    const angle = event.velocityX * multiplier;
+
+    this.eventEmitter.emitAppEvent(new HorizontalRotateSpinner(angle));
   }
 }
