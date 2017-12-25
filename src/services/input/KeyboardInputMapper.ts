@@ -39,34 +39,54 @@ export class KeyboardInputMapper {
     if (this.isHoldableKey(keyCode)) {
       store.dispatch(keyPressed(keyCode));
     }
+
+    if (this.shouldStopPropagation(keyCode)) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
   }
 
   private onKeyUp(event: KeyboardEvent) {
     const { keyCode } = event;
 
     if (this.isHoldableKey(keyCode)) {
-      return store.dispatch(keyReleased(keyCode));
+      store.dispatch(keyReleased(keyCode));
+    } else {
+      this.handleNotHoldableKey(keyCode);
     }
 
-    this.handleNotHoldableKey(keyCode);
+    if (this.shouldStopPropagation(keyCode)) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
   }
 
   private isHoldableKey(keyCode: number) {
     return this.holdableKeys.indexOf(keyCode) !== -1;
   }
 
-  private handleNotHoldableKey(keyCode: number) {
+  private handleNotHoldableKey(keyCode: number): boolean {
     switch (keyCode) {
       case KeyboardKeys.R:
         this.eventEmitter.emitAppEvent(new RestartEvent());
-        break;
+
+        return true;
 
       case KeyboardKeys.Space:
         this.eventEmitter.emitAppEvent(new ReleaseDwarfEvent());
-        break;
+
+        return true;
 
       default:
         break;
     }
+
+    return false;
+  }
+
+  private shouldStopPropagation(keyCode: number) {
+    return (
+      this.isHoldableKey(keyCode) || keyCode === KeyboardKeys.Space || keyCode === KeyboardKeys.R
+    );
   }
 }
