@@ -27,9 +27,9 @@ export const configuration = {
   fidgetSpinnerMass: 400,
   dwarfMass: 80,
 
-  spinnerAngularAcceleration: 6,
-  hingeAngularAcceleration: 3,
+  spinnerAngularAcceleration: 4,
+  hingeAngularAcceleration: 0.5,
 
   spinnerSwipeAccelerationMultiplier: 2,
-  spinnerPanRotationMultiplier: 0.1
+  spinnerPanRotationMultiplier: 0.05
 };
