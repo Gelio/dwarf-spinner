@@ -1,0 +1,11 @@
+.instructions {
+  margin-left: 1em;
+}
+
+.device-type-options > span {
+  margin-right: 1em;
+
+  &:last-of-type {
+    margin-right: none;
+  }
+}
