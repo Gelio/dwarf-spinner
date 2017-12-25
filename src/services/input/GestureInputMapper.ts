@@ -1,5 +1,8 @@
 import { Manager } from 'hammerjs';
 
+import { configuration } from 'configuration';
+
+import { AccelerateSpinnerEvent } from 'events/AccelerateSpinnerEvent';
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
 import { ReleaseDwarfEvent } from 'events/ReleaseDwarfEvent';
 import { RestartEvent } from 'events/RestartEvent';
@@ -19,16 +22,19 @@ export class GestureInputMapper {
 
     this.onTap = this.onTap.bind(this);
     this.onPress = this.onPress.bind(this);
+    this.onSwipe = this.onSwipe.bind(this);
   }
 
   public init() {
     this.canvasManager.on('tap', this.onTap);
     this.canvasManager.on('press', this.onPress);
+    this.canvasManager.on('swipe', this.onSwipe);
   }
 
   public destroy() {
     this.canvasManager.off('tap', this.onTap);
     this.canvasManager.off('press', this.onPress);
+    this.canvasManager.off('swipe', this.onSwipe);
   }
 
   private addRecognizers() {
@@ -49,5 +55,12 @@ export class GestureInputMapper {
 
   private onPress() {
     this.eventEmitter.emitAppEvent(new RestartEvent());
+  }
+
+  private onSwipe(event: HammerInput) {
+    const multiplier = -configuration.spinnerSwipeAccelerationMultiplier;
+    const velocity = event.velocityY * multiplier;
+
+    this.eventEmitter.emitAppEvent(new AccelerateSpinnerEvent(velocity));
   }
 }

@@ -9,6 +9,7 @@ import { ApplicationWorld } from 'models/ApplicationWorld';
 
 import { store } from 'store';
 
+import { AccelerateSpinnerEvent } from 'events/AccelerateSpinnerEvent';
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
 import { ReleaseDwarfEvent } from 'events/ReleaseDwarfEvent';
 import { RestartEvent } from 'events/RestartEvent';
@@ -28,16 +29,19 @@ export class InputHandler {
 
     this.restartWorld = this.restartWorld.bind(this);
     this.releaseDwarf = this.releaseDwarf.bind(this);
+    this.accelerateFidgetSpinner = this.accelerateFidgetSpinner.bind(this);
   }
 
   public init() {
     this.eventEmitter.on(RestartEvent.name, this.restartWorld);
     this.eventEmitter.on(ReleaseDwarfEvent.name, this.releaseDwarf);
+    this.eventEmitter.on(AccelerateSpinnerEvent.name, this.accelerateFidgetSpinner);
   }
 
   public destroy() {
     this.eventEmitter.removeListener(RestartEvent.name, this.restartWorld);
     this.eventEmitter.removeListener(ReleaseDwarfEvent.name, this.releaseDwarf);
+    this.eventEmitter.removeListener(AccelerateSpinnerEvent.name, this.accelerateFidgetSpinner);
   }
 
   public step(_timeDelta: number) {
@@ -70,6 +74,7 @@ export class InputHandler {
     const fidgetSpinnerBody = this.world.fidgetSpinner.body;
     const tickAcceleration = configuration.spinnerAngularAcceleration * timeDelta;
 
+    // FIXME: See issue #33 (no rotation is applied when hingeAngle changes)
     if (pressedKeys.has(KeyboardKeys.ArrowUp)) {
       fidgetSpinnerBody.angularVelocity.x += tickAcceleration;
     }
@@ -98,5 +103,13 @@ export class InputHandler {
     }
 
     hingeBody.quaternion.setFromAxisAngle(this.hingeRotationAxis, this.hingeAngle);
+  }
+
+  /**
+   * Used during swipes (mobile gestures)
+   * @param event
+   */
+  private accelerateFidgetSpinner(event: AccelerateSpinnerEvent) {
+    this.world.fidgetSpinner.body.angularVelocity.x += event.velocity;
   }
 }

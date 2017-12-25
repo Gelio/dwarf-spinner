@@ -28,5 +28,7 @@ export const configuration = {
   dwarfMass: 80,
 
   spinnerAngularAcceleration: 6,
-  hingeAngularAcceleration: 3
+  hingeAngularAcceleration: 3,
+
+  spinnerSwipeAccelerationMultiplier: 2
 };
