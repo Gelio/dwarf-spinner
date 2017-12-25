@@ -19327,7 +19327,7 @@ exports = module.exports = __webpack_require__(20)(undefined);
 
 
 // module
-exports.push([module.i, "html, body {\n  box-sizing: border-box;\n  min-width: 100%;\n  min-height: 100%; }\n\n*, *::before, *::after {\n  box-sizing: inherit; }\n\n#main-canvas {\n  border: solid 1px black; }\n", ""]);
+exports.push([module.i, "html, body {\n  box-sizing: border-box;\n  min-width: 100%;\n  min-height: 100%; }\n\n*, *::before, *::after {\n  box-sizing: inherit; }\n\n#main-canvas {\n  border: solid 1px black;\n  width: 100%;\n  height: auto; }\n", ""]);
 
 // exports
 
