@@ -1,10 +1,11 @@
-import { Body } from 'cannon';
+import { Body, Vec3 } from 'cannon';
 import { mat4, quat } from 'gl-matrix';
 
 import { IlluminationProperties } from 'common/IlluminationProperties';
 import { resetBody } from 'common/resetBody';
 
 import { BodilessModel } from 'models/BodilessModel';
+import { Spotlight } from 'models/lights/Spotlight';
 import { ModelPrototype } from 'models/ModelPrototype';
 
 import { CoordinateConverter } from 'services/CoordinateConverter';
@@ -12,7 +13,7 @@ import { WebGLBinder } from 'services/WebGLBinder';
 
 export class PhysicalModel extends BodilessModel {
   public readonly body: Body;
-  // TODO: lights
+  public spotlight: Spotlight | null = null;
 
   public constructor(
     modelPrototype: ModelPrototype,
@@ -25,6 +26,7 @@ export class PhysicalModel extends BodilessModel {
 
   public draw(gl: WebGLRenderingContext, webGLBinder: WebGLBinder) {
     this.updateModelMatrixFromBody();
+    this.updateAndBindSpotlight(webGLBinder);
     super.draw(gl, webGLBinder);
   }
 
@@ -47,5 +49,17 @@ export class PhysicalModel extends BodilessModel {
 
     mat4.fromRotationTranslation(this.modelMatrix, quaternion, translationVector);
     mat4.multiply(this.modelMatrix, this.modelMatrix, this.modelPrototype.modelMatrix);
+  }
+
+  private updateAndBindSpotlight(webGLBinder: WebGLBinder) {
+    if (!this.spotlight) {
+      return;
+    }
+
+    // TODO: set position on top of object
+    CoordinateConverter.physicsToRendering(this.spotlight.position, this.body.position);
+    // TODO: set direction based on object rotation
+    CoordinateConverter.physicsToRendering(this.spotlight.direction, new Vec3(0, 1, -1));
+    this.spotlight.bind(webGLBinder);
   }
 }
