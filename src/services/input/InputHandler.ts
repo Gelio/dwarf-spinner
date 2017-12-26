@@ -101,6 +101,7 @@ export class InputHandler {
     this.rotateDwarfReflector(0);
     store.dispatch(changeGameState(GameStateType.AcceleratingSpinner));
     store.dispatch(resetScore());
+    this.setCurrentCameraAsActive();
 
     if (this.dwarfReleased) {
       this.world.physicsWorld.addConstraint(this.world.dwarfConstraint);
@@ -219,11 +220,14 @@ export class InputHandler {
 
   private changeToNextCamera() {
     const nextCameraTypeIndex = (this.currentCameraTypeIndex + 1) % this.cameraTypeOrder.length;
-    const nextCameraType = this.cameraTypeOrder[nextCameraTypeIndex];
-    const nextCamera = this.cameraFactory.createCamera(nextCameraType);
-
-    this.eventEmitter.emitAppEvent(new NewCameraEvent(nextCamera));
-
     this.currentCameraTypeIndex = nextCameraTypeIndex;
+    this.setCurrentCameraAsActive();
+  }
+
+  private setCurrentCameraAsActive() {
+    const currentCameraType = this.cameraTypeOrder[this.currentCameraTypeIndex];
+    const currentCamera = this.cameraFactory.createCamera(currentCameraType);
+
+    this.eventEmitter.emitAppEvent(new NewCameraEvent(currentCamera));
   }
 }
