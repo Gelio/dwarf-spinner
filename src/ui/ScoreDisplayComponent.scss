@@ -1,0 +1,12 @@
+.score-display {
+  position: absolute;
+  top: 0;
+  right: 0;
+  pointer-events: all;
+
+  background-color: #482E74;
+  color: #F2F9B7;
+
+  padding: 0.5em;
+  border: solid 1px #222;
+}
