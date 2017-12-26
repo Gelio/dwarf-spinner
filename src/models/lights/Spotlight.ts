@@ -1,3 +1,4 @@
+import { Quaternion } from 'cannon';
 import { vec3 } from 'gl-matrix';
 
 import { DirectedLight } from 'interfaces/lights/DirectedLight';
@@ -8,6 +9,8 @@ export class Spotlight implements DirectedLight {
   public position: vec3 = vec3.create();
   public color: vec3;
   public cutoff: number;
+
+  public directionOffset: Quaternion = new Quaternion();
 
   public constructor(color: vec3, cutoffAngle: number) {
     this.color = color;
