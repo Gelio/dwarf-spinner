@@ -42,5 +42,6 @@ export const configuration = {
 
   dwarfRotationThrottleMultiplier: 0.7,
 
-  scoreUpdateInterval: 500
+  scoreUpdateInterval: 500,
+  scoreDifferenceThreshold: 0.5
 };

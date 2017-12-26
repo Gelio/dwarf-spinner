@@ -37,8 +37,13 @@ export class ScoreUpdater {
       return;
     }
 
-    // FIXME: don't dispatch if it's still moving
-    store.dispatch(updateScore(this.getScore()));
+    const newScore = this.getScore();
+    const oldScore = store.getState().game.get('currentScore');
+
+    if (Math.abs(newScore - oldScore) > configuration.scoreDifferenceThreshold) {
+      store.dispatch(updateScore(this.getScore()));
+
+    }
   }
 
   private getScore() {
