@@ -4,5 +4,6 @@ export enum KeyboardKeys {
   ArrowLeft = 37,
   ArrowRight = 39,
   Space = 32,
-  R = 82
+  R = 82,
+  C = 67
 }
