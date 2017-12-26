@@ -35,6 +35,7 @@ module.exports = function loader(source) {
         return callback(err);
       }
 
+      moduleExportsRegex.lastIndex = 0;
       dependencySource = moduleExportsRegex.exec(dependencySource)[1];
       dependencySource = dependencySource.replace(/\\n/g, '\n').replace(/\\r/g, '\r');
       source = source.replace(matches[0], dependencySource);
