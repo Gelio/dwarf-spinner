@@ -16,11 +16,6 @@ uniform vec3 uPointLightColor;
 
 uniform vec3 uViewerPosition;
 
-uniform float uDiffuseCoefficient;
-uniform float uSpecularCoefficient;
-uniform int uIlluminationModelType;
-uniform float uSpecularShininess;
-
 varying vec2 vTextureCoords;
 varying vec4 vLightIntensity;
 

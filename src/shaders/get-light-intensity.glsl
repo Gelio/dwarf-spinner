@@ -1,6 +1,14 @@
 #define PHONG_ILLUMINATION_TYPE 0
 #define BLINN_ILLUMINATION_TYPE 1
 
+#define BLINN_SHININESS_RATIO 0.5
+
+uniform int uIlluminationModelType;
+
+uniform float uSpecularShininess;
+uniform float uDiffuseCoefficient;
+uniform float uSpecularCoefficient;
+
 vec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector) {
   // Should sum across all light sources
   float cosine = max(0.0, dot(normalVector, lightVector));
@@ -19,7 +27,7 @@ vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerV
   } else if (uIlluminationModelType == BLINN_ILLUMINATION_TYPE)  {
     vec3 hVector = normalize(normalVector + lightVector);
     cosine = dot(normalVector, hVector);
-    shininess /= 2.0;
+    shininess *= BLINN_SHININESS_RATIO;
   }
 
   cosine = max(0.0, cosine);
