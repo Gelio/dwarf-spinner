@@ -9,6 +9,7 @@ import { HorizontalRotateDwarfReflector } from 'events/HorizontalRotateDwarfRefl
 import { HorizontalRotateSpinner } from 'events/HorizontalRotateSpinner';
 import { ReleaseDwarfEvent } from 'events/ReleaseDwarfEvent';
 import { RestartEvent } from 'events/RestartEvent';
+import { ThrottleDwarfRotationEvent } from 'events/ThrottleDwarfRotationEvent';
 
 import { getGameState } from 'store';
 
@@ -58,7 +59,13 @@ export class GestureInputMapper {
   }
 
   private onTap() {
-    this.eventEmitter.emitAppEvent(new ReleaseDwarfEvent());
+    const gameState = getGameState();
+
+    if (gameState === GameStateType.AcceleratingSpinner) {
+      this.eventEmitter.emitAppEvent(new ReleaseDwarfEvent());
+    } else if (gameState === GameStateType.DwarfInTheAir) {
+      this.eventEmitter.emitAppEvent(new ThrottleDwarfRotationEvent());
+    }
   }
 
   private onPress() {
@@ -80,7 +87,6 @@ export class GestureInputMapper {
     const gameState = getGameState();
 
     if (gameState === GameStateType.AcceleratingSpinner) {
-      console.log('accelerating');
       const multiplier = -configuration.spinnerPanRotationMultiplier;
       const angle = event.velocityX * multiplier;
 

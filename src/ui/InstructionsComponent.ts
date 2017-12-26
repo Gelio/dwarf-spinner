@@ -68,17 +68,21 @@ export class InstructionsComponent extends HyperComponent<ComponentState> {
 function DesktopInstructions() {
   return wire(DesktopInstructions)`
     <li>Use up/down arrow keys to accelerate the fidget spinner.</li>
-    <li>Use left/right arrow keys to rotate the fidget spinner horizontally.</li>
+    <li>While dwarf is not released, use left/right arrow keys to rotate the fidget spinner horizontally.</li>
     <li>Press the <em>Space</em> key to release the dwarf.</li>
     <li>Press the <em>R</em> key to restart the game.</li>
+    <li>While the dwarf is in the air, use left/right arrow keys to rotate the reflector on dwarf's head</li>
+    <li>While the dwarf is in the air, click repeatedly to slow down dwarf's rotation</li>
   `;
 }
 
 function MobileInstructions() {
   return wire(MobileInstructions)`
     <li>Swipe up/down to accelerate the fidget spinner.</li>
-    <li>Pan left/right to rotate the fidget spinner horizontally.</li>
+    <li>While dwarf is not released, pan left/right to rotate the fidget spinner horizontally.</li>
     <li>Tap to release the dwarf.</li>
     <li>Long press to restart the game.</li>
+    <li>While the dwarf is in the air, pan left/right to rotate the reflector on dwarf's head</li>
+    <li>While the dwarf is in the air, tap repeatedly to slow down dwarf's rotation</li>
   `;
 }

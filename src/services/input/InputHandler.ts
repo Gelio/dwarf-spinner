@@ -9,7 +9,7 @@ import { KeyboardKeys } from 'common/KeyboardKeys';
 import { ApplicationWorld } from 'models/ApplicationWorld';
 
 import { changeGameState } from 'actions/GameActions';
-import { store, getGameState } from 'store';
+import { getGameState, store } from 'store';
 
 import { AccelerateSpinnerEvent } from 'events/AccelerateSpinnerEvent';
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
@@ -17,6 +17,7 @@ import { HorizontalRotateDwarfReflector } from 'events/HorizontalRotateDwarfRefl
 import { HorizontalRotateSpinner } from 'events/HorizontalRotateSpinner';
 import { ReleaseDwarfEvent } from 'events/ReleaseDwarfEvent';
 import { RestartEvent } from 'events/RestartEvent';
+import { ThrottleDwarfRotationEvent } from 'events/ThrottleDwarfRotationEvent';
 
 export class InputHandler {
   // @ts-ignore
@@ -41,6 +42,7 @@ export class InputHandler {
     this.onHorizontalRotateDwarfReflectorEvent = this.onHorizontalRotateDwarfReflectorEvent.bind(
       this
     );
+    this.onThrottleDwarfRotationEvent = this.onThrottleDwarfRotationEvent.bind(this);
   }
 
   public init() {
@@ -52,6 +54,7 @@ export class InputHandler {
       HorizontalRotateDwarfReflector.name,
       this.onHorizontalRotateDwarfReflectorEvent
     );
+    this.eventEmitter.on(ThrottleDwarfRotationEvent.name, this.onThrottleDwarfRotationEvent);
   }
 
   public destroy() {
@@ -65,6 +68,10 @@ export class InputHandler {
     this.eventEmitter.removeListener(
       HorizontalRotateDwarfReflector.name,
       this.onHorizontalRotateDwarfReflectorEvent
+    );
+    this.eventEmitter.removeListener(
+      ThrottleDwarfRotationEvent.name,
+      this.onThrottleDwarfRotationEvent
     );
   }
 
@@ -152,6 +159,15 @@ export class InputHandler {
 
   private onHorizontalRotateDwarfReflectorEvent(event: HorizontalRotateDwarfReflector) {
     this.rotateDwarfReflector(event.angle);
+  }
+
+  private onThrottleDwarfRotationEvent() {
+    const dwarfBody = this.world.dwarf.body;
+
+    dwarfBody.angularVelocity.scale(
+      configuration.dwarfRotationThrottleMultiplier,
+      dwarfBody.angularVelocity
+    );
   }
 
   private rotateHinge(angle: number) {
