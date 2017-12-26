@@ -38,5 +38,7 @@ export const configuration = {
 
   dwarfReflectorPanRotationMultiplier: 0.1,
   dwarfReflectorAngularAcceleration: 0.5,
-  dwarfReflectorMaxAngle: 45 / 180 * Math.PI
+  dwarfReflectorMaxAngle: 45 / 180 * Math.PI,
+
+  dwarfRotationThrottleMultiplier: 0.7
 };
