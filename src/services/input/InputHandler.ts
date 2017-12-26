@@ -85,6 +85,8 @@ export class InputHandler {
   private restartWorld() {
     this.world.models.forEach(model => model.reset());
     this.hingeAngle = 0;
+    this.dwarfReflectorRotationAngle = 0;
+    this.rotateDwarfReflector(0);
     store.dispatch(changeGameState(GameStateType.AcceleratingSpinner));
     store.dispatch(resetScore());
 
