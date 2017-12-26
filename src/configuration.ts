@@ -40,5 +40,8 @@ export const configuration = {
   dwarfReflectorAngularAcceleration: 0.5,
   dwarfReflectorMaxAngle: 45 / 180 * Math.PI,
 
-  dwarfRotationThrottleMultiplier: 0.7
+  dwarfRotationThrottleMultiplier: 0.7,
+
+  scoreUpdateInterval: 500,
+  scoreDifferenceThreshold: 0.5
 };
