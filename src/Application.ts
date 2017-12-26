@@ -3,6 +3,7 @@ import { mat4 } from 'gl-matrix';
 
 import { configuration } from 'configuration';
 
+import { CameraType } from 'common/CameraType';
 import { ShadingModelType } from 'common/ShadingModelType';
 
 import { WebGLProgramFacade } from 'facades/WebGLProgramFacade';
@@ -28,6 +29,7 @@ import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttribute
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
 
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
+import { NewCameraEvent } from 'events/NewCameraEvent';
 import { NewIlluminationModelTypeEvent } from 'events/NewIlluminationModelTypeEvent';
 import { NewShadingModelTypeEvent } from 'events/NewShadingModelTypeEvent';
 import { RestartEvent } from 'events/RestartEvent';
@@ -74,6 +76,7 @@ export class Application {
     this.render = this.render.bind(this);
     this.onNewIlluminationModelType = this.onNewIlluminationModelType.bind(this);
     this.onNewShadingModelType = this.onNewShadingModelType.bind(this);
+    this.onNewCamera = this.onNewCamera.bind(this);
   }
 
   public async init() {
@@ -98,6 +101,7 @@ export class Application {
   private bindToEvents() {
     this.eventEmitter.on(NewIlluminationModelTypeEvent.name, this.onNewIlluminationModelType);
     this.eventEmitter.on(NewShadingModelTypeEvent.name, this.onNewShadingModelType);
+    this.eventEmitter.on(NewCameraEvent.name, this.onNewCamera);
   }
 
   private render(timestamp?: number) {
@@ -147,7 +151,7 @@ export class Application {
 
   private initCamera() {
     const cameraFactory = new CameraFactory(this.world);
-    const camera = cameraFactory.createStationaryCamera();
+    const camera = cameraFactory.createCamera(CameraType.Stationary);
     this.renderer.setActiveCamera(camera);
   }
 
@@ -233,8 +237,13 @@ export class Application {
     this.changeShadingModelType(event.shadingModelType);
   }
 
+  private onNewCamera(event: NewCameraEvent) {
+    this.renderer.setActiveCamera(event.camera);
+  }
+
   private initInputServices() {
-    this.inputHandler = new InputHandler(this.world, this.eventEmitter);
+    const cameraFactory = new CameraFactory(this.world);
+    this.inputHandler = new InputHandler(this.world, this.eventEmitter, cameraFactory);
     this.inputHandler.init();
 
     const keyboardInputMapper = new KeyboardInputMapper(this.eventEmitter);

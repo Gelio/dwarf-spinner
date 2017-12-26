@@ -8,15 +8,33 @@ import { Camera } from 'interfaces/Camera';
 
 import { CoordinateConverter } from 'services/CoordinateConverter';
 
+import { CameraType } from 'common/CameraType';
+
 export class CameraFactory {
   private readonly applicationWorld: ApplicationWorld;
-  private readonly stationaryPosition = new Vec3(-8, 0, 2);
+  private readonly stationaryPosition = new Vec3(-4, -5, 2);
 
   constructor(applicationWorld: ApplicationWorld) {
     this.applicationWorld = applicationWorld;
   }
 
-  public createStationaryCamera(): Camera {
+  public createCamera(cameraType: CameraType) {
+    switch (cameraType) {
+      case CameraType.Stationary:
+        return this.createStationaryCamera();
+
+      case CameraType.Observing:
+        return this.createObservingCamera();
+
+      case CameraType.Following:
+        // TODO: following camera
+
+      default:
+        return this.createStationaryCamera();
+    }
+  }
+
+  private createStationaryCamera(): Camera {
     const position = this.stationaryPosition.clone();
     const target = new Vec3(2, 2, 2);
 
@@ -26,13 +44,10 @@ export class CameraFactory {
     );
   }
 
-  public createObservingCamera(): Camera {
+  private createObservingCamera(): Camera {
     const position = this.stationaryPosition.clone();
     const dwarfBody = this.applicationWorld.dwarf.body;
 
-    return new ObservingCamera(
-      CoordinateConverter.physicsToRendering(position),
-      dwarfBody
-    );
+    return new ObservingCamera(CoordinateConverter.physicsToRendering(position), dwarfBody);
   }
 }
