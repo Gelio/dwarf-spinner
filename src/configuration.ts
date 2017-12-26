@@ -15,6 +15,7 @@ defaultIlluminationProperties.specularShininess = 50;
 export const configuration = {
   maxPhysicsWorldTimeAdvance: 1 / 30,
   physicsSpeed: 1,
+  inAirPhysicsSpeed: 0.25,
   ambientLightColor: vec3.fromValues(0, 0, 0),
 
   pointLightColor: vec3.fromValues(1, 1, 1),
@@ -32,6 +33,10 @@ export const configuration = {
 
   spinnerAngularAcceleration: 4,
   hingeAngularAcceleration: 0.5,
+  hingeAngleRange: {
+    min: -20 / 180 * Math.PI,
+    max: 20 / 180 * Math.PI
+  },
 
   spinnerSwipeAccelerationMultiplier: 2,
   spinnerPanRotationMultiplier: 0.05,
@@ -46,5 +51,7 @@ export const configuration = {
   scoreDifferenceThreshold: 0.5,
 
   followingCameraSpeed: 0.04,
-  followingCameraDistance: 7
+  followingCameraDistance: 7,
+
+  randomShapesCount: 20
 };
