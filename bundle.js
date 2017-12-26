@@ -24752,12 +24752,13 @@ class Application {
     }
     initCamera() {
         const cameraFactory = new CameraFactory_1.CameraFactory(this.world);
-        const camera = cameraFactory.createCamera(CameraType_1.CameraType.Stationary);
-        this.renderer.setActiveCamera(camera);
+        this.currentCamera = cameraFactory.createCamera(CameraType_1.CameraType.Stationary);
+        this.renderer.setActiveCamera(this.currentCamera);
     }
     initRenderer() {
         this.renderer = new Renderer_1.Renderer(this.canvas, this.gl, this.projectionMatrix, this.webGLBinder);
         this.renderer.init();
+        this.renderer.setActiveCamera(this.currentCamera);
     }
     initWebGLBinder() {
         this.webGLBinder = new WebGLBinder_1.WebGLBinder(this.gl, this.webGLUniforms, this.webGLAttributes);
@@ -24815,6 +24816,7 @@ class Application {
         this.changeShadingModelType(event.shadingModelType);
     }
     onNewCamera(event) {
+        this.currentCamera = event.camera;
         this.renderer.setActiveCamera(event.camera);
     }
     initInputServices() {
