@@ -218,6 +218,8 @@ export class Application {
       configuration.pointLightPosition,
       configuration.pointLightColor
     );
+    this.webGLBinder.bindSpotlightColor(configuration.dwarfReflectorColor);
+    this.webGLBinder.bindSpotlightCutoff(configuration.dwarfReflectorCutoff);
     this.webGLBinder.bindIlluminationModelType(configuration.defaultIlluminationModelType);
 
     this.initRenderer();
