@@ -7,7 +7,7 @@ import { ShadingModelType } from 'common/ShadingModelType';
 
 import { WebGLProgramFacade } from 'facades/WebGLProgramFacade';
 import { ApplicationWorld } from 'models/ApplicationWorld';
-import { Camera } from 'models/Camera';
+import { GeneralCamera } from 'models/cameras/GeneralCamera';
 
 import { CoordinateConverter } from 'services/CoordinateConverter';
 import { DwarfCollisionDetector } from 'services/DwarfCollisionDetector';
@@ -27,6 +27,7 @@ import { WorldLoader } from 'services/WorldLoader';
 
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
+import { Camera } from 'interfaces/Camera';
 
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
 import { NewIlluminationModelTypeEvent } from 'events/NewIlluminationModelTypeEvent';
@@ -156,7 +157,7 @@ export class Application {
     const position = new Vec3(0, -5, 2);
     const target = new Vec3(0, 0, 0);
 
-    this.camera = new Camera(
+    this.camera = new GeneralCamera(
       CoordinateConverter.physicsToRendering(position),
       CoordinateConverter.physicsToRendering(target)
     );

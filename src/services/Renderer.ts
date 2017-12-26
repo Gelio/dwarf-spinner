@@ -1,7 +1,7 @@
 import { mat4 } from 'gl-matrix';
 
+import { Camera } from 'interfaces/Camera';
 import { Model } from 'interfaces/Model';
-import { Camera } from 'models/Camera';
 
 import { WebGLBinder } from 'services/WebGLBinder';
 
@@ -41,7 +41,7 @@ export class Renderer {
   }
 
   public refreshCamera() {
-    this.camera.updateViewMatrix();
+    this.camera.update();
     this.webGLBinder.bindViewMatrix(this.camera.viewMatrix);
   }
 
