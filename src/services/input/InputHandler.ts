@@ -8,7 +8,7 @@ import { KeyboardKeys } from 'common/KeyboardKeys';
 
 import { ApplicationWorld } from 'models/ApplicationWorld';
 
-import { changeGameState } from 'actions/GameActions';
+import { changeGameState, resetScore } from 'actions/GameActions';
 import { getGameState, store } from 'store';
 
 import { AccelerateSpinnerEvent } from 'events/AccelerateSpinnerEvent';
@@ -86,6 +86,7 @@ export class InputHandler {
     this.world.models.forEach(model => model.reset());
     this.hingeAngle = 0;
     store.dispatch(changeGameState(GameStateType.AcceleratingSpinner));
+    store.dispatch(resetScore());
 
     if (this.dwarfReleased) {
       this.world.physicsWorld.addConstraint(this.world.dwarfConstraint);

@@ -10,6 +10,7 @@ import { ApplicationWorld } from 'models/ApplicationWorld';
 import { Camera } from 'models/Camera';
 
 import { CoordinateConverter } from 'services/CoordinateConverter';
+import { DwarfCollisionDetector } from 'services/DwarfCollisionDetector';
 import { ImageLoader } from 'services/ImageLoader';
 import { GestureInputMapper } from 'services/input/GestureInputMapper';
 import { InputHandler } from 'services/input/InputHandler';
@@ -17,6 +18,7 @@ import { KeyboardInputMapper } from 'services/input/KeyboardInputMapper';
 import { ModelPrototypeLoader } from 'services/ModelPrototypeLoader';
 import { ProjectionService } from 'services/ProjectionService';
 import { Renderer } from 'services/Renderer';
+import { ScoreUpdater } from 'services/ScoreUpdater';
 import { ShaderCompiler } from 'services/ShaderCompiler';
 import { WebGLAttributeLoader } from 'services/WebGLAttributeLoader';
 import { WebGLBinder } from 'services/WebGLBinder';
@@ -35,7 +37,6 @@ import { GouraudShadingProgramFactory } from 'programs/GouraudShadingProgramFact
 import { PhongShadingProgramFactory } from 'programs/PhongShadingProgramFactory';
 
 import 'store';
-import { DwarfCollisionDetector } from 'services/DwarfCollisionDetector';
 
 interface ProgramsDictionary {
   [shaderType: number]: WebGLProgramFacade;
@@ -90,6 +91,7 @@ export class Application {
 
     this.initInputServices();
     this.initCollisionDetectors();
+    this.initScoreUpdater();
     this.eventEmitter.emitAppEvent(new RestartEvent());
 
     this.render();
@@ -206,6 +208,11 @@ export class Application {
   private initCollisionDetectors() {
     const dwarfCollisionDetector = new DwarfCollisionDetector(this.eventEmitter, this.world);
     dwarfCollisionDetector.init();
+  }
+
+  private initScoreUpdater() {
+    const scoreUpdater = new ScoreUpdater(this.world, this.eventEmitter);
+    scoreUpdater.init();
   }
 
   private changeShadingModelType(newShadingModelType: ShadingModelType) {
