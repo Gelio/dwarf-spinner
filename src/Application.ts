@@ -28,6 +28,7 @@ import { WorldLoader } from 'services/WorldLoader';
 
 import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttributes';
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
+import { Camera } from 'interfaces/Camera';
 
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
 import { NewCameraEvent } from 'events/NewCameraEvent';
@@ -55,6 +56,8 @@ export class Application {
   private webGLUniforms: ApplicationWebGLUniforms;
   private webGLBinder: WebGLBinder;
   private projectionMatrix: mat4;
+
+  private currentCamera: Camera;
 
   private programs: ProgramsDictionary;
   private currentProgram: WebGLProgramFacade;
@@ -158,8 +161,8 @@ export class Application {
 
   private initCamera() {
     const cameraFactory = new CameraFactory(this.world);
-    const camera = cameraFactory.createCamera(CameraType.Stationary);
-    this.renderer.setActiveCamera(camera);
+    this.currentCamera = cameraFactory.createCamera(CameraType.Stationary);
+    this.renderer.setActiveCamera(this.currentCamera);
   }
 
   private initRenderer() {
@@ -171,6 +174,7 @@ export class Application {
     );
 
     this.renderer.init();
+    this.renderer.setActiveCamera(this.currentCamera);
   }
 
   private initWebGLBinder() {
@@ -245,6 +249,7 @@ export class Application {
   }
 
   private onNewCamera(event: NewCameraEvent) {
+    this.currentCamera = event.camera;
     this.renderer.setActiveCamera(event.camera);
   }
 
