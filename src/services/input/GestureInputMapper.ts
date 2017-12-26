@@ -1,12 +1,16 @@
 import { Manager } from 'hammerjs';
 
+import { GameStateType } from 'common/GameStateType';
 import { configuration } from 'configuration';
 
 import { AccelerateSpinnerEvent } from 'events/AccelerateSpinnerEvent';
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
+import { HorizontalRotateDwarfReflector } from 'events/HorizontalRotateDwarfReflector';
 import { HorizontalRotateSpinner } from 'events/HorizontalRotateSpinner';
 import { ReleaseDwarfEvent } from 'events/ReleaseDwarfEvent';
 import { RestartEvent } from 'events/RestartEvent';
+
+import { getGameState } from 'store';
 
 export class GestureInputMapper {
   private readonly canvas: HTMLCanvasElement;
@@ -62,16 +66,30 @@ export class GestureInputMapper {
   }
 
   private onSwipe(event: HammerInput) {
-    const multiplier = -configuration.spinnerSwipeAccelerationMultiplier;
-    const velocity = event.velocityY * multiplier;
+    const gameState = getGameState();
 
-    this.eventEmitter.emitAppEvent(new AccelerateSpinnerEvent(velocity));
+    if (gameState === GameStateType.AcceleratingSpinner) {
+      const multiplier = -configuration.spinnerSwipeAccelerationMultiplier;
+      const velocity = event.velocityY * multiplier;
+
+      this.eventEmitter.emitAppEvent(new AccelerateSpinnerEvent(velocity));
+    }
   }
 
   private onPan(event: HammerInput) {
-    const multiplier = -configuration.spinnerPanRotationMultiplier;
-    const angle = event.velocityX * multiplier;
+    const gameState = getGameState();
 
-    this.eventEmitter.emitAppEvent(new HorizontalRotateSpinner(angle));
+    if (gameState === GameStateType.AcceleratingSpinner) {
+      console.log('accelerating');
+      const multiplier = -configuration.spinnerPanRotationMultiplier;
+      const angle = event.velocityX * multiplier;
+
+      this.eventEmitter.emitAppEvent(new HorizontalRotateSpinner(angle));
+    } else {
+      const multiplier = -configuration.dwarfReflectorPanRotationMultiplier;
+      const angle = event.velocityX * multiplier;
+
+      this.eventEmitter.emitAppEvent(new HorizontalRotateDwarfReflector(angle));
+    }
   }
 }
