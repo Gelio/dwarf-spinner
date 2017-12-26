@@ -13,14 +13,14 @@ export class GeneralCamera implements Camera {
   }
 
   public position: vec3;
-  public target: vec3;
+  public targetPosition: vec3;
 
   protected upVector = CoordinateConverter.physicsToRendering(new Vec3(0, 0, 1));
   private _viewMatrix = mat4.create();
 
-  public constructor(position: vec3, target: vec3) {
+  public constructor(position: vec3, targetPosition: vec3) {
     this.position = position;
-    this.target = target;
+    this.targetPosition = targetPosition;
 
     this.updateViewMatrix();
   }
@@ -36,6 +36,6 @@ export class GeneralCamera implements Camera {
   protected updateViewMatrix() {
     // TODO: stop using gl-matrix method for calculating the view matrix
 
-    mat4.lookAt(this.viewMatrix, this.position, this.target, this.upVector);
+    mat4.lookAt(this.viewMatrix, this.position, this.targetPosition, this.upVector);
   }
 }
