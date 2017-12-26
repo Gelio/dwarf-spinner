@@ -20,6 +20,9 @@ export const configuration = {
   pointLightColor: vec3.fromValues(1, 1, 1),
   pointLightPosition: CoordinateConverter.physicsToRendering(new Vec3(0, 0, 5)),
 
+  dwarfReflectorColor: vec3.fromValues(1, 201 / 255, 14 / 255),
+  dwarfReflectorCutoff: Math.cos(30),
+
   defaultIlluminationModelType: IlluminationModelType.Phong,
   defaultShadingModelType: ShadingModelType.Phong,
   defaultIlluminationProperties,
