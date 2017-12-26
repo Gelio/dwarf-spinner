@@ -35,6 +35,7 @@ import { GouraudShadingProgramFactory } from 'programs/GouraudShadingProgramFact
 import { PhongShadingProgramFactory } from 'programs/PhongShadingProgramFactory';
 
 import 'store';
+import { DwarfCollisionDetector } from 'services/DwarfCollisionDetector';
 
 interface ProgramsDictionary {
   [shaderType: number]: WebGLProgramFacade;
@@ -88,6 +89,7 @@ export class Application {
     await this.initWorld();
 
     this.initInputServices();
+    this.initCollisionDetectors();
     this.eventEmitter.emitAppEvent(new RestartEvent());
 
     this.render();
@@ -199,6 +201,11 @@ export class Application {
     const worldLoader = new WorldLoader(modelPrototypeLoader);
 
     this.world = await worldLoader.loadWorld(physicsWorld);
+  }
+
+  private initCollisionDetectors() {
+    const dwarfCollisionDetector = new DwarfCollisionDetector(this.eventEmitter, this.world);
+    dwarfCollisionDetector.init();
   }
 
   private changeShadingModelType(newShadingModelType: ShadingModelType) {
