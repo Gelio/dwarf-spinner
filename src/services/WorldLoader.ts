@@ -21,6 +21,7 @@ import { PhysicalModel } from 'models/PhysicalModel';
 
 import { Model } from 'interfaces/Model';
 
+import { Spotlight } from 'models/lights/Spotlight';
 import { ModelPrototypeLoader } from 'services/ModelPrototypeLoader';
 
 export class WorldLoader {
@@ -84,6 +85,10 @@ export class WorldLoader {
     applicationWorld.physicsWorld.addBody(dwarfBody);
 
     const dwarf = new PhysicalModel(dwarfPrototype, dwarfBody);
+    dwarf.spotlight = new Spotlight(
+      configuration.dwarfReflectorColor,
+      configuration.dwarfReflectorCutoffAngle
+    );
     applicationWorld.models.push(dwarf);
     applicationWorld.dwarf = dwarf;
   }
