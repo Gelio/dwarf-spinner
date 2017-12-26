@@ -13,8 +13,14 @@ uniform float uSpecularCoefficient;
 
 // Light color and position uniforms
 uniform vec3 uAmbientLightColor;
+
 uniform vec3 uPointLightPosition;
 uniform vec3 uPointLightColor;
+
+uniform vec3 uSpotlightPosition;
+uniform vec3 uSpotlightDirection;
+uniform vec3 uSpotlightColor;
+uniform float uSpotlightCutoff;
 
 // Other uniforms
 uniform vec3 uViewerPosition;
@@ -24,22 +30,41 @@ vec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector, vec3 lightInt
 vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerVector, vec3 lightIntensity);
 
 vec4 getLightIntensityInWorldPoint(vec3 normalVector, vec3 worldPosition3D) {
-  vec3 pointLightVector = normalize(uPointLightPosition - worldPosition3D);
+  vec3 lightIntensity = uAmbientLightColor;
+
   vec3 viewerVector = normalize(uViewerPosition - worldPosition3D);
 
-  vec3 pointLightDiffuseIntensity = getDiffuseLightIntensity(
+  vec3 pointLightVector = normalize(uPointLightPosition - worldPosition3D);
+
+  lightIntensity += getDiffuseLightIntensity(
     pointLightVector,
     normalVector,
     uPointLightColor
   );
-  vec3 pointLightSpecularIntensity = getSpecularLightIntensity(
+  lightIntensity += getSpecularLightIntensity(
     pointLightVector,
     normalVector,
     viewerVector,
     uPointLightColor
   );
 
-  return vec4(uAmbientLightColor + pointLightDiffuseIntensity + pointLightSpecularIntensity, 1.0);
+  vec3 spotlightVector = normalize(uSpotlightPosition - worldPosition3D);
+  vec3 normalizedSpotlightDirection = normalize(-uSpotlightDirection);
+  if (dot(spotlightVector, normalizedSpotlightDirection) >= uSpotlightCutoff) {
+    lightIntensity += getDiffuseLightIntensity(
+      spotlightVector,
+      normalizedSpotlightDirection,
+      uSpotlightColor
+    );
+    lightIntensity += getSpecularLightIntensity(
+      spotlightVector,
+      normalVector,
+      viewerVector,
+      uSpotlightColor
+    );
+  }
+
+  return vec4(lightIntensity, 1.0);
 }
 
 
