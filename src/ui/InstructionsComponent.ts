@@ -73,6 +73,7 @@ function DesktopInstructions() {
     <li>Press the <em>R</em> key to restart the game.</li>
     <li>While the dwarf is in the air, use left/right arrow keys to rotate the reflector on dwarf's head</li>
     <li>While the dwarf is in the air, click repeatedly to slow down dwarf's rotation</li>
+    <li>Press the <em>C</em> key to switch the camera</li>
   `;
 }
 
