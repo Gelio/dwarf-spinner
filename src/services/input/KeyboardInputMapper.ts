@@ -6,6 +6,7 @@ import { store } from 'store';
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
 import { ReleaseDwarfEvent } from 'events/ReleaseDwarfEvent';
 import { RestartEvent } from 'events/RestartEvent';
+import { SwitchCameraEvent } from 'events/SwitchCameraEvent';
 
 export class KeyboardInputMapper {
   private readonly eventEmitter: ApplicationEventEmitter;
@@ -77,11 +78,14 @@ export class KeyboardInputMapper {
 
         return true;
 
-      default:
-        break;
-    }
+      case KeyboardKeys.C:
+        this.eventEmitter.emitAppEvent(new SwitchCameraEvent());
 
-    return false;
+        return true;
+
+      default:
+        return false;
+    }
   }
 
   private shouldStopPropagation(keyCode: number) {
