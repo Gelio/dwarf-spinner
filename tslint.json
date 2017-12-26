@@ -30,6 +30,7 @@
     "quotemark": [true, "single", "avoid-escape", "avoid-template"],
     "no-multiline-string": false,
     "no-relative-imports": false,
-    "no-any": false
+    "no-any": false,
+    "no-backbone-get-set-outside-model": false
   }
 }
