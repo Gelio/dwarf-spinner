@@ -11,6 +11,7 @@
     "@types/gl-matrix": "^2.4.0",
     "@types/hammerjs": "^2.0.35",
     "@types/jest": "^21.1.8",
+    "@types/node": "^8.5.2",
     "copy-webpack-plugin": "^4.2.3",
     "css-loader": "^0.28.7",
     "eslint": "^4.11.0",
