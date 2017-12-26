@@ -9,4 +9,8 @@
 
   padding: 0.5em;
   border: solid 1px #222;
+
+  @media (min-width: 800px) {
+    font-size: 1.5em;
+  }
 }
