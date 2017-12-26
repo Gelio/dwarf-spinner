@@ -1,14 +1,16 @@
 import { Vec3 } from 'cannon';
 
+import { CameraType } from 'common/CameraType';
+import { configuration } from 'configuration';
+
 import { ApplicationWorld } from 'models/ApplicationWorld';
+import { FollowingCamera } from 'models/cameras/FollowingCamera';
 import { GeneralCamera } from 'models/cameras/GeneralCamera';
 import { ObservingCamera } from 'models/cameras/ObservingCamera';
 
 import { Camera } from 'interfaces/Camera';
 
 import { CoordinateConverter } from 'services/CoordinateConverter';
-
-import { CameraType } from 'common/CameraType';
 
 export class CameraFactory {
   private readonly applicationWorld: ApplicationWorld;
@@ -27,7 +29,7 @@ export class CameraFactory {
         return this.createObservingCamera();
 
       case CameraType.Following:
-        // TODO: following camera
+        return this.createFollowingCamera();
 
       default:
         return this.createStationaryCamera();
@@ -49,5 +51,16 @@ export class CameraFactory {
     const dwarfBody = this.applicationWorld.dwarf.body;
 
     return new ObservingCamera(CoordinateConverter.physicsToRendering(position), dwarfBody);
+  }
+
+  private createFollowingCamera(): Camera {
+    const position = this.stationaryPosition.clone();
+    const dwarfBody = this.applicationWorld.dwarf.body;
+
+    return new FollowingCamera(
+      CoordinateConverter.physicsToRendering(position),
+      dwarfBody,
+      configuration.followingCameraDistance
+    );
   }
 }

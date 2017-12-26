@@ -20,12 +20,11 @@ export class ObservingCamera extends GeneralCamera {
   }
 
   public update() {
-    this.updateTargetVector();
-
-    super.update();
+    this.updateTargetPosition();
+    this.updateViewMatrix();
   }
 
-  private updateTargetVector() {
-    CoordinateConverter.physicsToRendering(this.target, this.targetBody.position);
+  protected updateTargetPosition() {
+    CoordinateConverter.physicsToRendering(this.targetPosition, this.targetBody.position);
   }
 }
