@@ -1,12 +1,15 @@
 import { KeyboardKeys } from 'common/KeyboardKeys';
 
+import { GameStateType } from 'common/GameStateType';
+
 import { keyPressed, keyReleased } from 'actions/InputActions';
-import { store } from 'store';
+import { getGameState, store } from 'store';
 
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
 import { ReleaseDwarfEvent } from 'events/ReleaseDwarfEvent';
 import { RestartEvent } from 'events/RestartEvent';
 import { SwitchCameraEvent } from 'events/SwitchCameraEvent';
+import { ThrottleDwarfRotationEvent } from 'events/ThrottleDwarfRotationEvent';
 
 export class KeyboardInputMapper {
   private readonly eventEmitter: ApplicationEventEmitter;
@@ -74,7 +77,11 @@ export class KeyboardInputMapper {
         return true;
 
       case KeyboardKeys.Space:
-        this.eventEmitter.emitAppEvent(new ReleaseDwarfEvent());
+        if (getGameState() === GameStateType.DwarfInTheAir) {
+          this.eventEmitter.emitAppEvent(new ThrottleDwarfRotationEvent());
+        } else {
+          this.eventEmitter.emitAppEvent(new ReleaseDwarfEvent());
+        }
 
         return true;
 
