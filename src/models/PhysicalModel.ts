@@ -1,4 +1,4 @@
-import { Body, Vec3 } from 'cannon';
+import { Body } from 'cannon';
 import { mat4, quat } from 'gl-matrix';
 
 import { IlluminationProperties } from 'common/IlluminationProperties';
@@ -11,9 +11,13 @@ import { ModelPrototype } from 'models/ModelPrototype';
 import { CoordinateConverter } from 'services/CoordinateConverter';
 import { WebGLBinder } from 'services/WebGLBinder';
 
+type UpdateSpotlightFunction = (physicalModel: PhysicalModel) => any;
+
 export class PhysicalModel extends BodilessModel {
   public readonly body: Body;
+
   public spotlight: Spotlight | null = null;
+  public updateSpotlight: UpdateSpotlightFunction | undefined;
 
   public constructor(
     modelPrototype: ModelPrototype,
@@ -52,14 +56,11 @@ export class PhysicalModel extends BodilessModel {
   }
 
   private updateAndBindSpotlight(webGLBinder: WebGLBinder) {
-    if (!this.spotlight) {
+    if (!this.spotlight || !this.updateSpotlight) {
       return;
     }
 
-    // TODO: set position on top of object
-    CoordinateConverter.physicsToRendering(this.spotlight.position, this.body.position);
-    // TODO: set direction based on object rotation
-    CoordinateConverter.physicsToRendering(this.spotlight.direction, new Vec3(0, 1, -1));
+    this.updateSpotlight(this);
     this.spotlight.bind(webGLBinder);
   }
 }
