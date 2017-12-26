@@ -3,6 +3,13 @@
 
 #define BLINN_SHININESS_RATIO 0.5
 
+// Dimming light with distance
+// IL = IL0 / (c1 d^2 + c2 d + c3)
+const float c1 = 0.1;
+const float c2 = -0.05;
+const float c3 = 0.0;
+
+
 // Illumination model uniforms
 uniform int uIlluminationModelType;
 
@@ -28,41 +35,48 @@ uniform vec3 uViewerPosition;
 
 vec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector, vec3 lightIntensity);
 vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerVector, vec3 lightIntensity);
+float getLightDistanceDimmingFactor(vec3 distanceVector);
 
 vec4 getLightIntensityInWorldPoint(vec3 normalVector, vec3 worldPosition3D) {
   vec3 lightIntensity = uAmbientLightColor;
 
   vec3 viewerVector = normalize(uViewerPosition - worldPosition3D);
 
-  vec3 pointLightVector = normalize(uPointLightPosition - worldPosition3D);
+  vec3 pointLightVectorUnnormalized = uPointLightPosition - worldPosition3D;
+  vec3 pointLightVector = normalize(pointLightVectorUnnormalized);
 
-  lightIntensity += getDiffuseLightIntensity(
+  vec3 pointLightIntensity = getDiffuseLightIntensity(
     pointLightVector,
     normalVector,
     uPointLightColor
   );
-  lightIntensity += getSpecularLightIntensity(
+  pointLightIntensity += getSpecularLightIntensity(
     pointLightVector,
     normalVector,
     viewerVector,
     uPointLightColor
   );
+  pointLightIntensity *= getLightDistanceDimmingFactor(pointLightVectorUnnormalized);
+  lightIntensity += pointLightIntensity;
 
-  vec3 spotlightVector = normalize(uSpotlightPosition - worldPosition3D);
+  vec3 spotlightVectorUnnormalized = uSpotlightPosition - worldPosition3D;
+  vec3 spotlightVector = normalize(spotlightVectorUnnormalized);
   vec3 normalizedReverseSpotlightDirection = normalize(-uSpotlightDirection);
+  vec3 spotlightIntensity = vec3(0.0, 0.0, 0.0);
   if (dot(spotlightVector, normalizedReverseSpotlightDirection) >= uSpotlightCutoff) {
-    lightIntensity += getDiffuseLightIntensity(
+    spotlightIntensity += getDiffuseLightIntensity(
       spotlightVector,
       normalVector,
       uSpotlightColor
     );
-    lightIntensity += getSpecularLightIntensity(
+    spotlightIntensity += getSpecularLightIntensity(
       spotlightVector,
       normalVector,
       viewerVector,
       uSpotlightColor
     );
   }
+  lightIntensity += spotlightIntensity;
 
   return vec4(lightIntensity, 1.0);
 }
@@ -93,4 +107,11 @@ vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerV
   cosine = max(0.0, cosine);
 
   return uSpecularCoefficient * lightIntensity * pow(cosine, uSpecularShininess);
+}
+
+float getLightDistanceDimmingFactor(vec3 distanceVector) {
+  float distance = length(distanceVector);
+
+  // c1 * d^2 + c2 * d + c3
+  return 1.0 / (c3 + distance * (c2 + c1 * distance));
 }
