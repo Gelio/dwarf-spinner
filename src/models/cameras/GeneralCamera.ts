@@ -3,9 +3,15 @@ import { mat4, vec3 } from 'gl-matrix';
 
 import { Camera } from 'interfaces/Camera';
 
+import { CameraType } from 'common/CameraType';
+
 import { CoordinateConverter } from 'services/CoordinateConverter';
 
 export class GeneralCamera implements Camera {
+  public get cameraType() {
+    return CameraType.Stationary;
+  }
+
   public position: vec3;
   public target: vec3;
 
