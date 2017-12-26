@@ -91,4 +91,20 @@ export class WebGLBinder {
   public bindViewerPosition(viewerPosition: vec3) {
     this.gl.uniform3fv(this.uniforms.viewerPosition, viewerPosition);
   }
+
+  public bindSpotlightPosition(spotlightPosition: vec3) {
+    this.gl.uniform3fv(this.uniforms.spotlightPosition, spotlightPosition);
+  }
+
+  public bindSpotlightDirection(spotlightDirection: vec3) {
+    this.gl.uniform3fv(this.uniforms.spotlightDirection, spotlightDirection);
+  }
+
+  public bindSpotlightColor(spotlightColor: vec3) {
+    this.gl.uniform3fv(this.uniforms.spotlightColor, spotlightColor);
+  }
+
+  public bindSpotlightCutoff(spotlightCutoff: number) {
+    this.gl.uniform1f(this.uniforms.spotlightCutoff, spotlightCutoff);
+  }
 }

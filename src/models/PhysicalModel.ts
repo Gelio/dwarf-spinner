@@ -5,14 +5,19 @@ import { IlluminationProperties } from 'common/IlluminationProperties';
 import { resetBody } from 'common/resetBody';
 
 import { BodilessModel } from 'models/BodilessModel';
+import { Spotlight } from 'models/lights/Spotlight';
 import { ModelPrototype } from 'models/ModelPrototype';
 
 import { CoordinateConverter } from 'services/CoordinateConverter';
 import { WebGLBinder } from 'services/WebGLBinder';
 
+type UpdateSpotlightFunction = (physicalModel: PhysicalModel) => any;
+
 export class PhysicalModel extends BodilessModel {
   public readonly body: Body;
-  // TODO: lights
+
+  public spotlight: Spotlight | null = null;
+  public updateSpotlight: UpdateSpotlightFunction | undefined;
 
   public constructor(
     modelPrototype: ModelPrototype,
@@ -25,6 +30,7 @@ export class PhysicalModel extends BodilessModel {
 
   public draw(gl: WebGLRenderingContext, webGLBinder: WebGLBinder) {
     this.updateModelMatrixFromBody();
+    this.updateAndBindSpotlight(webGLBinder);
     super.draw(gl, webGLBinder);
   }
 
@@ -47,5 +53,14 @@ export class PhysicalModel extends BodilessModel {
 
     mat4.fromRotationTranslation(this.modelMatrix, quaternion, translationVector);
     mat4.multiply(this.modelMatrix, this.modelMatrix, this.modelPrototype.modelMatrix);
+  }
+
+  private updateAndBindSpotlight(webGLBinder: WebGLBinder) {
+    if (!this.spotlight || !this.updateSpotlight) {
+      return;
+    }
+
+    this.updateSpotlight(this);
+    this.spotlight.bind(webGLBinder);
   }
 }

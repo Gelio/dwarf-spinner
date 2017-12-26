@@ -3,20 +3,80 @@
 
 #define BLINN_SHININESS_RATIO 0.5
 
+// Illumination model uniforms
 uniform int uIlluminationModelType;
 
 uniform float uSpecularShininess;
 uniform float uDiffuseCoefficient;
 uniform float uSpecularCoefficient;
 
-vec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector) {
+
+// Light color and position uniforms
+uniform vec3 uAmbientLightColor;
+
+uniform vec3 uPointLightPosition;
+uniform vec3 uPointLightColor;
+
+uniform vec3 uSpotlightPosition;
+uniform vec3 uSpotlightDirection;
+uniform vec3 uSpotlightColor;
+uniform float uSpotlightCutoff;
+
+// Other uniforms
+uniform vec3 uViewerPosition;
+
+
+vec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector, vec3 lightIntensity);
+vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerVector, vec3 lightIntensity);
+
+vec4 getLightIntensityInWorldPoint(vec3 normalVector, vec3 worldPosition3D) {
+  vec3 lightIntensity = uAmbientLightColor;
+
+  vec3 viewerVector = normalize(uViewerPosition - worldPosition3D);
+
+  vec3 pointLightVector = normalize(uPointLightPosition - worldPosition3D);
+
+  lightIntensity += getDiffuseLightIntensity(
+    pointLightVector,
+    normalVector,
+    uPointLightColor
+  );
+  lightIntensity += getSpecularLightIntensity(
+    pointLightVector,
+    normalVector,
+    viewerVector,
+    uPointLightColor
+  );
+
+  vec3 spotlightVector = normalize(uSpotlightPosition - worldPosition3D);
+  vec3 normalizedReverseSpotlightDirection = normalize(-uSpotlightDirection);
+  if (dot(spotlightVector, normalizedReverseSpotlightDirection) >= uSpotlightCutoff) {
+    lightIntensity += getDiffuseLightIntensity(
+      spotlightVector,
+      normalVector,
+      uSpotlightColor
+    );
+    lightIntensity += getSpecularLightIntensity(
+      spotlightVector,
+      normalVector,
+      viewerVector,
+      uSpotlightColor
+    );
+  }
+
+  return vec4(lightIntensity, 1.0);
+}
+
+
+
+vec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector, vec3 lightIntensity) {
   // Should sum across all light sources
   float cosine = max(0.0, dot(normalVector, lightVector));
 
-  return uDiffuseCoefficient * uPointLightColor * cosine;
+  return uDiffuseCoefficient * lightIntensity * cosine;
 }
 
-vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerVector) {
+vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerVector, vec3 lightIntensity) {
   // Should sum across all light sources
   float shininess = uSpecularShininess;
 
@@ -32,5 +92,5 @@ vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerV
 
   cosine = max(0.0, cosine);
 
-  return uSpecularCoefficient * uPointLightColor * pow(cosine, uSpecularShininess);
+  return uSpecularCoefficient * lightIntensity * pow(cosine, uSpecularShininess);
 }
