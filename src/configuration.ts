@@ -16,7 +16,7 @@ export const configuration = {
   maxPhysicsWorldTimeAdvance: 1 / 30,
   physicsSpeed: 1,
   inAirPhysicsSpeed: 0.25,
-  ambientLightColor: vec3.fromValues(0, 0, 0),
+  ambientLightColor: vec3.fromValues(0.05, 0.05, 0.05),
 
   pointLightColor: vec3.fromValues(1, 1, 1),
   pointLightPosition: CoordinateConverter.physicsToRendering(new Vec3(0, 0, 5)),
