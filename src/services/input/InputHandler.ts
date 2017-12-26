@@ -3,6 +3,7 @@ import { Set as ImmutableSet } from 'immutable';
 
 import { configuration } from 'configuration';
 
+import { CameraType } from 'common/CameraType';
 import { GameStateType } from 'common/GameStateType';
 import { KeyboardKeys } from 'common/KeyboardKeys';
 
@@ -15,14 +16,18 @@ import { AccelerateSpinnerEvent } from 'events/AccelerateSpinnerEvent';
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
 import { HorizontalRotateDwarfReflector } from 'events/HorizontalRotateDwarfReflector';
 import { HorizontalRotateSpinner } from 'events/HorizontalRotateSpinner';
+import { NewCameraEvent } from 'events/NewCameraEvent';
 import { ReleaseDwarfEvent } from 'events/ReleaseDwarfEvent';
 import { RestartEvent } from 'events/RestartEvent';
+import { SwitchCameraEvent } from 'events/SwitchCameraEvent';
 import { ThrottleDwarfRotationEvent } from 'events/ThrottleDwarfRotationEvent';
 
+import { CameraFactory } from 'services/CameraFactory';
+
 export class InputHandler {
-  // @ts-ignore
   private readonly world: ApplicationWorld;
   private readonly eventEmitter: ApplicationEventEmitter;
+  private readonly cameraFactory: CameraFactory;
 
   private dwarfReleased = false;
   private hingeAngle = 0;
@@ -31,9 +36,13 @@ export class InputHandler {
   private dwarfReflectorRotationAngle = 0;
   private readonly dwarfReflectorRotationAxis = new Vec3(0, 0, 1);
 
-  constructor(world: ApplicationWorld, eventEmitter: ApplicationEventEmitter) {
+  private currentCameraTypeIndex = 0;
+  private readonly cameraTypeOrder = [CameraType.Stationary, CameraType.Observing, CameraType.Following];
+
+  constructor(world: ApplicationWorld, eventEmitter: ApplicationEventEmitter, cameraFactory: CameraFactory) {
     this.world = world;
     this.eventEmitter = eventEmitter;
+    this.cameraFactory = cameraFactory;
 
     this.restartWorld = this.restartWorld.bind(this);
     this.releaseDwarf = this.releaseDwarf.bind(this);
@@ -43,6 +52,7 @@ export class InputHandler {
       this
     );
     this.onThrottleDwarfRotationEvent = this.onThrottleDwarfRotationEvent.bind(this);
+    this.changeToNextCamera = this.changeToNextCamera.bind(this);
   }
 
   public init() {
@@ -55,6 +65,7 @@ export class InputHandler {
       this.onHorizontalRotateDwarfReflectorEvent
     );
     this.eventEmitter.on(ThrottleDwarfRotationEvent.name, this.onThrottleDwarfRotationEvent);
+    this.eventEmitter.on(SwitchCameraEvent.name, this.changeToNextCamera);
   }
 
   public destroy() {
@@ -73,6 +84,7 @@ export class InputHandler {
       ThrottleDwarfRotationEvent.name,
       this.onThrottleDwarfRotationEvent
     );
+    this.eventEmitter.removeListener(SwitchCameraEvent.name, this.changeToNextCamera);
   }
 
   public step(timeDelta: number) {
@@ -203,5 +215,15 @@ export class InputHandler {
       this.dwarfReflectorRotationAxis,
       this.dwarfReflectorRotationAngle
     );
+  }
+
+  private changeToNextCamera() {
+    const nextCameraTypeIndex = (this.currentCameraTypeIndex + 1) % this.cameraTypeOrder.length;
+    const nextCameraType = this.cameraTypeOrder[nextCameraTypeIndex];
+    const nextCamera = this.cameraFactory.createCamera(nextCameraType);
+
+    this.eventEmitter.emitAppEvent(new NewCameraEvent(nextCamera));
+
+    this.currentCameraTypeIndex = nextCameraTypeIndex;
   }
 }

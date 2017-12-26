@@ -1,15 +1,15 @@
-import { NaiveBroadphase, Vec3, World } from 'cannon';
+import { NaiveBroadphase, World } from 'cannon';
 import { mat4 } from 'gl-matrix';
 
 import { configuration } from 'configuration';
 
+import { CameraType } from 'common/CameraType';
 import { ShadingModelType } from 'common/ShadingModelType';
 
 import { WebGLProgramFacade } from 'facades/WebGLProgramFacade';
 import { ApplicationWorld } from 'models/ApplicationWorld';
-import { Camera } from 'models/Camera';
 
-import { CoordinateConverter } from 'services/CoordinateConverter';
+import { CameraFactory } from 'services/CameraFactory';
 import { DwarfCollisionDetector } from 'services/DwarfCollisionDetector';
 import { ImageLoader } from 'services/ImageLoader';
 import { GestureInputMapper } from 'services/input/GestureInputMapper';
@@ -29,6 +29,7 @@ import { ApplicationWebGLAttributes } from 'interfaces/ApplicationWebGLAttribute
 import { ApplicationWebGLUniforms } from 'interfaces/ApplicationWebGLUniforms';
 
 import { ApplicationEventEmitter } from 'events/ApplicationEventEmitter';
+import { NewCameraEvent } from 'events/NewCameraEvent';
 import { NewIlluminationModelTypeEvent } from 'events/NewIlluminationModelTypeEvent';
 import { NewShadingModelTypeEvent } from 'events/NewShadingModelTypeEvent';
 import { RestartEvent } from 'events/RestartEvent';
@@ -48,7 +49,6 @@ export class Application {
   private readonly canvas: HTMLCanvasElement;
   private readonly gl: WebGLRenderingContext;
 
-  private camera: Camera;
   private webGLAttributes: ApplicationWebGLAttributes;
   private webGLUniforms: ApplicationWebGLUniforms;
   private webGLBinder: WebGLBinder;
@@ -76,18 +76,19 @@ export class Application {
     this.render = this.render.bind(this);
     this.onNewIlluminationModelType = this.onNewIlluminationModelType.bind(this);
     this.onNewShadingModelType = this.onNewShadingModelType.bind(this);
+    this.onNewCamera = this.onNewCamera.bind(this);
   }
 
   public async init() {
     this.bindToEvents();
 
     this.initProjectionMatrix();
-    this.initCamera();
 
     this.initPrograms();
     this.changeShadingModelType(configuration.defaultShadingModelType);
 
     await this.initWorld();
+    this.initCamera();
 
     this.initInputServices();
     this.initCollisionDetectors();
@@ -100,6 +101,7 @@ export class Application {
   private bindToEvents() {
     this.eventEmitter.on(NewIlluminationModelTypeEvent.name, this.onNewIlluminationModelType);
     this.eventEmitter.on(NewShadingModelTypeEvent.name, this.onNewShadingModelType);
+    this.eventEmitter.on(NewCameraEvent.name, this.onNewCamera);
   }
 
   private render(timestamp?: number) {
@@ -119,12 +121,7 @@ export class Application {
     this.inputHandler.step(timeDelta);
     this.world.physicsWorld.step(timeDelta);
 
-    const targetPosition = this.world.dwarf.body.position;
-
-    CoordinateConverter.physicsToRendering(this.camera.target, targetPosition);
     this.renderer.refreshCamera();
-    this.webGLBinder.bindViewerPosition(this.camera.position);
-
     this.renderer.clearCanvas();
 
     this.world.models.forEach(model => this.renderer.drawModel(model));
@@ -153,13 +150,9 @@ export class Application {
   }
 
   private initCamera() {
-    const position = new Vec3(0, -5, 2);
-    const target = new Vec3(0, 0, 0);
-
-    this.camera = new Camera(
-      CoordinateConverter.physicsToRendering(position),
-      CoordinateConverter.physicsToRendering(target)
-    );
+    const cameraFactory = new CameraFactory(this.world);
+    const camera = cameraFactory.createCamera(CameraType.Stationary);
+    this.renderer.setActiveCamera(camera);
   }
 
   private initRenderer() {
@@ -167,7 +160,6 @@ export class Application {
       this.canvas,
       this.gl,
       this.projectionMatrix,
-      this.camera,
       this.webGLBinder
     );
 
@@ -245,8 +237,13 @@ export class Application {
     this.changeShadingModelType(event.shadingModelType);
   }
 
+  private onNewCamera(event: NewCameraEvent) {
+    this.renderer.setActiveCamera(event.camera);
+  }
+
   private initInputServices() {
-    this.inputHandler = new InputHandler(this.world, this.eventEmitter);
+    const cameraFactory = new CameraFactory(this.world);
+    this.inputHandler = new InputHandler(this.world, this.eventEmitter, cameraFactory);
     this.inputHandler.init();
 
     const keyboardInputMapper = new KeyboardInputMapper(this.eventEmitter);

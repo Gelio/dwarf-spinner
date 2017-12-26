@@ -1,7 +1,7 @@
 import { mat4 } from 'gl-matrix';
 
+import { Camera } from 'interfaces/Camera';
 import { Model } from 'interfaces/Model';
-import { Camera } from 'models/Camera';
 
 import { WebGLBinder } from 'services/WebGLBinder';
 
@@ -10,21 +10,20 @@ export class Renderer {
   private readonly gl: WebGLRenderingContext;
 
   private readonly projectionMatrix: mat4;
-  private readonly camera: Camera;
   private readonly webGLBinder: WebGLBinder;
+
+  private camera: Camera;
 
   public constructor(
     canvas: HTMLCanvasElement,
     gl: WebGLRenderingContext,
     projectionMatrix: mat4,
-    camera: Camera,
     webGLBinder: WebGLBinder
   ) {
     this.canvas = canvas;
     this.gl = gl;
 
     this.projectionMatrix = projectionMatrix;
-    this.camera = camera;
     this.webGLBinder = webGLBinder;
   }
 
@@ -35,14 +34,18 @@ export class Renderer {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
     this.clearCanvas();
-    this.refreshCamera();
 
     this.webGLBinder.bindProjectionMatrix(this.projectionMatrix);
   }
 
   public refreshCamera() {
-    this.camera.updateViewMatrix();
+    this.camera.update();
     this.webGLBinder.bindViewMatrix(this.camera.viewMatrix);
+    this.webGLBinder.bindViewerPosition(this.camera.position);
+  }
+
+  public setActiveCamera(camera: Camera) {
+    this.camera = camera;
   }
 
   public clearCanvas() {
