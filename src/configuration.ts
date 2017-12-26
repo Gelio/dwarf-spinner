@@ -34,5 +34,9 @@ export const configuration = {
   hingeAngularAcceleration: 0.5,
 
   spinnerSwipeAccelerationMultiplier: 2,
-  spinnerPanRotationMultiplier: 0.05
+  spinnerPanRotationMultiplier: 0.05,
+
+  dwarfReflectorPanRotationMultiplier: 0.1,
+  dwarfReflectorAngularAcceleration: 0.5,
+  dwarfReflectorMaxAngle: 45 / 180 * Math.PI
 };
