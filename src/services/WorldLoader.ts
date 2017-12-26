@@ -41,7 +41,8 @@ export class WorldLoader {
       this.loadGround(world),
       this.loadDwarf(world),
       this.loadFidgetSpinner(world),
-      this.loadFidgetSpinnerHinge(world)
+      this.loadFidgetSpinnerHinge(world),
+      this.loadRandomShapesInAir(world)
     ]);
 
     this.setConstraints(world);
@@ -139,6 +140,38 @@ export class WorldLoader {
     applicationWorld.fidgetSpinnerHinge = hinge;
 
     applicationWorld.models.push(hinge);
+  }
+
+  private async loadRandomShapesInAir(applicationWorld: ApplicationWorld) {
+    const boxPrototype = await this.modelPrototypeLoader.loadModelPrototype(
+      'assets/models/cube.json',
+      'assets/textures/missile-texture.jpg'
+    );
+
+    const shape = new Box(new Vec3(0.5, 0.5, 0.5));
+
+    for (let i = 0; i < configuration.randomShapesCount; i += 1) {
+      const body = new Body({
+        mass: 0,
+        position: this.getRandomInAirPosition()
+      });
+
+      body.addShape(shape);
+      applicationWorld.physicsWorld.addBody(body);
+
+      const model = new PhysicalModel(boxPrototype, body);
+      applicationWorld.models.push(model);
+    }
+  }
+
+  private getRandomInAirPosition(): Vec3 {
+    // tslint:disable:insecure-random
+    const x = Math.random() * 5 - 2.5;
+    const y = Math.random() * 50 - 5;
+    const z = Math.random() * 10 + 7;
+    // tslint:enable:insecure-random
+
+    return new Vec3(x, y, z);
   }
 
   private setConstraints(applicationWorld: ApplicationWorld) {

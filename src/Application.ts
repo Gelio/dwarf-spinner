@@ -4,6 +4,7 @@ import { mat4 } from 'gl-matrix';
 import { configuration } from 'configuration';
 
 import { CameraType } from 'common/CameraType';
+import { GameStateType } from 'common/GameStateType';
 import { ShadingModelType } from 'common/ShadingModelType';
 
 import { WebGLProgramFacade } from 'facades/WebGLProgramFacade';
@@ -38,6 +39,7 @@ import { GouraudShadingProgramFactory } from 'programs/GouraudShadingProgramFact
 import { PhongShadingProgramFactory } from 'programs/PhongShadingProgramFactory';
 
 import 'store';
+import { getGameState } from 'store';
 
 interface ProgramsDictionary {
   [shaderType: number]: WebGLProgramFacade;
@@ -116,7 +118,12 @@ export class Application {
       this.previousRenderTimestamp = timestamp;
     }
     timeDelta = Math.min(timeDelta, configuration.maxPhysicsWorldTimeAdvance);
-    timeDelta *= configuration.physicsSpeed;
+
+    if (getGameState() === GameStateType.DwarfInTheAir) {
+      timeDelta *= configuration.inAirPhysicsSpeed;
+    } else {
+      timeDelta *= configuration.physicsSpeed;
+    }
 
     this.inputHandler.step(timeDelta);
     this.world.physicsWorld.step(timeDelta);

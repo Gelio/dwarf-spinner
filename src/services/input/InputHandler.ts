@@ -37,9 +37,17 @@ export class InputHandler {
   private readonly dwarfReflectorRotationAxis = new Vec3(0, 0, 1);
 
   private currentCameraTypeIndex = 0;
-  private readonly cameraTypeOrder = [CameraType.Stationary, CameraType.Observing, CameraType.Following];
+  private readonly cameraTypeOrder = [
+    CameraType.Stationary,
+    CameraType.Observing,
+    CameraType.Following
+  ];
 
-  constructor(world: ApplicationWorld, eventEmitter: ApplicationEventEmitter, cameraFactory: CameraFactory) {
+  constructor(
+    world: ApplicationWorld,
+    eventEmitter: ApplicationEventEmitter,
+    cameraFactory: CameraFactory
+  ) {
     this.world = world;
     this.eventEmitter = eventEmitter;
     this.cameraFactory = cameraFactory;
@@ -188,6 +196,11 @@ export class InputHandler {
 
   private rotateHinge(angle: number) {
     this.hingeAngle += angle;
+
+    this.hingeAngle = Math.max(
+      configuration.hingeAngleRange.min,
+      Math.min(configuration.hingeAngleRange.max, this.hingeAngle)
+    );
 
     this.world.fidgetSpinnerHinge.body.quaternion.setFromAxisAngle(
       this.hingeRotationAxis,
