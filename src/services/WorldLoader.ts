@@ -17,11 +17,12 @@ import { TextureWrapType } from 'common/TextureWrapType';
 import { ApplicationWorld } from 'models/ApplicationWorld';
 import { BodilessModel } from 'models/BodilessModel';
 import { InvisibleModel } from 'models/InvisibleModel';
+import { Spotlight } from 'models/lights/Spotlight';
 import { PhysicalModel } from 'models/PhysicalModel';
 
 import { Model } from 'interfaces/Model';
 
-import { Spotlight } from 'models/lights/Spotlight';
+import { CoordinateConverter } from 'services/CoordinateConverter';
 import { ModelPrototypeLoader } from 'services/ModelPrototypeLoader';
 
 export class WorldLoader {
@@ -85,12 +86,18 @@ export class WorldLoader {
     applicationWorld.physicsWorld.addBody(dwarfBody);
 
     const dwarf = new PhysicalModel(dwarfPrototype, dwarfBody);
+    applicationWorld.models.push(dwarf);
+    applicationWorld.dwarf = dwarf;
+    this.addDwarfSpotlight(dwarf);
+  }
+
+  private addDwarfSpotlight(dwarf: PhysicalModel) {
     dwarf.spotlight = new Spotlight(
       configuration.dwarfReflectorColor,
       configuration.dwarfReflectorCutoffAngle
     );
-    applicationWorld.models.push(dwarf);
-    applicationWorld.dwarf = dwarf;
+    dwarf.spotlight.directionOffset.setFromAxisAngle(new Vec3(1, 0, 0), -60 / 180 * Math.PI);
+    dwarf.updateSpotlight = updateDwarfSpotlight;
   }
 
   private async loadFidgetSpinner(applicationWorld: ApplicationWorld) {
@@ -155,4 +162,23 @@ export class WorldLoader {
     );
     applicationWorld.physicsWorld.addConstraint(hingeConstraint);
   }
+}
+
+const dwarfHeadPosition = new Vec3();
+const dwarfSpotlightDirection = new Vec3();
+const dwarfHeadOffset = new Vec3(0, 0, 0.7);
+function updateDwarfSpotlight(dwarf: PhysicalModel) {
+  const { spotlight, body } = dwarf;
+  if (!spotlight) {
+    return;
+  }
+
+  body.quaternion.vmult(dwarfHeadOffset, dwarfHeadPosition);
+  dwarfHeadPosition.vadd(body.position, dwarfHeadPosition);
+  CoordinateConverter.physicsToRendering(spotlight.position, dwarfHeadPosition);
+
+  dwarfSpotlightDirection.set(0, 1, 0);
+  spotlight.directionOffset.vmult(dwarfSpotlightDirection, dwarfSpotlightDirection);
+  body.quaternion.vmult(dwarfSpotlightDirection, dwarfSpotlightDirection);
+  CoordinateConverter.physicsToRendering(spotlight.direction, dwarfSpotlightDirection);
 }
