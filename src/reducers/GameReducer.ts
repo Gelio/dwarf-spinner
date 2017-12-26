@@ -1,4 +1,4 @@
-import { Map as ImmutableMap, Set as ImmutableSet } from 'immutable';
+import { Map as ImmutableMap } from 'immutable';
 import { AnyAction } from 'redux';
 
 import { GameActionTypes } from 'actions/GameActions';
@@ -14,7 +14,7 @@ const defaultState: GameState = ImmutableMap({
 export function gameReducer(state: GameState = defaultState, action: AnyAction) {
   switch (action.type) {
     case GameActionTypes.ChangeGameState:
-      return state.updateIn(['gameState'], action.newState);
+      return state.setIn(['gameState'], action.newState);
 
     default:
       return state;
