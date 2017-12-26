@@ -16,5 +16,10 @@ export interface ApplicationWebGLUniforms {
   pointLightPosition: WebGLUniformLocation;
   pointLightColor: WebGLUniformLocation;
 
+  spotlightPosition: WebGLUniformLocation;
+  spotlightDirection: WebGLUniformLocation;
+  spotlightColor: WebGLUniformLocation;
+  spotlightCutoff: WebGLUniformLocation;
+
   viewerPosition: WebGLUniformLocation;
 }
