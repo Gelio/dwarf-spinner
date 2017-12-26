@@ -59,6 +59,7 @@ export class WorldLoader {
     const groundShape = new Plane();
     const groundBody = new Body({ mass: 0 });
     groundBody.addShape(groundShape);
+    applicationWorld.groundBody = groundBody;
     applicationWorld.physicsWorld.addBody(groundBody);
 
     const illuminationProperties = new IlluminationProperties();
