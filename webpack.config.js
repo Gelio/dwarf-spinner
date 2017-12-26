@@ -4,7 +4,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const CONFIG = {
   distPath: path.resolve(__dirname, 'dist'),
-  srcPath: path.resolve(__dirname, 'src')
+  srcPath: path.resolve(__dirname, 'src'),
+  glslLoaderPath: path.resolve('loaders', 'glsl-loader.js')
 };
 
 module.exports = {
@@ -43,7 +44,7 @@ module.exports = {
       },
       {
         test: /\.glsl$/,
-        use: 'raw-loader'
+        use: ['raw-loader', CONFIG.glslLoaderPath]
       }
     ]
   },
