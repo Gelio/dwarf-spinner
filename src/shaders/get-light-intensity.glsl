@@ -49,11 +49,11 @@ vec4 getLightIntensityInWorldPoint(vec3 normalVector, vec3 worldPosition3D) {
   );
 
   vec3 spotlightVector = normalize(uSpotlightPosition - worldPosition3D);
-  vec3 normalizedSpotlightDirection = normalize(-uSpotlightDirection);
-  if (dot(spotlightVector, normalizedSpotlightDirection) >= uSpotlightCutoff) {
+  vec3 normalizedReverseSpotlightDirection = normalize(-uSpotlightDirection);
+  if (dot(spotlightVector, normalizedReverseSpotlightDirection) >= uSpotlightCutoff) {
     lightIntensity += getDiffuseLightIntensity(
       spotlightVector,
-      normalizedSpotlightDirection,
+      normalVector,
       uSpotlightColor
     );
     lightIntensity += getSpecularLightIntensity(
