@@ -155,7 +155,7 @@ export class Application {
       45,
       this.canvas.width / this.canvas.height,
       0.1,
-      100
+      400
     );
   }
 
@@ -200,6 +200,7 @@ export class Application {
     const physicsWorld = new World();
     physicsWorld.gravity.set(0, 0, -9.81);
     physicsWorld.broadphase = new NaiveBroadphase();
+    physicsWorld.allowSleep = true;
 
     const imageLoader = new ImageLoader();
     const modelPrototypeLoader = new ModelPrototypeLoader(this.gl, imageLoader);
