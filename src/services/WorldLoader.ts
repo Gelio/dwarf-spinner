@@ -134,6 +134,7 @@ export class WorldLoader {
     fidgetSpinnerBody.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), Math.PI / 2);
     fidgetSpinnerBody.initQuaternion.copy(fidgetSpinnerBody.quaternion);
     fidgetSpinnerBody.allowSleep = false;
+    fidgetSpinnerBody.angularDamping = 0;
 
     const shape = new Cylinder(radius, radius, height, 10);
     fidgetSpinnerBody.addShape(shape);
@@ -183,9 +184,9 @@ export class WorldLoader {
 
   private getRandomInAirPosition(): Vec3 {
     // tslint:disable:insecure-random
-    const x = Math.random() * 5 - 2.5;
+    const x = Math.random() * 8 - 4;
     const y = Math.random() * 50 - 5;
-    const z = Math.random() * 10 + 7;
+    const z = Math.random() * 10 + 8;
     // tslint:enable:insecure-random
 
     return new Vec3(x, y, z);

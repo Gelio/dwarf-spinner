@@ -29,20 +29,20 @@ export const configuration = {
   defaultIlluminationProperties,
 
   fidgetSpinnerMass: 400,
-  dwarfMass: 80,
+  dwarfMass: 40,
 
-  spinnerAngularAcceleration: 4,
-  hingeAngularAcceleration: 0.5,
+  spinnerAngularAcceleration: 6,
+  hingeAngularAcceleration: 1,
   hingeAngleRange: {
-    min: -20 / 180 * Math.PI,
-    max: 20 / 180 * Math.PI
+    min: -25 / 180 * Math.PI,
+    max: 25 / 180 * Math.PI
   },
 
   spinnerSwipeAccelerationMultiplier: 2,
   spinnerPanRotationMultiplier: 0.05,
 
   dwarfReflectorPanRotationMultiplier: 0.1,
-  dwarfReflectorAngularAcceleration: 0.5,
+  dwarfReflectorAngularAcceleration: 2.5,
   dwarfReflectorMaxAngle: 45 / 180 * Math.PI,
 
   dwarfRotationThrottleMultiplier: 0.7,
@@ -53,5 +53,5 @@ export const configuration = {
   followingCameraSpeed: 0.04,
   followingCameraDistance: 7,
 
-  randomShapesCount: 20
+  randomShapesCount: 40
 };
