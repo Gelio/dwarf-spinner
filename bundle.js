@@ -60,77 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 55);
+/******/ 	return __webpack_require__(__webpack_require__.s = 56);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-class BaseEvent {
-    constructor() {
-        this.eventType = this.constructor.name;
-    }
-}
-exports.BaseEvent = BaseEvent;
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const cannon_1 = __webpack_require__(5);
-const gl_matrix_1 = __webpack_require__(2);
-const IlluminationModelType_1 = __webpack_require__(30);
-const IlluminationProperties_1 = __webpack_require__(31);
-const ShadingModelType_1 = __webpack_require__(18);
-const CoordinateConverter_1 = __webpack_require__(9);
-const defaultIlluminationProperties = new IlluminationProperties_1.IlluminationProperties();
-defaultIlluminationProperties.diffuseCoefficient = 0.8;
-defaultIlluminationProperties.specularCoefficient = 0.5;
-defaultIlluminationProperties.specularShininess = 50;
-exports.configuration = {
-    maxPhysicsWorldTimeAdvance: 1 / 30,
-    physicsSpeed: 1,
-    inAirPhysicsSpeed: 0.25,
-    ambientLightColor: gl_matrix_1.vec3.fromValues(0.05, 0.05, 0.05),
-    pointLightColor: gl_matrix_1.vec3.fromValues(1, 1, 1),
-    pointLightPosition: CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(0, 0, 5)),
-    dwarfReflectorColor: gl_matrix_1.vec3.fromValues(1, 201 / 255, 14 / 255),
-    dwarfReflectorCutoffAngle: 15 / 180 * Math.PI,
-    defaultIlluminationModelType: IlluminationModelType_1.IlluminationModelType.Phong,
-    defaultShadingModelType: ShadingModelType_1.ShadingModelType.Phong,
-    defaultIlluminationProperties,
-    fidgetSpinnerMass: 400,
-    dwarfMass: 80,
-    spinnerAngularAcceleration: 4,
-    hingeAngularAcceleration: 0.5,
-    hingeAngleRange: {
-        min: -20 / 180 * Math.PI,
-        max: 20 / 180 * Math.PI
-    },
-    spinnerSwipeAccelerationMultiplier: 2,
-    spinnerPanRotationMultiplier: 0.05,
-    dwarfReflectorPanRotationMultiplier: 0.1,
-    dwarfReflectorAngularAcceleration: 0.5,
-    dwarfReflectorMaxAngle: 45 / 180 * Math.PI,
-    dwarfRotationThrottleMultiplier: 0.7,
-    scoreUpdateInterval: 500,
-    scoreDifferenceThreshold: 0.5,
-    followingCameraSpeed: 0.04,
-    followingCameraDistance: 7,
-    randomShapesCount: 20
-};
-
-
-/***/ }),
-/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -191,6 +125,72 @@ THE SOFTWARE. */
 
 
 
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+class BaseEvent {
+    constructor() {
+        this.eventType = this.constructor.name;
+    }
+}
+exports.BaseEvent = BaseEvent;
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const cannon_1 = __webpack_require__(5);
+const gl_matrix_1 = __webpack_require__(0);
+const IlluminationModelType_1 = __webpack_require__(30);
+const IlluminationProperties_1 = __webpack_require__(31);
+const ShadingModelType_1 = __webpack_require__(18);
+const CoordinateConverter_1 = __webpack_require__(9);
+const defaultIlluminationProperties = new IlluminationProperties_1.IlluminationProperties();
+defaultIlluminationProperties.diffuseCoefficient = 0.8;
+defaultIlluminationProperties.specularCoefficient = 0.5;
+defaultIlluminationProperties.specularShininess = 50;
+exports.configuration = {
+    maxPhysicsWorldTimeAdvance: 1 / 30,
+    physicsSpeed: 1,
+    inAirPhysicsSpeed: 0.25,
+    ambientLightColor: gl_matrix_1.vec3.fromValues(0.05, 0.05, 0.05),
+    pointLightColor: gl_matrix_1.vec3.fromValues(1, 1, 1),
+    pointLightPosition: CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(0, 0, 5)),
+    dwarfReflectorColor: gl_matrix_1.vec3.fromValues(1, 201 / 255, 14 / 255),
+    dwarfReflectorCutoffAngle: 15 / 180 * Math.PI,
+    defaultIlluminationModelType: IlluminationModelType_1.IlluminationModelType.Phong,
+    defaultShadingModelType: ShadingModelType_1.ShadingModelType.Phong,
+    defaultIlluminationProperties,
+    fidgetSpinnerMass: 400,
+    dwarfMass: 80,
+    spinnerAngularAcceleration: 4,
+    hingeAngularAcceleration: 0.5,
+    hingeAngleRange: {
+        min: -20 / 180 * Math.PI,
+        max: 20 / 180 * Math.PI
+    },
+    spinnerSwipeAccelerationMultiplier: 2,
+    spinnerPanRotationMultiplier: 0.05,
+    dwarfReflectorPanRotationMultiplier: 0.1,
+    dwarfReflectorAngularAcceleration: 0.5,
+    dwarfReflectorMaxAngle: 45 / 180 * Math.PI,
+    dwarfRotationThrottleMultiplier: 0.7,
+    scoreUpdateInterval: 500,
+    scoreDifferenceThreshold: 0.5,
+    followingCameraSpeed: 0.04,
+    followingCameraDistance: 7,
+    randomShapesCount: 20
+};
 
 
 /***/ }),
@@ -14041,9 +14041,9 @@ World.prototype.clearForces = function(){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const redux_1 = __webpack_require__(76);
-const GameReducer_1 = __webpack_require__(92);
-const InputReducer_1 = __webpack_require__(93);
+const redux_1 = __webpack_require__(77);
+const GameReducer_1 = __webpack_require__(93);
+const InputReducer_1 = __webpack_require__(94);
 const reducer = redux_1.combineReducers({
     input: InputReducer_1.inputReducer,
     game: GameReducer_1.gameReducer
@@ -14139,7 +14139,7 @@ const UIDC = '<!--' + UID + '-->';
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const cannon_1 = __webpack_require__(5);
-const gl_matrix_1 = __webpack_require__(2);
+const gl_matrix_1 = __webpack_require__(0);
 // tslint:disable-next-line:no-stateless-class
 class CoordinateConverter {
     static renderingToPhysics(v) {
@@ -14183,7 +14183,7 @@ var CameraType;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const BaseEvent_1 = __webpack_require__(0);
+const BaseEvent_1 = __webpack_require__(1);
 class RestartEvent extends BaseEvent_1.BaseEvent {
 }
 exports.RestartEvent = RestartEvent;
@@ -14987,7 +14987,7 @@ var ShadingModelType;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const BaseEvent_1 = __webpack_require__(0);
+const BaseEvent_1 = __webpack_require__(1);
 class ReleaseDwarfEvent extends BaseEvent_1.BaseEvent {
 }
 exports.ReleaseDwarfEvent = ReleaseDwarfEvent;
@@ -15000,7 +15000,7 @@ exports.ReleaseDwarfEvent = ReleaseDwarfEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const BaseEvent_1 = __webpack_require__(0);
+const BaseEvent_1 = __webpack_require__(1);
 class ThrottleDwarfRotationEvent extends BaseEvent_1.BaseEvent {
 }
 exports.ThrottleDwarfRotationEvent = ThrottleDwarfRotationEvent;
@@ -15013,7 +15013,7 @@ exports.ThrottleDwarfRotationEvent = ThrottleDwarfRotationEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const BaseEvent_1 = __webpack_require__(0);
+const BaseEvent_1 = __webpack_require__(1);
 class SwitchCameraEvent extends BaseEvent_1.BaseEvent {
 }
 exports.SwitchCameraEvent = SwitchCameraEvent;
@@ -17699,7 +17699,7 @@ exports.IlluminationProperties = IlluminationProperties;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const gl_matrix_1 = __webpack_require__(2);
+const gl_matrix_1 = __webpack_require__(0);
 const GeneralCamera_1 = __webpack_require__(33);
 const CoordinateConverter_1 = __webpack_require__(9);
 const CameraType_1 = __webpack_require__(10);
@@ -17730,9 +17730,11 @@ exports.ObservingCamera = ObservingCamera;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const cannon_1 = __webpack_require__(5);
-const gl_matrix_1 = __webpack_require__(2);
+const gl_matrix_1 = __webpack_require__(0);
 const CameraType_1 = __webpack_require__(10);
 const CoordinateConverter_1 = __webpack_require__(9);
+const ViewMatrixCalculator_1 = __webpack_require__(74);
+const viewMatrixCalculator = new ViewMatrixCalculator_1.ViewMatrixCalculator();
 class GeneralCamera {
     constructor(position, targetPosition) {
         this.upVector = CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(0, 0, 1));
@@ -17751,8 +17753,8 @@ class GeneralCamera {
         this.updateViewMatrix();
     }
     updateViewMatrix() {
-        // TODO: stop using gl-matrix method for calculating the view matrix
-        gl_matrix_1.mat4.lookAt(this.viewMatrix, this.position, this.targetPosition, this.upVector);
+        viewMatrixCalculator.lookAt(this.viewMatrix, this.position, this.targetPosition, this.upVector);
+        // mat4.lookAt(this.viewMatrix, this.position, this.targetPosition, this.upVector);
     }
 }
 exports.GeneralCamera = GeneralCamera;
@@ -17956,7 +17958,7 @@ process.umask = function() { return 0; };
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ActionTypes; });
 /* harmony export (immutable) */ __webpack_exports__["b"] = createStore;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash_es_isPlainObject__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable__ = __webpack_require__(86);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_symbol_observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_symbol_observable__);
 
 
@@ -18212,9 +18214,9 @@ var ActionTypes = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseGetTag_js__ = __webpack_require__(77);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getPrototype_js__ = __webpack_require__(82);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__isObjectLike_js__ = __webpack_require__(84);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseGetTag_js__ = __webpack_require__(78);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getPrototype_js__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__isObjectLike_js__ = __webpack_require__(85);
 
 
 
@@ -18284,7 +18286,7 @@ function isPlainObject(value) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_js__ = __webpack_require__(78);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__root_js__ = __webpack_require__(79);
 
 
 /** Built-in value references. */
@@ -23404,7 +23406,7 @@ exports.keyReleased = keyReleased;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const BaseEvent_1 = __webpack_require__(0);
+const BaseEvent_1 = __webpack_require__(1);
 class AccelerateSpinnerEvent extends BaseEvent_1.BaseEvent {
     constructor(velocity) {
         super();
@@ -23421,7 +23423,7 @@ exports.AccelerateSpinnerEvent = AccelerateSpinnerEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const BaseEvent_1 = __webpack_require__(0);
+const BaseEvent_1 = __webpack_require__(1);
 class HorizontalRotateDwarfReflector extends BaseEvent_1.BaseEvent {
     constructor(angle) {
         super();
@@ -23438,7 +23440,7 @@ exports.HorizontalRotateDwarfReflector = HorizontalRotateDwarfReflector;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const BaseEvent_1 = __webpack_require__(0);
+const BaseEvent_1 = __webpack_require__(1);
 class HorizontalRotateSpinner extends BaseEvent_1.BaseEvent {
     constructor(angle) {
         super();
@@ -23474,7 +23476,7 @@ var KeyboardKeys;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const BaseEvent_1 = __webpack_require__(0);
+const BaseEvent_1 = __webpack_require__(1);
 class NewCameraEvent extends BaseEvent_1.BaseEvent {
     constructor(camera) {
         super();
@@ -23509,8 +23511,8 @@ exports.WebGLBufferFacade = WebGLBufferFacade;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const gl_matrix_1 = __webpack_require__(2);
-const configuration_1 = __webpack_require__(1);
+const gl_matrix_1 = __webpack_require__(0);
+const configuration_1 = __webpack_require__(2);
 class BodilessModel {
     constructor(modelPrototype, illuminationProperties = configuration_1.configuration.defaultIlluminationProperties.clone()) {
         this.modelPrototype = modelPrototype;
@@ -23554,7 +23556,7 @@ exports.resetBody = resetBody;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const BaseEvent_1 = __webpack_require__(0);
+const BaseEvent_1 = __webpack_require__(1);
 class NewIlluminationModelTypeEvent extends BaseEvent_1.BaseEvent {
     constructor(illuminationModelType) {
         super();
@@ -23571,7 +23573,7 @@ exports.NewIlluminationModelTypeEvent = NewIlluminationModelTypeEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const BaseEvent_1 = __webpack_require__(0);
+const BaseEvent_1 = __webpack_require__(1);
 class NewShadingModelTypeEvent extends BaseEvent_1.BaseEvent {
     constructor(shadingModelType) {
         super();
@@ -23588,8 +23590,8 @@ exports.NewShadingModelTypeEvent = NewShadingModelTypeEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const ShaderType_1 = __webpack_require__(122);
-const WebGLProgramFacade_1 = __webpack_require__(123);
+const ShaderType_1 = __webpack_require__(123);
+const WebGLProgramFacade_1 = __webpack_require__(124);
 class ProgramFactory {
     constructor(shaderCompiler, gl) {
         this.shaderCompiler = shaderCompiler;
@@ -23649,7 +23651,8 @@ function handleOnChangeEvent(options, onChangeCallback, event) {
 
 
 /***/ }),
-/* 55 */
+/* 55 */,
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23659,8 +23662,8 @@ const esm_1 = __webpack_require__(4);
 __webpack_require__(62);
 __webpack_require__(65);
 const Application_1 = __webpack_require__(66);
-const ApplicationComponent_1 = __webpack_require__(129);
-const ScoreDisplayComponent_1 = __webpack_require__(136);
+const ApplicationComponent_1 = __webpack_require__(130);
+const ScoreDisplayComponent_1 = __webpack_require__(137);
 window.onload = bootstrap;
 function bootstrap() {
     const mainCanvas = document.getElementById('main-canvas');
@@ -23687,7 +23690,6 @@ function bootstrap() {
 
 
 /***/ }),
-/* 56 */,
 /* 57 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -24654,32 +24656,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const cannon_1 = __webpack_require__(5);
-const configuration_1 = __webpack_require__(1);
+const configuration_1 = __webpack_require__(2);
 const CameraType_1 = __webpack_require__(10);
 const GameStateType_1 = __webpack_require__(7);
 const ShadingModelType_1 = __webpack_require__(18);
 const CameraFactory_1 = __webpack_require__(72);
-const DwarfCollisionDetector_1 = __webpack_require__(74);
-const ImageLoader_1 = __webpack_require__(94);
-const GestureInputMapper_1 = __webpack_require__(95);
-const InputHandler_1 = __webpack_require__(97);
-const KeyboardInputMapper_1 = __webpack_require__(98);
-const ModelPrototypeLoader_1 = __webpack_require__(99);
-const ProjectionService_1 = __webpack_require__(106);
-const Renderer_1 = __webpack_require__(107);
-const ScoreUpdater_1 = __webpack_require__(108);
-const ShaderCompiler_1 = __webpack_require__(109);
-const WebGLAttributeLoader_1 = __webpack_require__(110);
-const WebGLBinder_1 = __webpack_require__(111);
-const WebGLUniformLoader_1 = __webpack_require__(112);
-const WorldLoader_1 = __webpack_require__(113);
-const ApplicationEventEmitter_1 = __webpack_require__(119);
+const DwarfCollisionDetector_1 = __webpack_require__(75);
+const ImageLoader_1 = __webpack_require__(95);
+const GestureInputMapper_1 = __webpack_require__(96);
+const InputHandler_1 = __webpack_require__(98);
+const KeyboardInputMapper_1 = __webpack_require__(99);
+const ModelPrototypeLoader_1 = __webpack_require__(100);
+const ProjectionService_1 = __webpack_require__(107);
+const Renderer_1 = __webpack_require__(108);
+const ScoreUpdater_1 = __webpack_require__(109);
+const ShaderCompiler_1 = __webpack_require__(110);
+const WebGLAttributeLoader_1 = __webpack_require__(111);
+const WebGLBinder_1 = __webpack_require__(112);
+const WebGLUniformLoader_1 = __webpack_require__(113);
+const WorldLoader_1 = __webpack_require__(114);
+const ApplicationEventEmitter_1 = __webpack_require__(120);
 const NewCameraEvent_1 = __webpack_require__(47);
 const NewIlluminationModelTypeEvent_1 = __webpack_require__(51);
 const NewShadingModelTypeEvent_1 = __webpack_require__(52);
 const RestartEvent_1 = __webpack_require__(11);
-const GouraudShadingProgramFactory_1 = __webpack_require__(121);
-const PhongShadingProgramFactory_1 = __webpack_require__(126);
+const GouraudShadingProgramFactory_1 = __webpack_require__(122);
+const PhongShadingProgramFactory_1 = __webpack_require__(127);
 __webpack_require__(6);
 const store_1 = __webpack_require__(6);
 class Application {
@@ -28885,7 +28887,7 @@ const forEach = (function() {
 Object.defineProperty(exports, "__esModule", { value: true });
 const cannon_1 = __webpack_require__(5);
 const CameraType_1 = __webpack_require__(10);
-const configuration_1 = __webpack_require__(1);
+const configuration_1 = __webpack_require__(2);
 const FollowingCamera_1 = __webpack_require__(73);
 const GeneralCamera_1 = __webpack_require__(33);
 const ObservingCamera_1 = __webpack_require__(32);
@@ -28933,8 +28935,8 @@ exports.CameraFactory = CameraFactory;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const gl_matrix_1 = __webpack_require__(2);
-const configuration_1 = __webpack_require__(1);
+const gl_matrix_1 = __webpack_require__(0);
+const configuration_1 = __webpack_require__(2);
 const CameraType_1 = __webpack_require__(10);
 const ObservingCamera_1 = __webpack_require__(32);
 class FollowingCamera extends ObservingCamera_1.ObservingCamera {
@@ -28970,8 +28972,69 @@ exports.FollowingCamera = FollowingCamera;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+const gl_matrix_1 = __webpack_require__(0);
+class ViewMatrixCalculator {
+    constructor() {
+        this.xAxis = gl_matrix_1.vec3.create();
+        this.yAxis = gl_matrix_1.vec3.create();
+        this.zAxis = gl_matrix_1.vec3.create();
+    }
+    /**
+     * This method does not invert the matrix.
+     *
+     * @see https://www.3dgep.com/understanding-the-view-matrix/#Look_At_Camera
+     *
+     * @param outMatrix
+     * @param cameraPosition
+     * @param cameraTarget
+     * @param upVector Unit vector
+     */
+    lookAt(outMatrix, cameraPosition, cameraTarget, upVector) {
+        if (this.vectorsInTheSamePosition(cameraPosition, cameraTarget)) {
+            gl_matrix_1.mat4.identity(outMatrix);
+            return;
+        }
+        const { xAxis, yAxis, zAxis } = this;
+        gl_matrix_1.vec3.sub(zAxis, cameraPosition, cameraTarget);
+        gl_matrix_1.vec3.normalize(zAxis, zAxis);
+        gl_matrix_1.vec3.cross(xAxis, upVector, zAxis);
+        gl_matrix_1.vec3.normalize(xAxis, xAxis);
+        gl_matrix_1.vec3.cross(yAxis, zAxis, xAxis);
+        outMatrix[0] = xAxis[0];
+        outMatrix[4] = xAxis[1];
+        outMatrix[8] = xAxis[2];
+        outMatrix[12] = -gl_matrix_1.vec3.dot(xAxis, cameraPosition);
+        outMatrix[1] = yAxis[0];
+        outMatrix[5] = yAxis[1];
+        outMatrix[9] = yAxis[2];
+        outMatrix[13] = -gl_matrix_1.vec3.dot(yAxis, cameraPosition);
+        outMatrix[2] = zAxis[0];
+        outMatrix[6] = zAxis[1];
+        outMatrix[10] = zAxis[2];
+        outMatrix[14] = -gl_matrix_1.vec3.dot(zAxis, cameraPosition);
+        outMatrix[3] = 0;
+        outMatrix[7] = 0;
+        outMatrix[11] = 0;
+        outMatrix[15] = 1;
+    }
+    vectorsInTheSamePosition(v1, v2) {
+        return (Math.abs(v1[0] - v2[0]) <= gl_matrix_1.glMatrix.EPSILON &&
+            Math.abs(v1[1] - v2[1]) <= gl_matrix_1.glMatrix.EPSILON &&
+            Math.abs(v1[2] - v2[2]) <= gl_matrix_1.glMatrix.EPSILON);
+    }
+}
+exports.ViewMatrixCalculator = ViewMatrixCalculator;
+
+
+/***/ }),
+/* 75 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
 const GameStateType_1 = __webpack_require__(7);
-const DwarfGroundCollisionEvent_1 = __webpack_require__(75);
+const DwarfGroundCollisionEvent_1 = __webpack_require__(76);
 const RestartEvent_1 = __webpack_require__(11);
 const GameActions_1 = __webpack_require__(14);
 const store_1 = __webpack_require__(6);
@@ -29009,13 +29072,13 @@ exports.DwarfCollisionDetector = DwarfCollisionDetector;
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const BaseEvent_1 = __webpack_require__(0);
+const BaseEvent_1 = __webpack_require__(1);
 class DwarfGroundCollisionEvent extends BaseEvent_1.BaseEvent {
     constructor(isInitial) {
         super();
@@ -29026,15 +29089,15 @@ exports.DwarfGroundCollisionEvent = DwarfGroundCollisionEvent;
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__combineReducers__ = __webpack_require__(89);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__ = __webpack_require__(90);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__combineReducers__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__bindActionCreators__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__compose__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warning__ = __webpack_require__(39);
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "createStore", function() { return __WEBPACK_IMPORTED_MODULE_0__createStore__["b"]; });
@@ -29063,13 +29126,13 @@ if (process.env.NODE_ENV !== 'production' && typeof isCrushed.name === 'string' 
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(34)))
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Symbol_js__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getRawTag_js__ = __webpack_require__(80);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__objectToString_js__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__getRawTag_js__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__objectToString_js__ = __webpack_require__(82);
 
 
 
@@ -29101,11 +29164,11 @@ function baseGetTag(value) {
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__ = __webpack_require__(79);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__ = __webpack_require__(80);
 
 
 /** Detect free variable `self`. */
@@ -29118,7 +29181,7 @@ var root = __WEBPACK_IMPORTED_MODULE_0__freeGlobal_js__["a" /* default */] || fr
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29130,7 +29193,7 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(38)))
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29184,7 +29247,7 @@ function getRawTag(value) {
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29213,11 +29276,11 @@ function objectToString(value) {
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__overArg_js__ = __webpack_require__(83);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__overArg_js__ = __webpack_require__(84);
 
 
 /** Built-in value references. */
@@ -29227,7 +29290,7 @@ var getPrototype = Object(__WEBPACK_IMPORTED_MODULE_0__overArg_js__["a" /* defau
 
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29249,7 +29312,7 @@ function overArg(func, transform) {
 
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29285,14 +29348,14 @@ function isObjectLike(value) {
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(86);
+module.exports = __webpack_require__(87);
 
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29302,7 +29365,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _ponyfill = __webpack_require__(88);
+var _ponyfill = __webpack_require__(89);
 
 var _ponyfill2 = _interopRequireDefault(_ponyfill);
 
@@ -29325,10 +29388,10 @@ if (typeof self !== 'undefined') {
 
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(38), __webpack_require__(87)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(38), __webpack_require__(88)(module)))
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -29356,7 +29419,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29385,7 +29448,7 @@ function symbolObservablePonyfill(root) {
 };
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29526,7 +29589,7 @@ function combineReducers(reducers) {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(34)))
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29580,7 +29643,7 @@ function bindActionCreators(actionCreators, dispatch) {
 }
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -29636,7 +29699,7 @@ function applyMiddleware() {
 }
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29669,7 +29732,7 @@ exports.gameReducer = gameReducer;
 
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29694,7 +29757,7 @@ exports.inputReducer = inputReducer;
 
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29714,15 +29777,15 @@ exports.ImageLoader = ImageLoader;
 
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const hammerjs_1 = __webpack_require__(96);
+const hammerjs_1 = __webpack_require__(97);
 const GameStateType_1 = __webpack_require__(7);
-const configuration_1 = __webpack_require__(1);
+const configuration_1 = __webpack_require__(2);
 const AccelerateSpinnerEvent_1 = __webpack_require__(43);
 const HorizontalRotateDwarfReflector_1 = __webpack_require__(44);
 const HorizontalRotateSpinner_1 = __webpack_require__(45);
@@ -29800,7 +29863,7 @@ exports.GestureInputMapper = GestureInputMapper;
 
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/*! Hammer.JS - v2.0.7 - 2016-04-22
@@ -32450,14 +32513,14 @@ if (true) {
 
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const cannon_1 = __webpack_require__(5);
-const configuration_1 = __webpack_require__(1);
+const configuration_1 = __webpack_require__(2);
 const CameraType_1 = __webpack_require__(10);
 const GameStateType_1 = __webpack_require__(7);
 const KeyboardKeys_1 = __webpack_require__(46);
@@ -32623,7 +32686,7 @@ exports.InputHandler = InputHandler;
 
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -32711,7 +32774,7 @@ exports.KeyboardInputMapper = KeyboardInputMapper;
 
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -32726,12 +32789,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // tslint:disable-next-line:no-require-imports
-const expandVertexData = __webpack_require__(100);
-const WebGLArrayBufferFacade_1 = __webpack_require__(101);
-const WebGLElementArrayBufferFacade_1 = __webpack_require__(102);
-const WebGLTextureFacade_1 = __webpack_require__(103);
-const BufferUsageType_1 = __webpack_require__(104);
-const ModelPrototype_1 = __webpack_require__(105);
+const expandVertexData = __webpack_require__(101);
+const WebGLArrayBufferFacade_1 = __webpack_require__(102);
+const WebGLElementArrayBufferFacade_1 = __webpack_require__(103);
+const WebGLTextureFacade_1 = __webpack_require__(104);
+const BufferUsageType_1 = __webpack_require__(105);
+const ModelPrototype_1 = __webpack_require__(106);
 class ModelPrototypeLoader {
     constructor(gl, imageLoader) {
         this.nextTextureId = 0;
@@ -32766,7 +32829,7 @@ exports.ModelPrototypeLoader = ModelPrototypeLoader;
 
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports) {
 
 module.exports = expandVertexData
@@ -32921,7 +32984,7 @@ function expandVertexData (compressedVertexData, opts) {
 
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -32944,7 +33007,7 @@ exports.WebGLArrayBufferFacade = WebGLArrayBufferFacade;
 
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -32965,7 +33028,7 @@ exports.WebGLElementArrayBufferFacade = WebGLElementArrayBufferFacade;
 
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33008,7 +33071,7 @@ exports.WebGLTextureFacade = WebGLTextureFacade;
 
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33023,13 +33086,13 @@ var BufferUsageType;
 
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const gl_matrix_1 = __webpack_require__(2);
+const gl_matrix_1 = __webpack_require__(0);
 class ModelPrototype {
     constructor(vertexNormalBuffer, vertexTextureCoordsBuffer, vertexPositionBuffer, vertexIndexBuffer, texture) {
         this.vertexNormalBuffer = vertexNormalBuffer;
@@ -33058,13 +33121,13 @@ exports.ModelPrototype = ModelPrototype;
 
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const gl_matrix_1 = __webpack_require__(2);
+const gl_matrix_1 = __webpack_require__(0);
 class ProjectionService {
     createProjectionMatrix(fovy, aspectRatio, near, far) {
         const projectionMatrix = gl_matrix_1.mat4.create();
@@ -33076,7 +33139,7 @@ exports.ProjectionService = ProjectionService;
 
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33118,14 +33181,14 @@ exports.Renderer = Renderer;
 
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const GameStateType_1 = __webpack_require__(7);
-const configuration_1 = __webpack_require__(1);
+const configuration_1 = __webpack_require__(2);
 const RestartEvent_1 = __webpack_require__(11);
 const GameActions_1 = __webpack_require__(14);
 const store_1 = __webpack_require__(6);
@@ -33166,7 +33229,7 @@ exports.ScoreUpdater = ScoreUpdater;
 
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33197,7 +33260,7 @@ exports.ShaderCompiler = ShaderCompiler;
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33225,7 +33288,7 @@ exports.WebGLAttributeLoader = WebGLAttributeLoader;
 
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33308,7 +33371,7 @@ exports.WebGLBinder = WebGLBinder;
 
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33348,7 +33411,7 @@ exports.WebGLUniformLoader = WebGLUniformLoader;
 
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33363,14 +33426,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const cannon_1 = __webpack_require__(5);
-const configuration_1 = __webpack_require__(1);
+const configuration_1 = __webpack_require__(2);
 const IlluminationProperties_1 = __webpack_require__(31);
-const TextureWrapType_1 = __webpack_require__(114);
-const ApplicationWorld_1 = __webpack_require__(115);
+const TextureWrapType_1 = __webpack_require__(115);
+const ApplicationWorld_1 = __webpack_require__(116);
 const BodilessModel_1 = __webpack_require__(49);
-const InvisibleModel_1 = __webpack_require__(116);
-const Spotlight_1 = __webpack_require__(117);
-const PhysicalModel_1 = __webpack_require__(118);
+const InvisibleModel_1 = __webpack_require__(117);
+const Spotlight_1 = __webpack_require__(118);
+const PhysicalModel_1 = __webpack_require__(119);
 const CoordinateConverter_1 = __webpack_require__(9);
 class WorldLoader {
     constructor(modelPrototypeLoader) {
@@ -33516,7 +33579,7 @@ function updateDwarfSpotlight(dwarf) {
 
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33530,7 +33593,7 @@ var TextureWrapType;
 
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33546,7 +33609,7 @@ exports.ApplicationWorld = ApplicationWorld;
 
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33568,14 +33631,14 @@ exports.InvisibleModel = InvisibleModel;
 
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const cannon_1 = __webpack_require__(5);
-const gl_matrix_1 = __webpack_require__(2);
+const gl_matrix_1 = __webpack_require__(0);
 class Spotlight {
     constructor(color, cutoffAngle) {
         this.direction = gl_matrix_1.vec3.create();
@@ -33595,13 +33658,13 @@ exports.Spotlight = Spotlight;
 
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const gl_matrix_1 = __webpack_require__(2);
+const gl_matrix_1 = __webpack_require__(0);
 const resetBody_1 = __webpack_require__(50);
 const BodilessModel_1 = __webpack_require__(49);
 const CoordinateConverter_1 = __webpack_require__(9);
@@ -33639,13 +33702,13 @@ exports.PhysicalModel = PhysicalModel;
 
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const events_1 = __webpack_require__(120);
+const events_1 = __webpack_require__(121);
 class ApplicationEventEmitter extends events_1.EventEmitter {
     emitAppEvent(event) {
         this.emit(event.eventType, event);
@@ -33655,7 +33718,7 @@ exports.ApplicationEventEmitter = ApplicationEventEmitter;
 
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -33963,7 +34026,7 @@ function isUndefined(arg) {
 
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -33971,8 +34034,8 @@ function isUndefined(arg) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const ProgramFactory_1 = __webpack_require__(53);
 // tslint:disable no-require-imports import-name no-var-requires
-const fragmentShaderSource = __webpack_require__(124);
-const vertexShaderSource = __webpack_require__(125);
+const fragmentShaderSource = __webpack_require__(125);
+const vertexShaderSource = __webpack_require__(126);
 // tslint:enable no-require-imports, import-name
 class GouraudShadingProgramFactory extends ProgramFactory_1.ProgramFactory {
     get fragmentShaderSource() {
@@ -33986,7 +34049,7 @@ exports.GouraudShadingProgramFactory = GouraudShadingProgramFactory;
 
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34000,7 +34063,7 @@ var ShaderType;
 
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34025,19 +34088,19 @@ exports.WebGLProgramFacade = WebGLProgramFacade;
 
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports) {
 
 module.exports = "precision mediump float;\r\n\r\nuniform sampler2D uTextureSampler;\r\n\r\nvarying vec2 vTextureCoords;\r\nvarying vec4 vLightIntensity;\r\n\r\nvoid main(void) {\r\n  gl_FragColor = vLightIntensity * texture2D(uTextureSampler, vTextureCoords);\r\n}\r\n"
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports) {
 
 module.exports = "precision mediump float;\r\n\r\nattribute vec3 aVertexPosition;\r\nattribute vec3 aNormalVector;\r\nattribute vec2 aTextureCoords;\r\n\r\nuniform mat4 uModelMatrix;\r\nuniform mat4 uNormalMatrix;\r\nuniform mat4 uViewMatrix;\r\nuniform mat4 uProjectionMatrix;\r\n\r\nvarying vec2 vTextureCoords;\r\nvarying vec4 vLightIntensity;\r\n\r\n#define PHONG_ILLUMINATION_TYPE 0\r\n#define BLINN_ILLUMINATION_TYPE 1\r\n\r\n#define BLINN_SHININESS_RATIO 0.5\r\n\r\n// Dimming light with distance\r\n// IL = IL0 / (c1 d^2 + c2 d + c3)\r\nconst float c1 = 0.1;\r\nconst float c2 = -0.05;\r\nconst float c3 = 0.0;\r\n\r\n\r\n// Illumination model uniforms\r\nuniform int uIlluminationModelType;\r\n\r\nuniform float uSpecularShininess;\r\nuniform float uDiffuseCoefficient;\r\nuniform float uSpecularCoefficient;\r\n\r\n\r\n// Light color and position uniforms\r\nuniform vec3 uAmbientLightColor;\r\n\r\nuniform vec3 uPointLightPosition;\r\nuniform vec3 uPointLightColor;\r\n\r\nuniform vec3 uSpotlightPosition;\r\nuniform vec3 uSpotlightDirection;\r\nuniform vec3 uSpotlightColor;\r\nuniform float uSpotlightCutoff;\r\n\r\n// Other uniforms\r\nuniform vec3 uViewerPosition;\r\n\r\n\r\nvec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector, vec3 lightIntensity);\r\nvec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerVector, vec3 lightIntensity);\r\nfloat getLightDistanceDimmingFactor(vec3 distanceVector);\r\n\r\nvec4 getLightIntensityInWorldPoint(vec3 normalVector, vec3 worldPosition3D) {\r\n  vec3 lightIntensity = uAmbientLightColor;\r\n\r\n  vec3 viewerVector = normalize(uViewerPosition - worldPosition3D);\r\n\r\n  vec3 pointLightVectorUnnormalized = uPointLightPosition - worldPosition3D;\r\n  vec3 pointLightVector = normalize(pointLightVectorUnnormalized);\r\n\r\n  vec3 pointLightIntensity = getDiffuseLightIntensity(\r\n    pointLightVector,\r\n    normalVector,\r\n    uPointLightColor\r\n  );\r\n  pointLightIntensity += getSpecularLightIntensity(\r\n    pointLightVector,\r\n    normalVector,\r\n    viewerVector,\r\n    uPointLightColor\r\n  );\r\n  pointLightIntensity *= getLightDistanceDimmingFactor(pointLightVectorUnnormalized);\r\n  lightIntensity += pointLightIntensity;\r\n\r\n  vec3 spotlightVectorUnnormalized = uSpotlightPosition - worldPosition3D;\r\n  vec3 spotlightVector = normalize(spotlightVectorUnnormalized);\r\n  vec3 normalizedReverseSpotlightDirection = normalize(-uSpotlightDirection);\r\n  vec3 spotlightIntensity = vec3(0.0, 0.0, 0.0);\r\n  if (dot(spotlightVector, normalizedReverseSpotlightDirection) >= uSpotlightCutoff) {\r\n    spotlightIntensity += getDiffuseLightIntensity(\r\n      spotlightVector,\r\n      normalVector,\r\n      uSpotlightColor\r\n    );\r\n    spotlightIntensity += getSpecularLightIntensity(\r\n      spotlightVector,\r\n      normalVector,\r\n      viewerVector,\r\n      uSpotlightColor\r\n    );\r\n  }\r\n  lightIntensity += spotlightIntensity;\r\n\r\n  return vec4(lightIntensity, 1.0);\r\n}\r\n\r\n\r\n\r\nvec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector, vec3 lightIntensity) {\r\n  // Should sum across all light sources\r\n  float cosine = max(0.0, dot(normalVector, lightVector));\r\n\r\n  return uDiffuseCoefficient * lightIntensity * cosine;\r\n}\r\n\r\nvec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerVector, vec3 lightIntensity) {\r\n  // Should sum across all light sources\r\n  float shininess = uSpecularShininess;\r\n\r\n  float cosine = 0.0;\r\n  if (uIlluminationModelType == PHONG_ILLUMINATION_TYPE) {\r\n    vec3 reflectionVector = 2.0 * dot(normalVector, lightVector) * normalVector - lightVector;\r\n    cosine = dot(viewerVector, reflectionVector);\r\n  } else if (uIlluminationModelType == BLINN_ILLUMINATION_TYPE)  {\r\n    vec3 hVector = normalize(normalVector + lightVector);\r\n    cosine = dot(normalVector, hVector);\r\n    shininess *= BLINN_SHININESS_RATIO;\r\n  }\r\n\r\n  cosine = max(0.0, cosine);\r\n\r\n  return uSpecularCoefficient * lightIntensity * pow(cosine, uSpecularShininess);\r\n}\r\n\r\nfloat getLightDistanceDimmingFactor(vec3 distanceVector) {\r\n  float distance = length(distanceVector);\r\n\r\n  // c1 * d^2 + c2 * d + c3\r\n  return 1.0 / (c3 + distance * (c2 + c1 * distance));\r\n}\r\n\r\n\r\nvoid main(void) {\r\n  vTextureCoords = aTextureCoords;\r\n\r\n  vec4 worldPosition4D = uModelMatrix * vec4(aVertexPosition, 1.0);\r\n  vec3 worldPosition3D = vec3(worldPosition4D) / worldPosition4D.w;\r\n\r\n  gl_Position = uProjectionMatrix * uViewMatrix * worldPosition4D;\r\n\r\n  vec3 normalVector = normalize(vec3(uNormalMatrix * vec4(aNormalVector, 0.0)));\r\n  vLightIntensity = getLightIntensityInWorldPoint(normalVector, worldPosition3D);\r\n}\r\n"
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34045,8 +34108,8 @@ module.exports = "precision mediump float;\r\n\r\nattribute vec3 aVertexPosition
 Object.defineProperty(exports, "__esModule", { value: true });
 const ProgramFactory_1 = __webpack_require__(53);
 // tslint:disable no-require-imports import-name no-var-requires
-const fragmentShaderSource = __webpack_require__(127);
-const vertexShaderSource = __webpack_require__(128);
+const fragmentShaderSource = __webpack_require__(128);
+const vertexShaderSource = __webpack_require__(129);
 // tslint:enable no-require-imports, import-name
 class PhongShadingProgramFactory extends ProgramFactory_1.ProgramFactory {
     get fragmentShaderSource() {
@@ -34060,29 +34123,29 @@ exports.PhongShadingProgramFactory = PhongShadingProgramFactory;
 
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports) {
 
 module.exports = "precision mediump float;\r\n\r\nuniform sampler2D uTextureSampler;\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormalVector;\r\nvarying vec2 vTextureCoords;\r\n\r\n#define PHONG_ILLUMINATION_TYPE 0\r\n#define BLINN_ILLUMINATION_TYPE 1\r\n\r\n#define BLINN_SHININESS_RATIO 0.5\r\n\r\n// Dimming light with distance\r\n// IL = IL0 / (c1 d^2 + c2 d + c3)\r\nconst float c1 = 0.1;\r\nconst float c2 = -0.05;\r\nconst float c3 = 0.0;\r\n\r\n\r\n// Illumination model uniforms\r\nuniform int uIlluminationModelType;\r\n\r\nuniform float uSpecularShininess;\r\nuniform float uDiffuseCoefficient;\r\nuniform float uSpecularCoefficient;\r\n\r\n\r\n// Light color and position uniforms\r\nuniform vec3 uAmbientLightColor;\r\n\r\nuniform vec3 uPointLightPosition;\r\nuniform vec3 uPointLightColor;\r\n\r\nuniform vec3 uSpotlightPosition;\r\nuniform vec3 uSpotlightDirection;\r\nuniform vec3 uSpotlightColor;\r\nuniform float uSpotlightCutoff;\r\n\r\n// Other uniforms\r\nuniform vec3 uViewerPosition;\r\n\r\n\r\nvec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector, vec3 lightIntensity);\r\nvec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerVector, vec3 lightIntensity);\r\nfloat getLightDistanceDimmingFactor(vec3 distanceVector);\r\n\r\nvec4 getLightIntensityInWorldPoint(vec3 normalVector, vec3 worldPosition3D) {\r\n  vec3 lightIntensity = uAmbientLightColor;\r\n\r\n  vec3 viewerVector = normalize(uViewerPosition - worldPosition3D);\r\n\r\n  vec3 pointLightVectorUnnormalized = uPointLightPosition - worldPosition3D;\r\n  vec3 pointLightVector = normalize(pointLightVectorUnnormalized);\r\n\r\n  vec3 pointLightIntensity = getDiffuseLightIntensity(\r\n    pointLightVector,\r\n    normalVector,\r\n    uPointLightColor\r\n  );\r\n  pointLightIntensity += getSpecularLightIntensity(\r\n    pointLightVector,\r\n    normalVector,\r\n    viewerVector,\r\n    uPointLightColor\r\n  );\r\n  pointLightIntensity *= getLightDistanceDimmingFactor(pointLightVectorUnnormalized);\r\n  lightIntensity += pointLightIntensity;\r\n\r\n  vec3 spotlightVectorUnnormalized = uSpotlightPosition - worldPosition3D;\r\n  vec3 spotlightVector = normalize(spotlightVectorUnnormalized);\r\n  vec3 normalizedReverseSpotlightDirection = normalize(-uSpotlightDirection);\r\n  vec3 spotlightIntensity = vec3(0.0, 0.0, 0.0);\r\n  if (dot(spotlightVector, normalizedReverseSpotlightDirection) >= uSpotlightCutoff) {\r\n    spotlightIntensity += getDiffuseLightIntensity(\r\n      spotlightVector,\r\n      normalVector,\r\n      uSpotlightColor\r\n    );\r\n    spotlightIntensity += getSpecularLightIntensity(\r\n      spotlightVector,\r\n      normalVector,\r\n      viewerVector,\r\n      uSpotlightColor\r\n    );\r\n  }\r\n  lightIntensity += spotlightIntensity;\r\n\r\n  return vec4(lightIntensity, 1.0);\r\n}\r\n\r\n\r\n\r\nvec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector, vec3 lightIntensity) {\r\n  // Should sum across all light sources\r\n  float cosine = max(0.0, dot(normalVector, lightVector));\r\n\r\n  return uDiffuseCoefficient * lightIntensity * cosine;\r\n}\r\n\r\nvec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerVector, vec3 lightIntensity) {\r\n  // Should sum across all light sources\r\n  float shininess = uSpecularShininess;\r\n\r\n  float cosine = 0.0;\r\n  if (uIlluminationModelType == PHONG_ILLUMINATION_TYPE) {\r\n    vec3 reflectionVector = 2.0 * dot(normalVector, lightVector) * normalVector - lightVector;\r\n    cosine = dot(viewerVector, reflectionVector);\r\n  } else if (uIlluminationModelType == BLINN_ILLUMINATION_TYPE)  {\r\n    vec3 hVector = normalize(normalVector + lightVector);\r\n    cosine = dot(normalVector, hVector);\r\n    shininess *= BLINN_SHININESS_RATIO;\r\n  }\r\n\r\n  cosine = max(0.0, cosine);\r\n\r\n  return uSpecularCoefficient * lightIntensity * pow(cosine, uSpecularShininess);\r\n}\r\n\r\nfloat getLightDistanceDimmingFactor(vec3 distanceVector) {\r\n  float distance = length(distanceVector);\r\n\r\n  // c1 * d^2 + c2 * d + c3\r\n  return 1.0 / (c3 + distance * (c2 + c1 * distance));\r\n}\r\n\r\n\r\nvoid main(void) {\r\n  vec3 normalVector = normalize(vNormalVector);\r\n  vec4 lightIntensity = getLightIntensityInWorldPoint(normalVector, vPosition);\r\n\r\n  gl_FragColor = lightIntensity * texture2D(uTextureSampler, vTextureCoords);\r\n}\r\n"
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports) {
 
 module.exports = "precision mediump float;\r\n\r\nattribute vec3 aVertexPosition;\r\nattribute vec3 aNormalVector;\r\nattribute vec2 aTextureCoords;\r\n\r\nuniform mat4 uModelMatrix;\r\nuniform mat4 uNormalMatrix;\r\nuniform mat4 uViewMatrix;\r\nuniform mat4 uProjectionMatrix;\r\n\r\nvarying vec3 vPosition;\r\nvarying vec3 vNormalVector;\r\nvarying vec2 vTextureCoords;\r\n\r\nvoid main(void) {\r\n  vTextureCoords = aTextureCoords;\r\n  vNormalVector = vec3(uNormalMatrix * vec4(aNormalVector, 0.0));\r\n\r\n  vec4 worldPosition = uModelMatrix * vec4(aVertexPosition, 1.0);\r\n  vPosition = vec3(worldPosition) / worldPosition.w;\r\n\r\n  gl_Position = uProjectionMatrix * uViewMatrix * worldPosition;\r\n}\r\n"
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const esm_1 = __webpack_require__(4);
-const IlluminationModelTypeSelectComponent_1 = __webpack_require__(130);
-const InstructionsComponent_1 = __webpack_require__(131);
-const ShadingModelTypeSelectComponent_1 = __webpack_require__(134);
-const SwitchCameraComponent_1 = __webpack_require__(135);
+const IlluminationModelTypeSelectComponent_1 = __webpack_require__(131);
+const InstructionsComponent_1 = __webpack_require__(132);
+const ShadingModelTypeSelectComponent_1 = __webpack_require__(135);
+const SwitchCameraComponent_1 = __webpack_require__(136);
 class ApplicationComponent extends esm_1.Component {
     constructor(eventEmitter) {
         super();
@@ -34105,7 +34168,7 @@ exports.ApplicationComponent = ApplicationComponent;
 
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34113,7 +34176,7 @@ exports.ApplicationComponent = ApplicationComponent;
 Object.defineProperty(exports, "__esModule", { value: true });
 const esm_1 = __webpack_require__(4);
 const IlluminationModelType_1 = __webpack_require__(30);
-const configuration_1 = __webpack_require__(1);
+const configuration_1 = __webpack_require__(2);
 const NewIlluminationModelTypeEvent_1 = __webpack_require__(51);
 const SelectComponent_1 = __webpack_require__(54);
 class IlluminationModelTypeSelectComponent extends esm_1.Component {
@@ -34156,14 +34219,14 @@ exports.IlluminationModelTypeSelectComponent = IlluminationModelTypeSelectCompon
 
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const esm_1 = __webpack_require__(4);
-__webpack_require__(132);
+__webpack_require__(133);
 class InstructionsComponent extends esm_1.Component {
     constructor() {
         super();
@@ -34241,13 +34304,13 @@ function MobileInstructions() {
 
 
 /***/ }),
-/* 132 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(133);
+var content = __webpack_require__(134);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -34272,7 +34335,7 @@ if(false) {
 }
 
 /***/ }),
-/* 133 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(16)(undefined);
@@ -34286,7 +34349,7 @@ exports.push([module.i, ".instructions {\n  margin-left: 1em; }\n\n.device-type-
 
 
 /***/ }),
-/* 134 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34294,7 +34357,7 @@ exports.push([module.i, ".instructions {\n  margin-left: 1em; }\n\n.device-type-
 Object.defineProperty(exports, "__esModule", { value: true });
 const esm_1 = __webpack_require__(4);
 const ShadingModelType_1 = __webpack_require__(18);
-const configuration_1 = __webpack_require__(1);
+const configuration_1 = __webpack_require__(2);
 const NewShadingModelTypeEvent_1 = __webpack_require__(52);
 const SelectComponent_1 = __webpack_require__(54);
 class ShadingModelTypeSelectComponent extends esm_1.Component {
@@ -34337,7 +34400,7 @@ exports.ShadingModelTypeSelectComponent = ShadingModelTypeSelectComponent;
 
 
 /***/ }),
-/* 135 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34357,7 +34420,7 @@ exports.SwitchCameraComponent = SwitchCameraComponent;
 
 
 /***/ }),
-/* 136 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34365,7 +34428,7 @@ exports.SwitchCameraComponent = SwitchCameraComponent;
 Object.defineProperty(exports, "__esModule", { value: true });
 const esm_1 = __webpack_require__(4);
 const store_1 = __webpack_require__(6);
-__webpack_require__(137);
+__webpack_require__(138);
 class ScoreDisplayComponent extends esm_1.Component {
     constructor() {
         super();
@@ -34399,13 +34462,13 @@ exports.ScoreDisplayComponent = ScoreDisplayComponent;
 
 
 /***/ }),
-/* 137 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(138);
+var content = __webpack_require__(139);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -34430,7 +34493,7 @@ if(false) {
 }
 
 /***/ }),
-/* 138 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(16)(undefined);
