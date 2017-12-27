@@ -6,6 +6,9 @@ import { Camera } from 'interfaces/Camera';
 import { CameraType } from 'common/CameraType';
 
 import { CoordinateConverter } from 'services/CoordinateConverter';
+import { ViewMatrixCalculator } from 'services/ViewMatrixCalculator';
+
+const viewMatrixCalculator = new ViewMatrixCalculator();
 
 export class GeneralCamera implements Camera {
   public get cameraType() {
@@ -34,8 +37,8 @@ export class GeneralCamera implements Camera {
   }
 
   protected updateViewMatrix() {
-    // TODO: stop using gl-matrix method for calculating the view matrix
+    viewMatrixCalculator.lookAt(this.viewMatrix, this.position, this.targetPosition, this.upVector);
 
-    mat4.lookAt(this.viewMatrix, this.position, this.targetPosition, this.upVector);
+    // mat4.lookAt(this.viewMatrix, this.position, this.targetPosition, this.upVector);
   }
 }
