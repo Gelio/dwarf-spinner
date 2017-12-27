@@ -120,7 +120,7 @@ export class WorldLoader {
   private async loadFidgetSpinner(applicationWorld: ApplicationWorld) {
     const fidgetSpinnerPrototype = await this.modelPrototypeLoader.loadModelPrototype(
       'assets/models/Fidget_Spinner-centered.json',
-      'assets/textures/fidget_texture.png'
+      'assets/textures/missile-texture.jpg'
     );
 
     const radius = 1.1;
