@@ -8,6 +8,7 @@ import {
   Vec3,
   World
 } from 'cannon';
+import { mat4 } from 'gl-matrix';
 
 import { configuration } from 'configuration';
 
@@ -57,6 +58,8 @@ export class WorldLoader {
     );
     groundPrototype.texture.enableWrapping(TextureWrapType.Repeat);
 
+    const groundSize = 100;
+
     const groundShape = new Plane();
     const groundBody = new Body({ mass: 0 });
     groundBody.addShape(groundShape);
@@ -68,8 +71,19 @@ export class WorldLoader {
     illuminationProperties.specularCoefficient = 0;
     illuminationProperties.specularShininess = 1;
 
-    const ground = new BodilessModel(groundPrototype, illuminationProperties);
-    applicationWorld.models.push(ground);
+    for (let x = -3; x <= 3; x += 1) {
+      for (let y = -3; y <= 3; y += 1) {
+        const ground = new BodilessModel(groundPrototype, illuminationProperties);
+
+        mat4.translate(
+          ground.modelMatrix,
+          ground.modelMatrix,
+          CoordinateConverter.physicsToRendering(new Vec3(x, y, 0).scale(groundSize))
+        );
+
+        applicationWorld.models.push(ground);
+      }
+    }
   }
 
   private async loadDwarf(applicationWorld: ApplicationWorld) {
@@ -81,6 +95,7 @@ export class WorldLoader {
     const dwarfBody = new Body({ mass: configuration.dwarfMass, position: new Vec3(2, 2, 3.05) });
     dwarfBody.initPosition.copy(dwarfBody.position);
     dwarfBody.initQuaternion.setFromAxisAngle(new Vec3(0, 1, 0), Math.PI / 2);
+    dwarfBody.allowSleep = false;
 
     const shape = new Box(new Vec3(0.4, 0.3, 0.75));
     dwarfBody.addShape(shape);
@@ -118,6 +133,7 @@ export class WorldLoader {
     fidgetSpinnerBody.initPosition.copy(fidgetSpinnerBody.position);
     fidgetSpinnerBody.quaternion.setFromAxisAngle(new Vec3(0, 1, 0), Math.PI / 2);
     fidgetSpinnerBody.initQuaternion.copy(fidgetSpinnerBody.quaternion);
+    fidgetSpinnerBody.allowSleep = false;
 
     const shape = new Cylinder(radius, radius, height, 10);
     fidgetSpinnerBody.addShape(shape);
@@ -134,6 +150,7 @@ export class WorldLoader {
       mass: 0,
       position: new Vec3(2, 2, 5)
     });
+    hingeBody.allowSleep = false;
     applicationWorld.physicsWorld.addBody(hingeBody);
 
     const hinge = new InvisibleModel(hingeBody);
