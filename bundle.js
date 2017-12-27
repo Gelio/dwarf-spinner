@@ -69,7 +69,7 @@
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__gl_matrix_common__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__gl_matrix_common__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__gl_matrix_mat2__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__gl_matrix_mat2d__ = __webpack_require__(68);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__gl_matrix_mat3__ = __webpack_require__(27);
@@ -149,7 +149,7 @@ exports.BaseEvent = BaseEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const cannon_1 = __webpack_require__(5);
+const cannon_1 = __webpack_require__(3);
 const gl_matrix_1 = __webpack_require__(0);
 const IlluminationModelType_1 = __webpack_require__(30);
 const IlluminationProperties_1 = __webpack_require__(31);
@@ -172,178 +172,29 @@ exports.configuration = {
     defaultShadingModelType: ShadingModelType_1.ShadingModelType.Phong,
     defaultIlluminationProperties,
     fidgetSpinnerMass: 400,
-    dwarfMass: 80,
-    spinnerAngularAcceleration: 4,
-    hingeAngularAcceleration: 0.5,
+    dwarfMass: 40,
+    spinnerAngularAcceleration: 6,
+    hingeAngularAcceleration: 1,
     hingeAngleRange: {
-        min: -20 / 180 * Math.PI,
-        max: 20 / 180 * Math.PI
+        min: -25 / 180 * Math.PI,
+        max: 25 / 180 * Math.PI
     },
     spinnerSwipeAccelerationMultiplier: 2,
     spinnerPanRotationMultiplier: 0.05,
     dwarfReflectorPanRotationMultiplier: 0.1,
-    dwarfReflectorAngularAcceleration: 0.5,
+    dwarfReflectorAngularAcceleration: 2.5,
     dwarfReflectorMaxAngle: 45 / 180 * Math.PI,
     dwarfRotationThrottleMultiplier: 0.7,
     scoreUpdateInterval: 500,
     scoreDifferenceThreshold: 0.5,
     followingCameraSpeed: 0.04,
     followingCameraDistance: 7,
-    randomShapesCount: 20
+    randomShapesCount: 40
 };
 
 
 /***/ }),
 /* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ARRAY_TYPE", function() { return ARRAY_TYPE; });
-/* harmony export (immutable) */ __webpack_exports__["setMatrixArrayType"] = setMatrixArrayType;
-/* harmony export (immutable) */ __webpack_exports__["toRadian"] = toRadian;
-/* harmony export (immutable) */ __webpack_exports__["equals"] = equals;
-/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE. */
-
-/**
- * Common utilities
- * @module glMatrix
- */
-
-// Configuration Constants
-const EPSILON = 0.000001;
-/* harmony export (immutable) */ __webpack_exports__["EPSILON"] = EPSILON;
-
-let ARRAY_TYPE = (typeof Float32Array !== 'undefined') ? Float32Array : Array;
-const RANDOM = Math.random;
-/* harmony export (immutable) */ __webpack_exports__["RANDOM"] = RANDOM;
-
-
-/**
- * Sets the type of array used when creating new vectors and matrices
- *
- * @param {Type} type Array type, such as Float32Array or Array
- */
-function setMatrixArrayType(type) {
-  ARRAY_TYPE = type;
-}
-
-const degree = Math.PI / 180;
-
-/**
- * Convert Degree To Radian
- *
- * @param {Number} a Angle in Degrees
- */
-function toRadian(a) {
-  return a * degree;
-}
-
-/**
- * Tests whether or not the arguments have approximately the same value, within an absolute
- * or relative tolerance of glMatrix.EPSILON (an absolute tolerance is used for values less
- * than or equal to 1.0, and a relative tolerance is used for larger values)
- *
- * @param {Number} a The first number to test.
- * @param {Number} b The second number to test.
- * @returns {Boolean} True if the numbers are approximately equal, false otherwise.
- */
-function equals(a, b) {
-  return Math.abs(a - b) <= EPSILON*Math.max(1.0, Math.abs(a), Math.abs(b));
-}
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bind", function() { return bind; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "define", function() { return define; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hyper", function() { return hyper; });
-/* harmony export (immutable) */ __webpack_exports__["default"] = hyper;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__classes_Component_js__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__objects_Intent_js__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__ = __webpack_require__(57);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__hyper_render_js__ = __webpack_require__(25);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_domdiff_js__ = __webpack_require__(26);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return __WEBPACK_IMPORTED_MODULE_0__classes_Component_js__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "diff", function() { return __WEBPACK_IMPORTED_MODULE_4__shared_domdiff_js__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "wire", function() { return __WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["b"]; });
-/*! (c) Andrea Giammarchi (ISC) */
-
-
-
-
-
-
-
-// all functions are self bound to the right context
-// you can do the following
-// const {bind, wire} = hyperHTML;
-// and use them right away: bind(node)`hello!`;
-const bind = context => __WEBPACK_IMPORTED_MODULE_3__hyper_render_js__["a" /* default */].bind(context);
-const define = __WEBPACK_IMPORTED_MODULE_1__objects_Intent_js__["a" /* default */].define;
-
-hyper.Component = __WEBPACK_IMPORTED_MODULE_0__classes_Component_js__["a" /* default */];
-hyper.bind = bind;
-hyper.define = define;
-hyper.diff = __WEBPACK_IMPORTED_MODULE_4__shared_domdiff_js__["a" /* default */];
-hyper.hyper = hyper;
-hyper.wire = __WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["b" /* default */];
-
-// the wire content is the lazy defined
-// html or svg property of each hyper.Component
-Object(__WEBPACK_IMPORTED_MODULE_0__classes_Component_js__["b" /* setup */])(__WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["a" /* content */]);
-
-// everything is exported directly or through the
-// hyperHTML callback, when used as top level script
-
-
-// by default, hyperHTML is a smart function
-// that "magically" understands what's the best
-// thing to do with passed arguments
-function hyper(HTML) {
-  return arguments.length < 2 ?
-    (HTML == null ?
-      Object(__WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["a" /* content */])('html') :
-      (typeof HTML === 'string' ?
-        Object(__WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["b" /* default */])(null, HTML) :
-        ('raw' in HTML ?
-          Object(__WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["a" /* content */])('html')(HTML) :
-          ('nodeType' in HTML ?
-            __WEBPACK_IMPORTED_MODULE_3__hyper_render_js__["a" /* default */].bind(HTML) :
-            Object(__WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["c" /* weakly */])(HTML, 'html')
-          )
-        )
-      )) :
-    ('raw' in HTML ?
-      Object(__WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["a" /* content */])('html') : __WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["b" /* default */]
-    ).apply(null, arguments);
-}
-
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var require;var require;/*
@@ -14035,6 +13886,155 @@ World.prototype.clearForces = function(){
 });
 
 /***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ARRAY_TYPE", function() { return ARRAY_TYPE; });
+/* harmony export (immutable) */ __webpack_exports__["setMatrixArrayType"] = setMatrixArrayType;
+/* harmony export (immutable) */ __webpack_exports__["toRadian"] = toRadian;
+/* harmony export (immutable) */ __webpack_exports__["equals"] = equals;
+/* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. */
+
+/**
+ * Common utilities
+ * @module glMatrix
+ */
+
+// Configuration Constants
+const EPSILON = 0.000001;
+/* harmony export (immutable) */ __webpack_exports__["EPSILON"] = EPSILON;
+
+let ARRAY_TYPE = (typeof Float32Array !== 'undefined') ? Float32Array : Array;
+const RANDOM = Math.random;
+/* harmony export (immutable) */ __webpack_exports__["RANDOM"] = RANDOM;
+
+
+/**
+ * Sets the type of array used when creating new vectors and matrices
+ *
+ * @param {Type} type Array type, such as Float32Array or Array
+ */
+function setMatrixArrayType(type) {
+  ARRAY_TYPE = type;
+}
+
+const degree = Math.PI / 180;
+
+/**
+ * Convert Degree To Radian
+ *
+ * @param {Number} a Angle in Degrees
+ */
+function toRadian(a) {
+  return a * degree;
+}
+
+/**
+ * Tests whether or not the arguments have approximately the same value, within an absolute
+ * or relative tolerance of glMatrix.EPSILON (an absolute tolerance is used for values less
+ * than or equal to 1.0, and a relative tolerance is used for larger values)
+ *
+ * @param {Number} a The first number to test.
+ * @param {Number} b The second number to test.
+ * @returns {Boolean} True if the numbers are approximately equal, false otherwise.
+ */
+function equals(a, b) {
+  return Math.abs(a - b) <= EPSILON*Math.max(1.0, Math.abs(a), Math.abs(b));
+}
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bind", function() { return bind; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "define", function() { return define; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hyper", function() { return hyper; });
+/* harmony export (immutable) */ __webpack_exports__["default"] = hyper;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__classes_Component_js__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__objects_Intent_js__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__ = __webpack_require__(57);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__hyper_render_js__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_domdiff_js__ = __webpack_require__(26);
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "Component", function() { return __WEBPACK_IMPORTED_MODULE_0__classes_Component_js__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "diff", function() { return __WEBPACK_IMPORTED_MODULE_4__shared_domdiff_js__["a"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "wire", function() { return __WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["b"]; });
+/*! (c) Andrea Giammarchi (ISC) */
+
+
+
+
+
+
+
+// all functions are self bound to the right context
+// you can do the following
+// const {bind, wire} = hyperHTML;
+// and use them right away: bind(node)`hello!`;
+const bind = context => __WEBPACK_IMPORTED_MODULE_3__hyper_render_js__["a" /* default */].bind(context);
+const define = __WEBPACK_IMPORTED_MODULE_1__objects_Intent_js__["a" /* default */].define;
+
+hyper.Component = __WEBPACK_IMPORTED_MODULE_0__classes_Component_js__["a" /* default */];
+hyper.bind = bind;
+hyper.define = define;
+hyper.diff = __WEBPACK_IMPORTED_MODULE_4__shared_domdiff_js__["a" /* default */];
+hyper.hyper = hyper;
+hyper.wire = __WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["b" /* default */];
+
+// the wire content is the lazy defined
+// html or svg property of each hyper.Component
+Object(__WEBPACK_IMPORTED_MODULE_0__classes_Component_js__["b" /* setup */])(__WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["a" /* content */]);
+
+// everything is exported directly or through the
+// hyperHTML callback, when used as top level script
+
+
+// by default, hyperHTML is a smart function
+// that "magically" understands what's the best
+// thing to do with passed arguments
+function hyper(HTML) {
+  return arguments.length < 2 ?
+    (HTML == null ?
+      Object(__WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["a" /* content */])('html') :
+      (typeof HTML === 'string' ?
+        Object(__WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["b" /* default */])(null, HTML) :
+        ('raw' in HTML ?
+          Object(__WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["a" /* content */])('html')(HTML) :
+          ('nodeType' in HTML ?
+            __WEBPACK_IMPORTED_MODULE_3__hyper_render_js__["a" /* default */].bind(HTML) :
+            Object(__WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["c" /* weakly */])(HTML, 'html')
+          )
+        )
+      )) :
+    ('raw' in HTML ?
+      Object(__WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["a" /* content */])('html') : __WEBPACK_IMPORTED_MODULE_2__hyper_wire_js__["b" /* default */]
+    ).apply(null, arguments);
+}
+
+
+/***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14138,7 +14138,7 @@ const UIDC = '<!--' + UID + '-->';
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const cannon_1 = __webpack_require__(5);
+const cannon_1 = __webpack_require__(3);
 const gl_matrix_1 = __webpack_require__(0);
 // tslint:disable-next-line:no-stateless-class
 class CoordinateConverter {
@@ -15385,7 +15385,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["multiplyScalarAndAdd"] = multiplyScalarAndAdd;
 /* harmony export (immutable) */ __webpack_exports__["exactEquals"] = exactEquals;
 /* harmony export (immutable) */ __webpack_exports__["equals"] = equals;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(4);
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -16202,7 +16202,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["str"] = str;
 /* harmony export (immutable) */ __webpack_exports__["exactEquals"] = exactEquals;
 /* harmony export (immutable) */ __webpack_exports__["equals"] = equals;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(4);
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17034,7 +17034,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["str"] = str;
 /* harmony export (immutable) */ __webpack_exports__["exactEquals"] = exactEquals;
 /* harmony export (immutable) */ __webpack_exports__["equals"] = equals;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(4);
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -17729,7 +17729,7 @@ exports.ObservingCamera = ObservingCamera;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const cannon_1 = __webpack_require__(5);
+const cannon_1 = __webpack_require__(3);
 const gl_matrix_1 = __webpack_require__(0);
 const CameraType_1 = __webpack_require__(10);
 const CoordinateConverter_1 = __webpack_require__(9);
@@ -23622,7 +23622,7 @@ exports.ProgramFactory = ProgramFactory;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const esm_1 = __webpack_require__(4);
+const esm_1 = __webpack_require__(5);
 function OptionComponent(selectedValue, value, label) {
     const isSelected = selectedValue === value;
     return esm_1.wire() `
@@ -23658,7 +23658,7 @@ function handleOnChangeEvent(options, onChangeCallback, event) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const esm_1 = __webpack_require__(4);
+const esm_1 = __webpack_require__(5);
 __webpack_require__(62);
 __webpack_require__(65);
 const Application_1 = __webpack_require__(66);
@@ -24655,7 +24655,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cannon_1 = __webpack_require__(5);
+const cannon_1 = __webpack_require__(3);
 const configuration_1 = __webpack_require__(2);
 const CameraType_1 = __webpack_require__(10);
 const GameStateType_1 = __webpack_require__(7);
@@ -24750,7 +24750,7 @@ class Application {
     }
     initProjectionMatrix() {
         const projectionService = new ProjectionService_1.ProjectionService();
-        this.projectionMatrix = projectionService.createProjectionMatrix(45, this.canvas.width / this.canvas.height, 0.1, 100);
+        this.projectionMatrix = projectionService.createProjectionMatrix(45, this.canvas.width / this.canvas.height, 0.1, 400);
     }
     initCamera() {
         const cameraFactory = new CameraFactory_1.CameraFactory(this.world);
@@ -24782,6 +24782,7 @@ class Application {
             const physicsWorld = new cannon_1.World();
             physicsWorld.gravity.set(0, 0, -9.81);
             physicsWorld.broadphase = new cannon_1.NaiveBroadphase();
+            physicsWorld.allowSleep = true;
             const imageLoader = new ImageLoader_1.ImageLoader();
             const modelPrototypeLoader = new ModelPrototypeLoader_1.ModelPrototypeLoader(this.gl, imageLoader);
             const worldLoader = new WorldLoader_1.WorldLoader(modelPrototypeLoader);
@@ -24864,7 +24865,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["equals"] = equals;
 /* harmony export (immutable) */ __webpack_exports__["multiplyScalar"] = multiplyScalar;
 /* harmony export (immutable) */ __webpack_exports__["multiplyScalarAndAdd"] = multiplyScalarAndAdd;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(4);
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25333,7 +25334,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["multiplyScalarAndAdd"] = multiplyScalarAndAdd;
 /* harmony export (immutable) */ __webpack_exports__["exactEquals"] = exactEquals;
 /* harmony export (immutable) */ __webpack_exports__["equals"] = equals;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(4);
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25856,7 +25857,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["multiplyScalarAndAdd"] = multiplyScalarAndAdd;
 /* harmony export (immutable) */ __webpack_exports__["exactEquals"] = exactEquals;
 /* harmony export (immutable) */ __webpack_exports__["equals"] = equals;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(4);
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27565,7 +27566,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["fromMat3"] = fromMat3;
 /* harmony export (immutable) */ __webpack_exports__["fromEuler"] = fromEuler;
 /* harmony export (immutable) */ __webpack_exports__["str"] = str;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mat3__ = __webpack_require__(27);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__vec3__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__vec4__ = __webpack_require__(29);
@@ -28275,7 +28276,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["str"] = str;
 /* harmony export (immutable) */ __webpack_exports__["exactEquals"] = exactEquals;
 /* harmony export (immutable) */ __webpack_exports__["equals"] = equals;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__common__ = __webpack_require__(4);
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28885,7 +28886,7 @@ const forEach = (function() {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const cannon_1 = __webpack_require__(5);
+const cannon_1 = __webpack_require__(3);
 const CameraType_1 = __webpack_require__(10);
 const configuration_1 = __webpack_require__(2);
 const FollowingCamera_1 = __webpack_require__(73);
@@ -32519,7 +32520,7 @@ if (true) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const cannon_1 = __webpack_require__(5);
+const cannon_1 = __webpack_require__(3);
 const configuration_1 = __webpack_require__(2);
 const CameraType_1 = __webpack_require__(10);
 const GameStateType_1 = __webpack_require__(7);
@@ -32660,7 +32661,11 @@ class InputHandler {
         this.world.fidgetSpinnerHinge.body.quaternion.setFromAxisAngle(this.hingeRotationAxis, this.hingeAngle);
     }
     accelerateSpinner(amount) {
-        this.world.fidgetSpinner.body.angularVelocity.x += amount;
+        const spinnerBody = this.world.fidgetSpinner.body;
+        const hingeBody = this.world.fidgetSpinnerHinge.body;
+        const angularAcceleration = new cannon_1.Vec3(amount, 0, 0);
+        hingeBody.quaternion.vmult(angularAcceleration, angularAcceleration);
+        spinnerBody.angularVelocity.vadd(angularAcceleration, spinnerBody.angularVelocity);
     }
     rotateDwarfReflector(angle) {
         if (!this.world.dwarf.spotlight) {
@@ -33425,7 +33430,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cannon_1 = __webpack_require__(5);
+const cannon_1 = __webpack_require__(3);
+const gl_matrix_1 = __webpack_require__(0);
 const configuration_1 = __webpack_require__(2);
 const IlluminationProperties_1 = __webpack_require__(31);
 const TextureWrapType_1 = __webpack_require__(115);
@@ -33458,6 +33464,7 @@ class WorldLoader {
         return __awaiter(this, void 0, void 0, function* () {
             const groundPrototype = yield this.modelPrototypeLoader.loadModelPrototype('assets/models/ground.json', 'assets/textures/ground_dirt_1226_9352_Small.jpg');
             groundPrototype.texture.enableWrapping(TextureWrapType_1.TextureWrapType.Repeat);
+            const groundSize = 100;
             const groundShape = new cannon_1.Plane();
             const groundBody = new cannon_1.Body({ mass: 0 });
             groundBody.addShape(groundShape);
@@ -33467,8 +33474,13 @@ class WorldLoader {
             illuminationProperties.diffuseCoefficient = 1;
             illuminationProperties.specularCoefficient = 0;
             illuminationProperties.specularShininess = 1;
-            const ground = new BodilessModel_1.BodilessModel(groundPrototype, illuminationProperties);
-            applicationWorld.models.push(ground);
+            for (let x = -3; x <= 3; x += 1) {
+                for (let y = -3; y <= 3; y += 1) {
+                    const ground = new BodilessModel_1.BodilessModel(groundPrototype, illuminationProperties);
+                    gl_matrix_1.mat4.translate(ground.modelMatrix, ground.modelMatrix, CoordinateConverter_1.CoordinateConverter.physicsToRendering(new cannon_1.Vec3(x, y, 0).scale(groundSize)));
+                    applicationWorld.models.push(ground);
+                }
+            }
         });
     }
     loadDwarf(applicationWorld) {
@@ -33477,6 +33489,7 @@ class WorldLoader {
             const dwarfBody = new cannon_1.Body({ mass: configuration_1.configuration.dwarfMass, position: new cannon_1.Vec3(2, 2, 3.05) });
             dwarfBody.initPosition.copy(dwarfBody.position);
             dwarfBody.initQuaternion.setFromAxisAngle(new cannon_1.Vec3(0, 1, 0), Math.PI / 2);
+            dwarfBody.allowSleep = false;
             const shape = new cannon_1.Box(new cannon_1.Vec3(0.4, 0.3, 0.75));
             dwarfBody.addShape(shape);
             applicationWorld.physicsWorld.addBody(dwarfBody);
@@ -33493,7 +33506,7 @@ class WorldLoader {
     }
     loadFidgetSpinner(applicationWorld) {
         return __awaiter(this, void 0, void 0, function* () {
-            const fidgetSpinnerPrototype = yield this.modelPrototypeLoader.loadModelPrototype('assets/models/Fidget_Spinner-centered.json', 'assets/textures/fidget_texture.png');
+            const fidgetSpinnerPrototype = yield this.modelPrototypeLoader.loadModelPrototype('assets/models/Fidget_Spinner-centered.json', 'assets/textures/missile-texture.jpg');
             const radius = 1.1;
             const height = 0.05;
             const fidgetSpinnerBody = new cannon_1.Body({
@@ -33503,6 +33516,8 @@ class WorldLoader {
             fidgetSpinnerBody.initPosition.copy(fidgetSpinnerBody.position);
             fidgetSpinnerBody.quaternion.setFromAxisAngle(new cannon_1.Vec3(0, 1, 0), Math.PI / 2);
             fidgetSpinnerBody.initQuaternion.copy(fidgetSpinnerBody.quaternion);
+            fidgetSpinnerBody.allowSleep = false;
+            fidgetSpinnerBody.angularDamping = 0;
             const shape = new cannon_1.Cylinder(radius, radius, height, 10);
             fidgetSpinnerBody.addShape(shape);
             applicationWorld.physicsWorld.addBody(fidgetSpinnerBody);
@@ -33517,6 +33532,7 @@ class WorldLoader {
                 mass: 0,
                 position: new cannon_1.Vec3(2, 2, 5)
             });
+            hingeBody.allowSleep = false;
             applicationWorld.physicsWorld.addBody(hingeBody);
             const hinge = new InvisibleModel_1.InvisibleModel(hingeBody);
             applicationWorld.fidgetSpinnerHinge = hinge;
@@ -33541,9 +33557,9 @@ class WorldLoader {
     }
     getRandomInAirPosition() {
         // tslint:disable:insecure-random
-        const x = Math.random() * 5 - 2.5;
+        const x = Math.random() * 8 - 4;
         const y = Math.random() * 50 - 5;
-        const z = Math.random() * 10 + 7;
+        const z = Math.random() * 10 + 8;
         // tslint:enable:insecure-random
         return new cannon_1.Vec3(x, y, z);
     }
@@ -33637,7 +33653,7 @@ exports.InvisibleModel = InvisibleModel;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const cannon_1 = __webpack_require__(5);
+const cannon_1 = __webpack_require__(3);
 const gl_matrix_1 = __webpack_require__(0);
 class Spotlight {
     constructor(color, cutoffAngle) {
@@ -33664,6 +33680,7 @@ exports.Spotlight = Spotlight;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+const cannon_1 = __webpack_require__(3);
 const gl_matrix_1 = __webpack_require__(0);
 const resetBody_1 = __webpack_require__(50);
 const BodilessModel_1 = __webpack_require__(49);
@@ -33675,7 +33692,9 @@ class PhysicalModel extends BodilessModel_1.BodilessModel {
         this.body = body;
     }
     draw(gl, webGLBinder) {
-        this.updateModelMatrixFromBody();
+        if (this.body.sleepState !== cannon_1.Body.SLEEPING) {
+            this.updateModelMatrixFromBody();
+        }
         this.updateAndBindSpotlight(webGLBinder);
         super.draw(gl, webGLBinder);
     }
@@ -34141,7 +34160,7 @@ module.exports = "precision mediump float;\r\n\r\nattribute vec3 aVertexPosition
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const esm_1 = __webpack_require__(4);
+const esm_1 = __webpack_require__(5);
 const IlluminationModelTypeSelectComponent_1 = __webpack_require__(131);
 const InstructionsComponent_1 = __webpack_require__(132);
 const ShadingModelTypeSelectComponent_1 = __webpack_require__(135);
@@ -34174,7 +34193,7 @@ exports.ApplicationComponent = ApplicationComponent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const esm_1 = __webpack_require__(4);
+const esm_1 = __webpack_require__(5);
 const IlluminationModelType_1 = __webpack_require__(30);
 const configuration_1 = __webpack_require__(2);
 const NewIlluminationModelTypeEvent_1 = __webpack_require__(51);
@@ -34225,7 +34244,7 @@ exports.IlluminationModelTypeSelectComponent = IlluminationModelTypeSelectCompon
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const esm_1 = __webpack_require__(4);
+const esm_1 = __webpack_require__(5);
 __webpack_require__(133);
 class InstructionsComponent extends esm_1.Component {
     constructor() {
@@ -34355,7 +34374,7 @@ exports.push([module.i, ".instructions {\n  margin-left: 1em; }\n\n.device-type-
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const esm_1 = __webpack_require__(4);
+const esm_1 = __webpack_require__(5);
 const ShadingModelType_1 = __webpack_require__(18);
 const configuration_1 = __webpack_require__(2);
 const NewShadingModelTypeEvent_1 = __webpack_require__(52);
@@ -34406,7 +34425,7 @@ exports.ShadingModelTypeSelectComponent = ShadingModelTypeSelectComponent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const esm_1 = __webpack_require__(4);
+const esm_1 = __webpack_require__(5);
 const SwitchCameraEvent_1 = __webpack_require__(21);
 function SwitchCameraComponent(eventEmitter) {
     function onClick() {
@@ -34426,7 +34445,7 @@ exports.SwitchCameraComponent = SwitchCameraComponent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const esm_1 = __webpack_require__(4);
+const esm_1 = __webpack_require__(5);
 const store_1 = __webpack_require__(6);
 __webpack_require__(138);
 class ScoreDisplayComponent extends esm_1.Component {
