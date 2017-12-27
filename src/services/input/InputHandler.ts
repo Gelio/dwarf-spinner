@@ -209,7 +209,13 @@ export class InputHandler {
   }
 
   private accelerateSpinner(amount: number) {
-    this.world.fidgetSpinner.body.angularVelocity.x += amount;
+    const spinnerBody = this.world.fidgetSpinner.body;
+    const hingeBody = this.world.fidgetSpinnerHinge.body;
+
+    const angularAcceleration = new Vec3(amount, 0, 0);
+    hingeBody.quaternion.vmult(angularAcceleration, angularAcceleration);
+
+    spinnerBody.angularVelocity.vadd(angularAcceleration, spinnerBody.angularVelocity);
   }
 
   private rotateDwarfReflector(angle: number) {
