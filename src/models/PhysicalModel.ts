@@ -29,7 +29,9 @@ export class PhysicalModel extends BodilessModel {
   }
 
   public draw(gl: WebGLRenderingContext, webGLBinder: WebGLBinder) {
-    this.updateModelMatrixFromBody();
+    if (this.body.sleepState !== Body.SLEEPING) {
+      this.updateModelMatrixFromBody();
+    }
     this.updateAndBindSpotlight(webGLBinder);
     super.draw(gl, webGLBinder);
   }
