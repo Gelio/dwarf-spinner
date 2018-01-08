@@ -16,9 +16,9 @@ export const configuration = {
   maxPhysicsWorldTimeAdvance: 1 / 30,
   physicsSpeed: 1,
   inAirPhysicsSpeed: 0.25,
-  ambientLightColor: vec3.fromValues(0.05, 0.05, 0.05),
+  ambientLightColor: vec3.fromValues(0.25, 0.25, 0.25),
 
-  pointLightColor: vec3.fromValues(1, 1, 1),
+  pointLightColor: vec3.fromValues(0.5, 0.5, 1),
   pointLightPosition: CoordinateConverter.physicsToRendering(new Vec3(0, 0, 5)),
 
   dwarfReflectorColor: vec3.fromValues(1, 201 / 255, 14 / 255),
