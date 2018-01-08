@@ -5,9 +5,9 @@
 
 // Dimming light with distance
 // IL = IL0 / (c1 d^2 + c2 d + c3)
-const float c1 = 0.1;
+const float c1 = 0.07;
 const float c2 = -0.05;
-const float c3 = 0.0;
+const float c3 = -0.1;
 
 
 // Illumination model uniforms
@@ -38,7 +38,7 @@ vec4 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerV
 float getLightDistanceDimmingFactor(vec3 distanceVector);
 
 vec4 getColorInWorldPoint(vec3 normalVector, vec3 worldPosition3D, vec4 textureColor) {
-  vec4 lightIntensity = vec4(uAmbientLightColor, 1.0);
+  vec4 lightIntensity = vec4(uAmbientLightColor, 1.0) * textureColor;
 
   vec3 viewerVector = normalize(uViewerPosition - worldPosition3D);
 
@@ -115,5 +115,5 @@ float getLightDistanceDimmingFactor(vec3 distanceVector) {
   float distance = length(distanceVector);
 
   // c1 * d^2 + c2 * d + c3
-  return 1.0 / (c3 + distance * (c2 + c1 * distance));
+  return max(0.0, 1.0 / (c3 + distance * (c2 + c1 * distance)));
 }
