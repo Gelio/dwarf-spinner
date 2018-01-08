@@ -5,8 +5,8 @@
 
 // Dimming light with distance
 // IL = IL0 / (c1 d^2 + c2 d + c3)
-const float c1 = 0.07;
-const float c2 = -0.05;
+const float c1 = 0.1;
+const float c2 = -0.04;
 const float c3 = -0.1;
 
 
@@ -115,5 +115,5 @@ float getLightDistanceDimmingFactor(vec3 distanceVector) {
   float distance = length(distanceVector);
 
   // c1 * d^2 + c2 * d + c3
-  return max(0.0, 1.0 / (c3 + distance * (c2 + c1 * distance)));
+  return clamp(1.0 / abs(c3 + distance * (c2 + c1 * distance)), 0.0, 1.0);
 }

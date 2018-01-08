@@ -19,7 +19,7 @@ export const configuration = {
   ambientLightColor: vec3.fromValues(0.25, 0.25, 0.25),
 
   pointLightColor: vec3.fromValues(0.5, 0.5, 1),
-  pointLightPosition: CoordinateConverter.physicsToRendering(new Vec3(0, 0, 5)),
+  pointLightPosition: CoordinateConverter.physicsToRendering(new Vec3(-1, 2, 4)),
 
   dwarfReflectorColor: vec3.fromValues(1, 201 / 255, 14 / 255),
   dwarfReflectorCutoffAngle: 15 / 180 * Math.PI,
