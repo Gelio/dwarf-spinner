@@ -11,7 +11,6 @@ varying vec2 vTextureCoords;
 void main(void) {
   vec3 normalVector = normalize(vNormalVector);
   vec4 textureColor = texture2D(uTextureSampler, vTextureCoords);
-  vec4 lightIntensity = getColorInWorldPoint(normalVector, vPosition, textureColor);
 
-  gl_FragColor = lightIntensity;
+  gl_FragColor = getColorInWorldPoint(normalVector, vPosition, textureColor);
 }
