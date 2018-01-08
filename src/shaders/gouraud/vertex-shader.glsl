@@ -11,6 +11,7 @@ uniform mat4 uProjectionMatrix;
 
 varying vec2 vTextureCoords;
 varying vec4 vLightIntensity;
+uniform sampler2D uTextureSampler;
 
 #pragma require('../get-light-intensity.glsl')
 
@@ -23,5 +24,6 @@ void main(void) {
   gl_Position = uProjectionMatrix * uViewMatrix * worldPosition4D;
 
   vec3 normalVector = normalize(vec3(uNormalMatrix * vec4(aNormalVector, 0.0)));
-  vLightIntensity = getLightIntensityInWorldPoint(normalVector, worldPosition3D);
+  vec4 textureColor = texture2D(uTextureSampler, aTextureCoords);
+  vLightIntensity = getColorInWorldPoint(normalVector, worldPosition3D, textureColor);
 }

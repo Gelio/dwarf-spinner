@@ -33,22 +33,23 @@ uniform float uSpotlightCutoff;
 uniform vec3 uViewerPosition;
 
 
-vec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector, vec3 lightIntensity);
-vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerVector, vec3 lightIntensity);
+vec4 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector, vec3 lightIntensity, vec4 textureColor);
+vec4 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerVector, vec3 lightIntensity);
 float getLightDistanceDimmingFactor(vec3 distanceVector);
 
-vec4 getLightIntensityInWorldPoint(vec3 normalVector, vec3 worldPosition3D) {
-  vec3 lightIntensity = uAmbientLightColor;
+vec4 getColorInWorldPoint(vec3 normalVector, vec3 worldPosition3D, vec4 textureColor) {
+  vec4 lightIntensity = vec4(uAmbientLightColor, 1.0);
 
   vec3 viewerVector = normalize(uViewerPosition - worldPosition3D);
 
   vec3 pointLightVectorUnnormalized = uPointLightPosition - worldPosition3D;
   vec3 pointLightVector = normalize(pointLightVectorUnnormalized);
 
-  vec3 pointLightIntensity = getDiffuseLightIntensity(
+  vec4 pointLightIntensity = getDiffuseLightIntensity(
     pointLightVector,
     normalVector,
-    uPointLightColor
+    uPointLightColor,
+    textureColor
   );
   pointLightIntensity += getSpecularLightIntensity(
     pointLightVector,
@@ -62,12 +63,13 @@ vec4 getLightIntensityInWorldPoint(vec3 normalVector, vec3 worldPosition3D) {
   vec3 spotlightVectorUnnormalized = uSpotlightPosition - worldPosition3D;
   vec3 spotlightVector = normalize(spotlightVectorUnnormalized);
   vec3 normalizedReverseSpotlightDirection = normalize(-uSpotlightDirection);
-  vec3 spotlightIntensity = vec3(0.0, 0.0, 0.0);
+  vec4 spotlightIntensity = vec4(0.0, 0.0, 0.0, 0.0);
   if (dot(spotlightVector, normalizedReverseSpotlightDirection) >= uSpotlightCutoff) {
     spotlightIntensity += getDiffuseLightIntensity(
       spotlightVector,
       normalVector,
-      uSpotlightColor
+      uSpotlightColor,
+      textureColor
     );
     spotlightIntensity += getSpecularLightIntensity(
       spotlightVector,
@@ -78,19 +80,19 @@ vec4 getLightIntensityInWorldPoint(vec3 normalVector, vec3 worldPosition3D) {
   }
   lightIntensity += spotlightIntensity;
 
-  return vec4(lightIntensity, 1.0);
+  return lightIntensity;
 }
 
 
 
-vec3 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector, vec3 lightIntensity) {
+vec4 getDiffuseLightIntensity(vec3 lightVector, vec3 normalVector, vec3 lightIntensity, vec4 textureColor) {
   // Should sum across all light sources
   float cosine = max(0.0, dot(normalVector, lightVector));
 
-  return uDiffuseCoefficient * lightIntensity * cosine;
+  return vec4(uDiffuseCoefficient * lightIntensity * cosine, 1.0) * textureColor;
 }
 
-vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerVector, vec3 lightIntensity) {
+vec4 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerVector, vec3 lightIntensity) {
   // Should sum across all light sources
   float shininess = uSpecularShininess;
 
@@ -106,7 +108,7 @@ vec3 getSpecularLightIntensity(vec3 lightVector, vec3 normalVector, vec3 viewerV
 
   cosine = max(0.0, cosine);
 
-  return uSpecularCoefficient * lightIntensity * pow(cosine, uSpecularShininess);
+  return vec4(uSpecularCoefficient * lightIntensity * pow(cosine, uSpecularShininess), 1.0);
 }
 
 float getLightDistanceDimmingFactor(vec3 distanceVector) {

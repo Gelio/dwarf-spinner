@@ -6,5 +6,5 @@ varying vec2 vTextureCoords;
 varying vec4 vLightIntensity;
 
 void main(void) {
-  gl_FragColor = vLightIntensity * texture2D(uTextureSampler, vTextureCoords);
+  gl_FragColor = vLightIntensity;
 }
