@@ -72,7 +72,7 @@ export class Application {
     this.canvas = canvas;
     this.eventEmitter = new ApplicationEventEmitter();
 
-    const gl = this.canvas.getContext('webgl');
+    const gl = this.canvas.getContext('webgl') || this.canvas.getContext('experimental-webgl');
     if (!gl) {
       throw new Error('WebGL not supported');
     }
