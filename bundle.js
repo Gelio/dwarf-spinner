@@ -24688,7 +24688,7 @@ class Application {
     constructor(canvas) {
         this.canvas = canvas;
         this.eventEmitter = new ApplicationEventEmitter_1.ApplicationEventEmitter();
-        const gl = this.canvas.getContext('webgl');
+        const gl = this.canvas.getContext('webgl') || this.canvas.getContext('experimental-webgl');
         if (!gl) {
             throw new Error('WebGL not supported');
         }
